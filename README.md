@@ -50,3 +50,6 @@ README〜ER図作成：7/10〆切
 
 # 画面遷移図
 https://www.figma.com/file/rj3SrRK6eHT9Y9IgWyifnX/%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3?node-id=0%3A1
+
+# ER図
+https://gyazo.com/83738f3ba317953609a258d2a93c1601
