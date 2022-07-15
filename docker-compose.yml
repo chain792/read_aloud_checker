@@ -18,8 +18,9 @@ services:
       - "./api:/$WORKDIR"
     environment:
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      API_DOMAIN: "localhost:$FRONT_PORT"
     ports:
-      - "8000:3000"
+      - "$API_PORT:$CONTAINER_PORT"
     depends_on:
       - db
 
@@ -28,9 +29,10 @@ services:
       context: ./front
       args:
         WORKDIR: $WORKDIR
+        API_URL: "http://localhost:$API_PORT"
     volumes:
       - "./front:/$WORKDIR"
     ports:
-      - "3000:3000"
+      - "$FRONT_PORT:$CONTAINER_PORT"
     depends_on:
       - api
