@@ -1,6 +1,7 @@
-FROM node:15.14.0-alpine
+FROM node:16.16.0-alpine
 
 ARG WORKDIR
+ARG API_URL
 
 ENV HOME=/${WORKDIR} \
     TZ=Asia/Tokyo
