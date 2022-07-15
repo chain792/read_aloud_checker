@@ -4,8 +4,7 @@ ARG WORKDIR
 ARG API_URL
 
 ENV HOME=/${WORKDIR} \
-    TZ=Asia/Tokyo \
-    API_URL=${API_URL} 
+    TZ=Asia/Tokyo
 
 WORKDIR ${HOME}
 

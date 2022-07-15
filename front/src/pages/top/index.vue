@@ -6,6 +6,7 @@
     color="secondary"
     :size="a"
     class="ma-lg-5"
+    @click="axiosTest"
   >
     Secondary
   </v-btn>
@@ -15,17 +16,26 @@
 import { computed } from 'vue';
 import { useStore } from '../../store/store';
 import { useDisplay } from 'vuetify'
+import axios from '../../plugins/axios'
 const store = useStore()
 const display = useDisplay()
-console.log(display.md) // 1280
 const a = computed(() => {
-  console.log('con')
   if(display.md.value){
     return 'large'
   }else{
     return 'small'
   }
 })
+
+const axiosTest = () => {
+  axios.get('api/v1/users')
+    .then(res => {
+      console.log(res)
+    })
+    .catch(e => {
+      console.log(e)
+    })
+}
 </script>
 
 <style scoped>
