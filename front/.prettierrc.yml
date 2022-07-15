@@ -1,6 +1,2 @@
-# インデントのスペース数の指定
-tabWidth: 2
 # ステートメントの最後のセミコロンの設定
 semi: false
-# VueのSCFのscript,styleタグにインデントの指定
-vueIndentScriptAndStyle: false

@@ -1,13 +1,12 @@
-import { defineStore } from "pinia";
+import { defineStore } from "pinia"
 
 interface State {
   hello: string
 }
 
-export const useStore = defineStore('app', {
+export const useStore = defineStore("app", {
   state: (): State => ({
-    hello: 'hello world',
+    hello: "hello world",
   }),
-  actions: {
-  }
+  actions: {},
 })
