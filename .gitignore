@@ -25,6 +25,8 @@ api/.byebug_history
 # Ignore master key for decrypting credentials and more.
 api/config/master.key
 
+api/.cache
+
 
 # front側の設定
 
