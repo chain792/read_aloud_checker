@@ -24,7 +24,7 @@
 <script setup lang="ts">
 </script>
 
-<style>
+<style scoped>
 .v-app-bar a{
   text-decoration: none;
 }
