@@ -5,6 +5,10 @@
   aaaaaaaaas{{aiu.mmm}}
   </template>
 </Test>
+<div>------------</div>
+<Test v-slot="slotProps">
+  {{ slotProps.mmm }}
+</Test>
 </template>
 
 <script setup lang="ts">

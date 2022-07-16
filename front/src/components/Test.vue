@@ -1,5 +1,5 @@
 <template>
-  <button><slot name="unko" :mmm="data">submit</slot></button>
+  <button><slot :mmm="data">submit</slot></button>
 </template>
 
 <script setup lang="ts">
