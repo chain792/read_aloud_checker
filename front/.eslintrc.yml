@@ -27,4 +27,7 @@ extends:
   - 'prettier'
 
 rules:
+  # コンポーネント名は1単語を許すことにする
   'vue/multi-word-component-names': off
+  # https://eslint.vuejs.org/rules/v-slot-style.html
+  'vue/v-slot-style': off
