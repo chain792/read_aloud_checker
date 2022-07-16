@@ -1,21 +1,14 @@
 <template>
   <v-app>
+    <Header v-if="false" />
+    <HeaderBeforeLoginVue v-else />
     <v-main>
       <router-view />
     </v-main>
   </v-app>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
-
-export default defineComponent({
-  name: "App",
-
-  data() {
-    return {
-      //
-    }
-  },
-})
+<script setup lang="ts">
+import Header from './components/Header.vue'
+import HeaderBeforeLoginVue from './components/HeaderBeforeLogin.vue'
 </script>
