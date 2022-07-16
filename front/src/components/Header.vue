@@ -44,7 +44,7 @@ const items = [
 ]
 </script>
 
-<style>
+<style scoped>
 .v-app-bar img{
   border-radius: 50%;
   width: 40px;
