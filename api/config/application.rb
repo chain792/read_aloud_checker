@@ -40,5 +40,8 @@ module App
 
     # https://railsguides.jp/autoloading_and_reloading_constants.html#%24load-path-load-path
     config.add_autoload_paths_to_load_path = false
+
+    config.i18n.default_locale = :ja
+    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
   end
 end
