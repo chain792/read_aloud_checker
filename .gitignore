@@ -26,6 +26,7 @@ api/.byebug_history
 api/config/master.key
 
 api/.cache
+api/.irb_history
 
 
 # front側の設定
