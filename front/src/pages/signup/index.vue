@@ -12,7 +12,7 @@
         lazy-validation
       >
         <v-text-field
-          v-model="name"
+          v-model="user.name"
           label="名前"
           placeholder="名前を入力"
           color="blue"
@@ -23,7 +23,7 @@
         ></v-text-field>
 
         <v-text-field
-          v-model="email"
+          v-model="user.email"
           type="email"
           label="メールアドレス"
           placeholder="メールアドレスを入力"
@@ -35,7 +35,7 @@
         ></v-text-field>
 
         <v-text-field
-          v-model="password"
+          v-model="user.password"
           :type="isVisiblePassword ? 'text' : 'password'"
           label="パスワード"
           placeholder="半角英数字6文字以上"
@@ -64,31 +64,44 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, reactive } from "vue"
+import axios from "../../plugins/axios"
+import { useUserStore }  from "../../store/userStore"
+
+const userStore = useUserStore()
 
 const valid = ref(true)
 
-const name = ref('')
+const user = reactive({
+  name: "",
+  email: "",
+  password: ""
+})
+
 const nameRules = [
   (v: string) => !!v || '名前を入力してください',
   (v: string) => (v && v.length <= 16) || '16文字以内で入力してください' 
 ]
 
-const email = ref('')
 const emailRules = [
   (v: string) => !!v || 'メールアドレスを入力してください',
   (v: string) => /.+@.+\..+/.test(v) || 'メールアドレスの形式が正しくありません',
 ]
 
-const password = ref('')
 const passwordRules = [
   (v: string) => !!v || 'パスワードを入力してください',
   (v: string) => (v && v.length >= 6) || '6文字以上で入力してください',
 ]
 const isVisiblePassword = ref(false)
 
-const register = () => {
-  console.log('register')
+const register = async () => {
+  try{
+    const res = await axios.post("users", { user: user })
+    userStore.setUser(res.data)
+  } catch(e) {
+    console.log(e)
+  }
+
 }
 
 
