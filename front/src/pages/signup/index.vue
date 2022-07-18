@@ -94,14 +94,13 @@ const passwordRules = [
 ]
 const isVisiblePassword = ref(false)
 
-const register = async () => {
+const register = async (): Promise<void> => {
   try{
     const res = await axios.post("users", { user: user })
     userStore.setUser(res.data)
   } catch(e) {
     console.log(e)
   }
-
 }
 
 

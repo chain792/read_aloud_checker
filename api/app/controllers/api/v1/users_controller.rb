@@ -8,7 +8,7 @@ class Api::V1::UsersController < ApplicationController
     # 入力フォームのパスワード入力は1回にしているためpasswordの値を代入する
     user.password_confirmation = user.password
     if user.save
-      render json: user
+      render json: UserResource.new(user).serialize
     else
       render json: user.errors.full_messages, status: :bad_request
     end

@@ -5,8 +5,8 @@ interface User {
   email: string
   name: string
   avatar: string
-  created_at: string
-  updated_at: string
+  createdAt: string
+  updatedAt: string
 }
 
 interface UserState {
