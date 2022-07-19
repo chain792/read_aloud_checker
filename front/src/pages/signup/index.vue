@@ -2,9 +2,20 @@
   <v-card width="400" class="mx-auto mt-10 px-5 py-3">
     <v-card-item>
       <v-card-title class="text-center text-h5">ユーザー登録</v-card-title>
-
+      <v-card-subtitle v-if="errorMessages.length" class="mt-3">
+        <v-alert
+          v-for="(message, index) in errorMessages"
+          :key="index"
+          class="mt-3"
+          type="error"
+          density="compact"
+          variant="tonal"
+          icon="mdi-alert-circle"
+        >
+          <p class="text-wrap f-size-085">{{ message }}</p>
+        </v-alert>
+      </v-card-subtitle>
     </v-card-item>
-
     <v-card-text class="mt-3">
       <v-form
         ref="form"
@@ -66,6 +77,7 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue"
 import axios from "../../plugins/axios"
+import Axios from "axios"
 import { useUserStore }  from "../../store/userStore"
 
 const userStore = useUserStore()
@@ -94,12 +106,22 @@ const passwordRules = [
 ]
 const isVisiblePassword = ref(false)
 
+
+let errorMessages: string[] = reactive([])
+
 const register = async (): Promise<void> => {
   try{
+    errorMessages.splice(0)
     const res = await axios.post("users", { user: user })
     userStore.setUser(res.data)
   } catch(e) {
-    console.log(e)
+    if(Axios.isAxiosError(e) && e.response && e.response.data && Array.isArray(e.response.data)){
+      e.response.data.forEach(v => {
+        errorMessages.push(v)
+      })
+    }else{
+      console.log(e)
+    }
   }
 }
 
@@ -107,5 +129,8 @@ const register = async (): Promise<void> => {
 </script>
 
 <style scoped>
+.f-size-085{
+  font-size: 0.85rem;
 
+}
 </style>
