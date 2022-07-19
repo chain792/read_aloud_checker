@@ -3,17 +3,7 @@
     <v-card-item>
       <v-card-title class="text-center text-h5">ユーザー登録</v-card-title>
       <v-card-subtitle v-if="errorMessages.length" class="mt-3">
-        <v-alert
-          v-for="(message, index) in errorMessages"
-          :key="index"
-          class="mt-3"
-          type="error"
-          density="compact"
-          variant="tonal"
-          icon="mdi-alert-circle"
-        >
-          <p class="text-wrap f-size-085">{{ message }}</p>
-        </v-alert>
+        <ErrorMessages :error-messages="errorMessages" />
       </v-card-subtitle>
     </v-card-item>
     <v-card-text class="mt-3">
@@ -79,6 +69,7 @@ import { ref, reactive } from "vue"
 import axios from "../../plugins/axios"
 import Axios from "axios"
 import { useUserStore }  from "../../store/userStore"
+import ErrorMessages from "../../components/shared/ErrorMessages.vue"
 
 const userStore = useUserStore()
 
@@ -129,8 +120,4 @@ const register = async (): Promise<void> => {
 </script>
 
 <style scoped>
-.f-size-085{
-  font-size: 0.85rem;
-
-}
 </style>
