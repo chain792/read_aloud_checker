@@ -8,13 +8,29 @@
 
     <v-spacer></v-spacer>
 
-    <router-link to="#" class="mr-5 text-white font-weight-bold">
+    <v-btn
+      density="compact"
+      color="white"
+      size="x-large"
+      variant="text"
+      class="mr-2 font-weight-bold"
+      rounded="xl"
+    >
       ログイン
-    </router-link>
+    </v-btn>
 
-    <router-link to="#" class="mr-5 text-white font-weight-bold">
+
+    <v-btn
+      density="comfortable"
+      color="white"
+      size="x-large"
+      variant="text"
+      class="mr-2 font-weight-bold"
+      rounded="xl"
+      :to="{ name: 'SignupIndex' }"
+    >
       新規登録
-    </router-link>
+    </v-btn>
 
 
     

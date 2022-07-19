@@ -23,7 +23,7 @@ const a = computed(() => {
 
 const axiosTest = () => {
   axios
-    .get("api/v1/users")
+    .get("users")
     .then((res) => {
       console.log(res)
     })
