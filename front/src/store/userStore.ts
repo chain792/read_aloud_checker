@@ -13,7 +13,7 @@ interface UserState {
   authUser: User | null
 }
 
-export const useUserStore = defineStore("app", {
+export const useUserStore = defineStore("user", {
   state: (): UserState => ({
     authUser: null
   }),

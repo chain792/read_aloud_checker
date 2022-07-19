@@ -68,10 +68,13 @@
 import { ref, reactive } from "vue"
 import axios from "../../plugins/axios"
 import Axios from "axios"
-import { useUserStore }  from "../../store/userStore"
 import ErrorMessages from "../../components/shared/ErrorMessages.vue"
+import { useUserStore }  from "../../store/userStore"
+import { useFlashStore } from "../../store/flashStore"
 
 const userStore = useUserStore()
+const flashStore = useFlashStore()
+
 
 const valid = ref(true)
 
@@ -113,6 +116,7 @@ const register = async (): Promise<void> => {
     }else{
       console.log(e)
     }
+    flashStore.failSignup()
   }
 }
 
