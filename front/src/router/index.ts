@@ -3,6 +3,7 @@ import TopIndex from "../pages/top/index.vue"
 
 const TestIndex = () => import("../pages/test/index.vue")
 const SignupIndex = () => import("../pages/signup/index.vue")
+const LoginIndex = () => import("../pages/login/index.vue")
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -19,6 +20,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/signup",
     name: "SignupIndex",
     component: SignupIndex,
+  },
+  {
+    path: "/login",
+    name: "LoginIndex",
+    component: LoginIndex,
   },
 ]
 
