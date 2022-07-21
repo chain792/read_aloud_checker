@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  include AccessToken
   include RefreshToken
   authenticates_with_sorcery!
 

@@ -231,6 +231,7 @@ DEPENDENCIES
   alba
   bootsnap (>= 1.4.4)
   byebug
+  jwt
   listen (~> 3.3)
   mysql2 (~> 0.5)
   net-imap
