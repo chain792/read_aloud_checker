@@ -8,8 +8,9 @@ module RefreshToken
     end
   end
 
-  def generate_refresh_token
+  def refresh_me!
     self.refresh_token = SecureRandom.uuid
-    self.save
+    self.save!
+    refresh_token
   end
 end

@@ -24,4 +24,11 @@ module Api::UserAuthenticator
 
     header.gsub(pattern, '') if header&.match(pattern)
   end
+
+  def set_refresh_token_to_cookie(refresh_token)
+    cookies[:refresh_token] = {
+      value: refresh_token,
+      http_only: true
+    }
+  end
 end
