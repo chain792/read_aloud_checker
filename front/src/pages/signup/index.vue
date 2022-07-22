@@ -71,9 +71,11 @@ import Axios from "axios"
 import ErrorMessages from "../../components/shared/ErrorMessages.vue"
 import { useUserStore }  from "../../store/userStore"
 import { useFlashStore } from "../../store/flashStore"
+import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
+const router = useRouter()
 
 
 const valid = ref(true)
@@ -108,6 +110,8 @@ const register = async (): Promise<void> => {
     errorMessages.splice(0)
     const res = await axios.post("users", { user: user })
     userStore.setUser(res.data)
+    flashStore.succeedSignup()
+    router.push({ name: "LoginIndex" })
   } catch(e) {
     if(Axios.isAxiosError(e) && e.response && e.response.data && Array.isArray(e.response.data)){
       e.response.data.forEach(v => {
