@@ -56,7 +56,6 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue"
 import axios from "../../plugins/axios"
-import Axios from "axios"
 import ErrorMessages from "../../components/shared/ErrorMessages.vue"
 import { useUserStore }  from "../../store/userStore"
 import { useFlashStore } from "../../store/flashStore"
@@ -90,16 +89,11 @@ const register = async (): Promise<void> => {
   try{
     errorMessages.splice(0)
     const res = await axios.post("login", loginInfo)
+    console.log(res)
     //userStore.setUser(res.data)
+    flashStore.succeedLogin()
   } catch(e) {
-    if(Axios.isAxiosError(e) && e.response && e.response.data && Array.isArray(e.response.data)){
-      e.response.data.forEach(v => {
-        errorMessages.push(v)
-      })
-    }else{
-      console.log(e)
-    }
-    //flashStore.failSignup()
+    flashStore.failLogin()
   }
 }
 
