@@ -26,22 +26,44 @@
           v-for="(item, index) in items"
           :key="index"
           :value="index"
+          @click="item.click"
         >
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
 
-    
   </v-app-bar>
 </template>
 
 <script setup lang="ts">
+import axios from "../../plugins/axios"
+import { useUserStore }  from "../../store/userStore"
+import { useFlashStore } from "../../store/flashStore"
+import { useTokenStore } from "../../store/tokenStore"
+
+const userStore = useUserStore()
+const flashStore = useFlashStore()
+const tokenStore = useTokenStore()
+
 const items = [
-  { title: "マイページ" },
-  { title: "プロフィール" },
-  { title: "ログアウト" },
+  { title: "マイページ", click: logout },
+  { title: "プロフィール", click: logout },
+  { title: "ログアウト", click: logout },
 ]
+
+async function logout(): Promise<void>{
+  try{
+    await axios.delete("logout")
+    userStore.$reset()
+    tokenStore.$reset()
+    flashStore.succeedLogout()
+  } catch(e) {
+    console.log(e)
+    flashStore.failLogout()
+  }
+}
+
 </script>
 
 <style scoped>

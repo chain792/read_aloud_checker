@@ -13,4 +13,8 @@ class Api::V1::SessionsController < ApplicationController
       head :unauthorized
     end
   end
+
+  def destroy
+    cookies.delete(:refresh_token)
+  end
 end
