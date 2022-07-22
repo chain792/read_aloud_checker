@@ -18,7 +18,7 @@
           color="rgba(0,200,255,1)"
           v-bind="props"
         >
-          <img src="../../public/cat.jpeg" alt="">
+          <img src="/public/cat.jpeg" alt="">
         </v-btn>
       </template>
       <v-list>
