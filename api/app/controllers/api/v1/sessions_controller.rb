@@ -14,6 +14,18 @@ class Api::V1::SessionsController < ApplicationController
     end
   end
 
+  def refresh
+    refresh_token = cookies[:refresh_token]
+    user = User.load_from_refresh_token(refresh_token)
+
+    if user
+      access_token = user.create_access_token.transform_keys{|k| k.to_s.camelize(:lower)}
+      render json: access_token.merge(user: UserResource.new(user).serialize)
+    else
+      head :unauthorized
+    end
+  end
+
   def destroy
     cookies.delete(:refresh_token)
   end

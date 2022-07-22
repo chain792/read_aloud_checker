@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw, RouteLocationNormalized } from "vue-router"
 import TopIndex from "../pages/top/index.vue"
 import { useUserStore } from "../store/userStore"
+import { silentRefresh } from "../common/refresh"
 
 const TestIndex = () => import("../pages/test/index.vue")
 const SignupIndex = () => import("../pages/signup/index.vue")
@@ -35,7 +36,8 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to: RouteLocationNormalized) => {
+router.beforeEach(async (to: RouteLocationNormalized) => {
+  await silentRefresh()
   const authUser = useUserStore().authUser
   if (to.matched.some(record => record.meta.requiresAuth) && !authUser) {
     return { name: "LoginIndex" }

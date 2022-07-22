@@ -56,7 +56,8 @@ const items = [
 
 async function logout(): Promise<void>{
   try{
-    await axios.delete("logout")
+    const res = await axios.delete("logout")
+    console.log(res)
     userStore.$reset()
     tokenStore.$reset()
     flashStore.succeedLogout()
