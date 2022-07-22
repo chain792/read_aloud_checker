@@ -1,5 +1,6 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
+import { createRouter, createWebHistory, RouteRecordRaw, RouteLocationNormalized } from "vue-router"
 import TopIndex from "../pages/top/index.vue"
+import { useUserStore } from "../store/userStore"
 
 const TestIndex = () => import("../pages/test/index.vue")
 const SignupIndex = () => import("../pages/signup/index.vue")
@@ -15,6 +16,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/test",
     name: "TestIndex",
     component: TestIndex,
+    meta: { requiresAuth: true }
   },
   {
     path: "/signup",
@@ -31,6 +33,13 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+})
+
+router.beforeEach((to: RouteLocationNormalized) => {
+  const authUser = useUserStore().authUser
+  if (to.matched.some(record => record.meta.requiresAuth) && !authUser) {
+    return { name: "LoginIndex" }
+  }
 })
 
 export default router

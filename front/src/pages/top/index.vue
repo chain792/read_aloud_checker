@@ -3,6 +3,9 @@
   <v-btn flat color="secondary" :size="a" class="ma-lg-5" @click="axiosTest">
     Secondary
   </v-btn>
+  <v-btn flat color="secondary" :size="a" class="ma-lg-5" to="/test">
+    test
+  </v-btn>
 </template>
 
 <script setup lang="ts">
