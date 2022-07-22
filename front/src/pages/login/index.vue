@@ -59,9 +59,11 @@ import axios from "../../plugins/axios"
 import ErrorMessages from "../../components/shared/ErrorMessages.vue"
 import { useUserStore }  from "../../store/userStore"
 import { useFlashStore } from "../../store/flashStore"
+import { useTokenStore } from "../../store/tokenStore"
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
+const tokenStore = useTokenStore()
 
 
 const valid = ref(true)
@@ -89,8 +91,8 @@ const register = async (): Promise<void> => {
   try{
     errorMessages.splice(0)
     const res = await axios.post("login", loginInfo)
-    console.log(res)
-    //userStore.setUser(res.data)
+    userStore.setUser(res.data.user)
+    tokenStore.setToken(res.data.token, res.data.expiredTime)
     flashStore.succeedLogin()
   } catch(e) {
     flashStore.failLogin()

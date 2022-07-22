@@ -7,8 +7,8 @@ class Api::V1::SessionsController < ApplicationController
     if user
       refresh_token = user.refresh_me!
       set_refresh_token_to_cookie(refresh_token)
-      access_token = user.create_access_token
-      render json: { token: access_token }
+      access_token = user.create_access_token.transform_keys{|k| k.to_s.camelize(:lower)}
+      render json: access_token.merge(user: UserResource.new(user).serialize)
     else
       head :unauthorized
     end
