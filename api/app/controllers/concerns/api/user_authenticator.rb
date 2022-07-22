@@ -28,7 +28,8 @@ module Api::UserAuthenticator
   def set_refresh_token_to_cookie(refresh_token)
     cookies[:refresh_token] = {
       value: refresh_token,
-      http_only: true
+      http_only: true,
+      secure: true,
     }
   end
 end
