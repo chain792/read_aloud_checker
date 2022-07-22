@@ -41,10 +41,12 @@ import axios from "../../plugins/axios"
 import { useUserStore }  from "../../store/userStore"
 import { useFlashStore } from "../../store/flashStore"
 import { useTokenStore } from "../../store/tokenStore"
+import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
 const tokenStore = useTokenStore()
+const router = useRouter()
 
 const items = [
   { title: "マイページ", click: logout },
@@ -58,6 +60,7 @@ async function logout(): Promise<void>{
     userStore.$reset()
     tokenStore.$reset()
     flashStore.succeedLogout()
+    router.push({ name: "TopIndex" })
   } catch(e) {
     console.log(e)
     flashStore.failLogout()
