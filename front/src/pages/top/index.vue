@@ -25,9 +25,11 @@ const axiosTest = () => {
   axios
     .get("users")
     .then((res) => {
+      console.log('success')
       console.log(res)
     })
     .catch((e) => {
+      console.log('fail')
       console.log(e)
     })
 }
