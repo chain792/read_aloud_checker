@@ -6,6 +6,7 @@ const axiosInstance: AxiosInstance = axios.create({
   baseURL: "http://localhost:8000/api/v1",
   headers: {
     "Content-type": "application/json",
+    'X-Requested-With': 'XMLHttpRequest'
   },
   withCredentials: true
 })
