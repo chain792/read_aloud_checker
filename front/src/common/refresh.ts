@@ -9,6 +9,7 @@ export async function refresh(): Promise<void> {
     const res = await axios.post("http://localhost:8000/api/v1/refresh", "", {
       headers: {
         "Content-type": "application/json",
+        'X-Requested-With': 'XMLHttpRequest'
       },
       withCredentials: true
     })
