@@ -1,6 +1,10 @@
 class Api::V1::UsersController < ApplicationController
+  skip_before_action :authenticate!, only: %i[create]
   def index
-    render json: 'Hello User Index'
+    p '------------------------'
+    p 'index'
+    p '------------------------'
+    render json: current_user
   end
 
   def create

@@ -23,5 +23,25 @@ export const useFlashStore = defineStore("flash", {
       this.message = "ユーザー登録に失敗しました"
       this.color = "red-accent-3"
     },
+    succeedLogin(): void {
+      this.status = true
+      this.message = "ログインしました"
+      this.color = "green-accent-4"
+    },
+    failLogin(): void {
+      this.status = true
+      this.message = "ログインに失敗しました"
+      this.color = "red-accent-3"
+    },
+    succeedLogout(): void {
+      this.status = true
+      this.message = "ログアウトしました"
+      this.color = "green-accent-4"
+    },
+    failLogout(): void {
+      this.status = true
+      this.message = "ログアウトに失敗しました"
+      this.color = "red-accent-3"
+    },
   },
 })

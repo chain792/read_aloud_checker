@@ -15,6 +15,7 @@
       variant="text"
       class="mr-2 font-weight-bold"
       rounded="xl"
+      :to="{ name: 'LoginIndex' }"
     >
       ログイン
     </v-btn>
