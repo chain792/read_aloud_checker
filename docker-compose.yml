@@ -19,6 +19,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
       API_DOMAIN: "localhost:$FRONT_PORT"
+      EDITOR: vim
     ports:
       - "$API_PORT:$CONTAINER_PORT"
     depends_on:

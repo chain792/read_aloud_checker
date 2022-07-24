@@ -27,6 +27,7 @@ api/config/master.key
 
 api/.cache
 api/.irb_history
+api/.viminfo
 
 
 # front側の設定
