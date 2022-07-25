@@ -43,7 +43,7 @@
           color="success"
           class="mr-4"
           width="400"
-          @click="register"
+          @click="login"
         >
           ログイン
         </v-btn>
@@ -87,7 +87,7 @@ const isVisiblePassword = ref(false)
 
 let errorMessages: string[] = reactive([])
 
-const register = async (): Promise<void> => {
+const login = async (): Promise<void> => {
   try{
     errorMessages.splice(0)
     const res = await axios.post("login", loginInfo)
