@@ -8,7 +8,7 @@
 
     <v-spacer></v-spacer>
 
-    <router-link to="#" class="mr-5 text-white font-weight-bold">
+    <router-link :to="{ name: 'SentencesIndex' }" class="mr-5 text-white font-weight-bold">
       英文一覧
     </router-link>
 
