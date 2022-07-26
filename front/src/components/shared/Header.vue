@@ -12,6 +12,10 @@
       英文一覧
     </router-link>
 
+    <router-link :to="{ name: 'NewSentences' }" class="mr-5 text-white font-weight-bold">
+      英文投稿
+    </router-link>
+
     <v-menu>
       <template v-slot:activator="{ props }">
         <v-btn
