@@ -43,5 +43,15 @@ export const useFlashStore = defineStore("flash", {
       this.message = "ログアウトに失敗しました"
       this.color = "red-accent-3"
     },
+    succeedCreateSentences(): void {
+      this.status = true
+      this.message = "英文を作成しました"
+      this.color = "green-accent-4"
+    },
+    failCreateSentences(): void {
+      this.status = true
+      this.message = "英文の作成に失敗しました"
+      this.color = "red-accent-3"
+    },
   },
 })

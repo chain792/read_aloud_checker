@@ -65,11 +65,9 @@ import { ref, reactive } from "vue"
 import axios from "../../plugins/axios"
 import Axios from "axios"
 import ErrorMessages from "../../components/shared/ErrorMessages.vue"
-import { useUserStore }  from "../../store/userStore"
 import { useFlashStore } from "../../store/flashStore"
 import { useRouter } from 'vue-router'
 
-const userStore = useUserStore()
 const flashStore = useFlashStore()
 const router = useRouter()
 
@@ -93,7 +91,6 @@ const bodyRules = [
 ]
 
 
-
 let errorMessages: string[] = reactive([])
 
 const createSentences = async (): Promise<void> => {
@@ -101,8 +98,7 @@ const createSentences = async (): Promise<void> => {
     errorMessages.splice(0)
     const res = await axios.post("sentences", { sentence: sentence })
     console.log(res)
-    // userStore.setUser(res.data)
-    // flashStore.succeedSignup()
+    flashStore.succeedCreateSentences()
     // router.push({ name: "LoginIndex" })
   } catch(e) {
     if(Axios.isAxiosError(e) && e.response && e.response.data && Array.isArray(e.response.data)){
@@ -112,7 +108,7 @@ const createSentences = async (): Promise<void> => {
     }else{
       console.log(e)
     }
-    //lashStore.failSignup()
+    flashStore.failCreateSentences()
   }
 }
 
