@@ -5,7 +5,7 @@ class CreateSentences < ActiveRecord::Migration[6.1]
       t.references :creater, null: false, polymorphic: true
       t.string :title
       t.text :body
-      t.integer :status
+      t.integer :status, default: 0
 
       t.timestamps
     end

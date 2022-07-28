@@ -37,11 +37,11 @@
         <v-radio-group v-model="sentence.status">
           <v-radio
             label="公開する"
-            :value="1"
+            :value="0"
           ></v-radio>
           <v-radio
             label="公開しない"
-            :value="2"
+            :value="1"
           ></v-radio>
         </v-radio-group>
 
@@ -79,7 +79,7 @@ const valid = ref(true)
 const sentence = reactive({
   title: "",
   body: "",
-  status: 1
+  status: 0
 })
 
 const titleRules = [

@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(version: 2022_07_26_082755) do
     t.bigint "creater_id", null: false
     t.string "title"
     t.text "body"
-    t.integer "status"
+    t.integer "status", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["creater_type", "creater_id"], name: "index_sentences_on_creater"
