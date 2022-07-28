@@ -50,7 +50,7 @@
           color="success"
           class="mr-4"
           width="800"
-          @click="register"
+          @click="createSentences"
         >
           投稿
         </v-btn>
@@ -96,7 +96,7 @@ const bodyRules = [
 
 let errorMessages: string[] = reactive([])
 
-const register = async (): Promise<void> => {
+const createSentences = async (): Promise<void> => {
   try{
     errorMessages.splice(0)
     const res = await axios.post("sentences", { sentence: sentence })

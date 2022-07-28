@@ -1,6 +1,11 @@
 class Api::V1::SentencesController < ApplicationController
   before_action :sentence_params, only: %i[create]
 
+  def index
+    sentences = Sentence.public_state.where(creater_type: 'User').order(created_at: :desc)
+    render json: SentenceResource.new(sentences).serialize
+  end
+
   def create
     sentence = current_user.sentences.build(sentence_params)
     if sentence.save
