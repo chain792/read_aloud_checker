@@ -15,9 +15,9 @@ ActiveRecord::Schema.define(version: 2022_07_26_082755) do
   create_table "sentences", id: { type: :string, limit: 36 }, charset: "utf8mb4", force: :cascade do |t|
     t.string "creater_type", null: false
     t.bigint "creater_id", null: false
-    t.string "title"
-    t.text "body"
-    t.integer "status", default: 0
+    t.string "title", null: false
+    t.text "body", null: false
+    t.integer "status", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["creater_type", "creater_id"], name: "index_sentences_on_creater"
