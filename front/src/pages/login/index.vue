@@ -43,7 +43,7 @@
           color="success"
           class="mr-4"
           width="400"
-          @click="register"
+          @click="login"
         >
           ログイン
         </v-btn>
@@ -60,10 +60,12 @@ import ErrorMessages from "../../components/shared/ErrorMessages.vue"
 import { useUserStore }  from "../../store/userStore"
 import { useFlashStore } from "../../store/flashStore"
 import { useTokenStore } from "../../store/tokenStore"
+import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
 const tokenStore = useTokenStore()
+const router = useRouter()
 
 
 const valid = ref(true)
@@ -87,13 +89,15 @@ const isVisiblePassword = ref(false)
 
 let errorMessages: string[] = reactive([])
 
-const register = async (): Promise<void> => {
+const login = async (): Promise<void> => {
+  flashStore.$reset()
   try{
     errorMessages.splice(0)
     const res = await axios.post("login", loginInfo)
     userStore.setUser(res.data.user)
     tokenStore.setToken(res.data.token, res.data.expiredTime)
     flashStore.succeedLogin()
+    router.push({ name: "SentencesIndex" })
   } catch(e) {
     flashStore.failLogin()
   }

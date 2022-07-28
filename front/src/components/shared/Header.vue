@@ -8,8 +8,12 @@
 
     <v-spacer></v-spacer>
 
-    <router-link to="#" class="mr-5 text-white font-weight-bold">
+    <router-link :to="{ name: 'SentencesIndex' }" class="mr-5 text-white font-weight-bold">
       英文一覧
+    </router-link>
+
+    <router-link :to="{ name: 'NewSentences' }" class="mr-5 text-white font-weight-bold">
+      英文投稿
     </router-link>
 
     <v-menu>
@@ -55,9 +59,9 @@ const items = [
 ]
 
 async function logout(): Promise<void>{
+  flashStore.$reset()
   try{
-    const res = await axios.delete("logout")
-    console.log(res)
+    await axios.delete("logout")
     userStore.$reset()
     tokenStore.$reset()
     flashStore.succeedLogout()

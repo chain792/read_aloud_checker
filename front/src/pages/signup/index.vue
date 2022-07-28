@@ -71,10 +71,12 @@ import Axios from "axios"
 import ErrorMessages from "../../components/shared/ErrorMessages.vue"
 import { useUserStore }  from "../../store/userStore"
 import { useFlashStore } from "../../store/flashStore"
+import { useTokenStore } from "../../store/tokenStore"
 import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
+const tokenStore = useTokenStore()
 const router = useRouter()
 
 
@@ -106,12 +108,14 @@ const isVisiblePassword = ref(false)
 let errorMessages: string[] = reactive([])
 
 const register = async (): Promise<void> => {
+  flashStore.$reset()
   try{
     errorMessages.splice(0)
     const res = await axios.post("users", { user: user })
-    userStore.setUser(res.data)
+    userStore.setUser(res.data.user)
+    tokenStore.setToken(res.data.token, res.data.expiredTime)
     flashStore.succeedSignup()
-    router.push({ name: "LoginIndex" })
+    router.push({ name: "SentencesIndex" })
   } catch(e) {
     if(Axios.isAxiosError(e) && e.response && e.response.data && Array.isArray(e.response.data)){
       e.response.data.forEach(v => {
