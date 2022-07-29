@@ -1,24 +1,35 @@
 <template>
-  <v-card>
-    <v-card-text>news sentences</v-card-text>
+  <v-card v-for="sentence in sentences" :key="sentence" class="my-3 mx-10">
+    <v-card-text>{{ sentence.title }}</v-card-text>
   </v-card>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive } from "vue"
 import axios from "../../../plugins/axios"
-import ErrorMessages from "../../../components/shared/ErrorMessages.vue"
-import { useUserStore }  from "../../../store/userStore"
-import { useFlashStore } from "../../../store/flashStore"
-import { useTokenStore } from "../../../store/tokenStore"
-
-const userStore = useUserStore()
-const flashStore = useFlashStore()
-const tokenStore = useTokenStore()
 
 
+interface Sentence {
+  title: string
+}
 
+const sentences: Array<Sentence> = reactive([])
 
+const fetchSentences = async (): Promise<void> => {
+  try{
+    const res = await axios.get("news_sentences")
+    console.log(res)
+    res.data.map((sentence: Sentence) => {
+      sentences.push({
+        title: sentence.title
+      })
+    })
+    // router.push({ name: "LoginIndex" })
+  } catch(e) {
+    console.log(e)
+  }
+}
+fetchSentences()
 
 
 
