@@ -17,7 +17,7 @@ const sentences: Array<Sentence> = reactive([])
 
 const fetchSentences = async (): Promise<void> => {
   try{
-    const res = await axios.get("sentences")
+    const res = await axios.get("user_sentences")
     console.log(res)
     res.data.map((sentence: Sentence) => {
       sentences.push({

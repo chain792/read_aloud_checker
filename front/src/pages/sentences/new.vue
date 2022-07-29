@@ -96,7 +96,7 @@ let errorMessages: string[] = reactive([])
 const createSentences = async (): Promise<void> => {
   try{
     errorMessages.splice(0)
-    const res = await axios.post("sentences", { sentence: sentence })
+    const res = await axios.post("user/sentences", { sentence: sentence })
     console.log(res)
     flashStore.succeedCreateSentences()
     // router.push({ name: "LoginIndex" })
