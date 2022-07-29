@@ -10,7 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_26_082755) do
+ActiveRecord::Schema.define(version: 2022_07_29_065710) do
+
+  create_table "news", charset: "utf8mb4", force: :cascade do |t|
+    t.string "title", null: false
+    t.bigint "news_category_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["news_category_id"], name: "index_news_on_news_category_id"
+  end
+
+  create_table "news_categories", charset: "utf8mb4", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "sentences", id: { type: :string, limit: 36 }, charset: "utf8mb4", force: :cascade do |t|
     t.string "creater_type", null: false
@@ -41,4 +55,5 @@ ActiveRecord::Schema.define(version: 2022_07_26_082755) do
     t.index ["refresh_token"], name: "index_users_on_refresh_token", unique: true
   end
 
+  add_foreign_key "news", "news_categories"
 end
