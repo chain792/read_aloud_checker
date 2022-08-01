@@ -14,7 +14,7 @@
       <v-btn :border="true" @click="skipWord">パス</v-btn>
     </div>
     <div v-else class="mt-5 d-flex justify-center">
-      <v-btn :border="true" @click="stopReadAloud">再音読する</v-btn>
+      <v-btn :border="true" @click="replayReadAloud">再音読する</v-btn>
       <v-btn :border="true">音声を保存する</v-btn>
     </div>
   </v-container>
@@ -40,12 +40,14 @@ const isPlaying = ref(false)
 
 const isFinished = ref(false)
 
+let sentenceBodyBeforeReadAloud: string
+
 
 const fetchSentence = async (): Promise<void> => {
   try{
     const res = await axios.get(`sentences/${props.id}`)
     sentence.value = res.data
-    //sentence.value.body = `<span class="red">aaa<span>`
+    sentenceBodyBeforeReadAloud = sentence.value.body
   } catch(e) {
     console.log(e)
   }
@@ -59,12 +61,12 @@ const startReadAloud = (): void => {
 
 let recognition: any
 let wordCount = 0
-let sentenceWords: Array<string> = []
+let sentenceWords: Array<string>
 let failedTimes = 0
 //音読でタイピングゲーム
 const playReadAloud = (): void => {
   const Recognition = window.webkitSpeechRecognition || window.SpeechRecognition;
-  sentenceWords = sentence.value.body.split(' ')
+  sentenceWords = sentenceBodyBeforeReadAloud.split(' ')
   let isSucceeded = false
   recognition = new Recognition();
   recognition.lang = 'en-US'
@@ -128,6 +130,14 @@ const skipWord = (): void => {
   if(wordCount === sentenceWords.length){
     recognition.stop()
   }
+}
+
+const replayReadAloud = (): void => {
+  wordCount = 0
+  failedTimes = 0
+  sentence.value.body = sentenceBodyBeforeReadAloud
+  isFinished.value = false
+  playReadAloud()
 }
 
 </script>
