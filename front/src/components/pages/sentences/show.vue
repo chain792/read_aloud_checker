@@ -1,46 +1,37 @@
 <template>
-<div>
- 
-</div>
-<div>
-
-</div>
-<div>
-
-</div>
-<div>
-  {{ id }}
-</div>
+  <div>
+    {{ sentence.title }}
+  </div>
+  <div>
+    {{ sentence.body }}
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue"
+import { ref } from "vue"
 import { useRoute } from "vue-router"
 import axios from "@/plugins/axios"
-import ErrorMessages from "@/components/shared/ErrorMessages.vue"
-import { useUserStore }  from "@/store/userStore"
-import { useFlashStore } from "@/store/flashStore"
-import { useTokenStore } from "@/store/tokenStore"
-import NewsSentences from "./components/NewsSentences.vue"
-import UserSentences from "./components/UserSentences.vue"
-
-
-const userStore = useUserStore()
-const flashStore = useFlashStore()
-const tokenStore = useTokenStore()
-
 
 interface Props {
   id: string
 }
+
 const props = defineProps<Props>()
-console.log(props.id)
+const sentence = ref({
+  id: "",
+  title: "",
+  body: ""
+})
 
-
-
-
-
-
+const fetchSentence = async (): Promise<void> => {
+  try{
+    const res = await axios.get(`sentences/${props.id}`)
+    sentence.value = res.data
+  } catch(e) {
+    console.log(e)
+  }
+}
+fetchSentence()
 
 
 </script>
