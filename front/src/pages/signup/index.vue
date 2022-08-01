@@ -115,7 +115,7 @@ const register = async (): Promise<void> => {
     userStore.setUser(res.data.user)
     tokenStore.setToken(res.data.token, res.data.expiredTime)
     flashStore.succeedSignup()
-    router.push({ name: "SentencesIndex" })
+    router.push({ name: "Sentences" })
   } catch(e) {
     if(Axios.isAxiosError(e) && e.response && e.response.data && Array.isArray(e.response.data)){
       e.response.data.forEach(v => {

@@ -97,7 +97,7 @@ const login = async (): Promise<void> => {
     userStore.setUser(res.data.user)
     tokenStore.setToken(res.data.token, res.data.expiredTime)
     flashStore.succeedLogin()
-    router.push({ name: "SentencesIndex" })
+    router.push({ name: "Sentences" })
   } catch(e) {
     flashStore.failLogin()
   }

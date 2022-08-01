@@ -6,8 +6,8 @@ import { silentRefresh } from "../common/refresh"
 const TestIndex = () => import("../pages/test/index.vue")
 const SignupIndex = () => import("../pages/signup/index.vue")
 const LoginIndex = () => import("../pages/login/index.vue")
-const SentencesIndex = () => import("../pages/sentences/index.vue")
-const NewSentences = () => import("../pages/sentences/new.vue")
+const Sentences = () => import("../pages/sentences/index.vue")
+const NewSentence = () => import("../pages/sentences/new.vue")
 const Sentence = () => import("../pages/sentences/show.vue")
 
 const routes: Array<RouteRecordRaw> = [
@@ -34,13 +34,13 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/sentences",
-    name: "SentencesIndex",
-    component: SentencesIndex,
+    name: "Sentences",
+    component: Sentences,
   },
   {
     path: "/sentences/new",
-    name: "NewSentences",
-    component: NewSentences,
+    name: "NewSentence",
+    component: NewSentence,
   },
   {
     path: "/sentences/:id",
