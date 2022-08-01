@@ -9,9 +9,13 @@
     <div v-if="!isPlaying" class="mt-5 d-flex justify-center">
       <v-btn :border="true" @click="startReadAloud">音読開始</v-btn>
     </div>
-    <div v-else class="mt-5 d-flex justify-center">
-      <v-btn :border="true">音読を終了する</v-btn>
+    <div v-else-if="!isFinished" class="mt-5 d-flex justify-center">
+      <v-btn :border="true" @click="stopReadAloud">音読を終了する</v-btn>
       <v-btn :border="true">パス</v-btn>
+    </div>
+    <div v-else class="mt-5 d-flex justify-center">
+      <v-btn :border="true" @click="stopReadAloud">再音読する</v-btn>
+      <v-btn :border="true">音声を保存する</v-btn>
     </div>
   </v-container>
 </template>
@@ -25,11 +29,17 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+
 const sentence = ref({
   id: "",
   title: "",
   body: ""
 })
+
+const isPlaying = ref(false)
+
+const isFinished = ref(false)
+
 
 const fetchSentence = async (): Promise<void> => {
   try{
@@ -42,19 +52,20 @@ const fetchSentence = async (): Promise<void> => {
 }
 fetchSentence()
 
-const isPlaying = ref(false)
 const startReadAloud = (): void => {
   isPlaying.value = true
   playReadAloud()
 }
 
+let recognition: any
+//音読でタイピングゲーム
 const playReadAloud = (): void => {
   const Recognition = window.webkitSpeechRecognition || window.SpeechRecognition;
   const sentenceWords = sentence.value.body.split(' ')
   let wordCount = 0
   let isSucceeded = false
   let failedTimes = 0
-  const recognition = new Recognition();
+  recognition = new Recognition();
   recognition.lang = 'en-US'
   recognition.interimResults = true;
   recognition.continuous = true;
@@ -63,6 +74,11 @@ const playReadAloud = (): void => {
       if (event.results[i].isFinal) {
         //
       } else { 
+        if(wordCount === sentenceWords.length){
+          recognition.stop()
+          break
+        }
+
         const result = event.results[i][0]
         if (!result) continue
 
@@ -71,7 +87,7 @@ const playReadAloud = (): void => {
         console.log(transcriptWords)
         isSucceeded=false
         for(let j = 0; j < transcriptWords.length; j++){
-          if(sentenceWords[wordCount].toLowerCase() === transcriptWords[j].toLowerCase()){
+          if(sentenceWords[wordCount]?.toLowerCase() === transcriptWords[j].toLowerCase()){
             isSucceeded = true
             failedTimes = 0
             sentenceWords[wordCount] = `<span class="gray">${sentenceWords[wordCount]}</span>`
@@ -92,15 +108,16 @@ const playReadAloud = (): void => {
     }
   }
   recognition.onaudioend = (event) =>{
-    console.log(event)
-  }
-  recognition.onspeechend = (event) =>{
+    isFinished.value = true
     console.log(event)
   }
 
   recognition.start()
 }
 
+const stopReadAloud = (): void => {
+  recognition.stop()
+}
 
 
 </script>
