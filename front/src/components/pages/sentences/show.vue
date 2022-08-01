@@ -11,7 +11,7 @@
     </div>
     <div v-else-if="!isFinished" class="mt-5 d-flex justify-center">
       <v-btn :border="true" @click="stopReadAloud">音読を終了する</v-btn>
-      <v-btn :border="true">パス</v-btn>
+      <v-btn :border="true" @click="skipWord">パス</v-btn>
     </div>
     <div v-else class="mt-5 d-flex justify-center">
       <v-btn :border="true" @click="stopReadAloud">再音読する</v-btn>
@@ -58,13 +58,14 @@ const startReadAloud = (): void => {
 }
 
 let recognition: any
+let wordCount = 0
+let sentenceWords: Array<string> = []
+let failedTimes = 0
 //音読でタイピングゲーム
 const playReadAloud = (): void => {
   const Recognition = window.webkitSpeechRecognition || window.SpeechRecognition;
-  const sentenceWords = sentence.value.body.split(' ')
-  let wordCount = 0
+  sentenceWords = sentence.value.body.split(' ')
   let isSucceeded = false
-  let failedTimes = 0
   recognition = new Recognition();
   recognition.lang = 'en-US'
   recognition.interimResults = true;
@@ -119,6 +120,15 @@ const stopReadAloud = (): void => {
   recognition.stop()
 }
 
+const skipWord = (): void => {
+  failedTimes = 0
+  sentenceWords[wordCount] = `<span class="red">${sentenceWords[wordCount]}</span>`
+  sentence.value.body = sentenceWords.join(' ')
+  wordCount++
+  if(wordCount === sentenceWords.length){
+    recognition.stop()
+  }
+}
 
 </script>
 
