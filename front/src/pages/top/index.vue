@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import { computed } from "vue"
 import { useDisplay } from "vuetify"
-import axios from "../../plugins/axios"
+import axios from "@/plugins/axios"
 const display = useDisplay()
 const a = computed(() => {
   if (display.md.value) {

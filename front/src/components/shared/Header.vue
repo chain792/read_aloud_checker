@@ -41,10 +41,10 @@
 </template>
 
 <script setup lang="ts">
-import axios from "../../plugins/axios"
-import { useUserStore }  from "../../store/userStore"
-import { useFlashStore } from "../../store/flashStore"
-import { useTokenStore } from "../../store/tokenStore"
+import axios from "@/plugins/axios"
+import { useUserStore }  from "@/store/userStore"
+import { useFlashStore } from "@/store/flashStore"
+import { useTokenStore } from "@/store/tokenStore"
 import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()

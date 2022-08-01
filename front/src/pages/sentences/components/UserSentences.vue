@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { reactive } from "vue"
-import axios from "../../../plugins/axios"
+import axios from "@/plugins/axios"
 
 
 interface Sentence {

@@ -62,10 +62,10 @@
 
 <script setup lang="ts">
 import { ref, reactive } from "vue"
-import axios from "../../plugins/axios"
+import axios from "@/plugins/axios"
 import Axios from "axios"
-import ErrorMessages from "../../components/shared/ErrorMessages.vue"
-import { useFlashStore } from "../../store/flashStore"
+import ErrorMessages from "@/components/shared/ErrorMessages.vue"
+import { useFlashStore } from "@/store/flashStore"
 import { useRouter } from 'vue-router'
 
 const flashStore = useFlashStore()

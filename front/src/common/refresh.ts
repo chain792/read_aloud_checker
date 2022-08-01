@@ -1,6 +1,6 @@
 import axios from "axios"
-import { useUserStore } from "../store/userStore"
-import { useTokenStore } from "../store/tokenStore"
+import { useUserStore } from "@/store/userStore"
+import { useTokenStore } from "@/store/tokenStore"
 
 export async function refresh(): Promise<void> {
   const tokenStore = useTokenStore()
