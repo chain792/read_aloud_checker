@@ -1,14 +1,14 @@
 import { createRouter, createWebHistory, RouteRecordRaw, RouteLocationNormalized } from "vue-router"
-import TopIndex from "../pages/top/index.vue"
-import { useUserStore } from "../store/userStore"
-import { silentRefresh } from "../common/refresh"
+import TopIndex from "@/components/pages/top/index.vue"
+import { useUserStore } from "@/store/userStore"
+import { silentRefresh } from "@/common/refresh"
 
-const TestIndex = () => import("../pages/test/index.vue")
-const SignupIndex = () => import("../pages/signup/index.vue")
-const LoginIndex = () => import("../pages/login/index.vue")
-const Sentences = () => import("../pages/sentences/index.vue")
-const NewSentence = () => import("../pages/sentences/new.vue")
-const Sentence = () => import("../pages/sentences/show.vue")
+const TestIndex = () => import("@/components/pages/test/index.vue")
+const SignupIndex = () => import("@/components/pages/signup/index.vue")
+const LoginIndex = () => import("@/components/pages/login/index.vue")
+const Sentences = () => import("@/components/pages/sentences/index.vue")
+const NewSentence = () => import("@/components/pages/sentences/new.vue")
+const Sentence = () => import("@/components/pages/sentences/show.vue")
 
 const routes: Array<RouteRecordRaw> = [
   {
