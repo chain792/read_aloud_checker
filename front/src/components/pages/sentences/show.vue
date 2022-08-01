@@ -1,10 +1,19 @@
 <template>
-  <div>
-    {{ sentence.title }}
-  </div>
-  <div>
-    {{ sentence.body }}
-  </div>
+  <v-container>
+    <h1 class="text-center text-h5">{{ sentence.title }}</h1>
+    <v-card variant="outlined" :elevation="2" class="mx-auto mt-5 px-5 py-3">
+      <v-card-text class="mt-3 text-h6 sentence-body">
+        {{ sentence.body }}
+      </v-card-text>
+    </v-card>
+    <div v-if="!isPlaying" class="mt-5 d-flex justify-center">
+      <v-btn :border="true" @click="startReadAloud">音読開始</v-btn>
+    </div>
+    <div v-else class="mt-5 d-flex justify-center">
+      <v-btn :border="true" @click="playReadAloud">音読を終了する</v-btn>
+      <v-btn :border="true" @click="playReadAloud">パス</v-btn>
+    </div>
+  </v-container>
 </template>
 
 <script setup lang="ts">
@@ -33,8 +42,22 @@ const fetchSentence = async (): Promise<void> => {
 }
 fetchSentence()
 
+const isPlaying = ref(false)
+const startReadAloud = (): void => {
+  isPlaying.value = true
+  playReadAloud()
+}
+
+const playReadAloud = (): void => {
+}
+
+
 
 </script>
 
 <style scoped>
+.sentence-body{
+  font-weight: 350;
+  line-height: 1.5;
+}
 </style>
