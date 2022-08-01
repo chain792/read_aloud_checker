@@ -1,15 +1,18 @@
 <template>
-  <v-card v-for="sentence in sentences" :key="sentence" class="my-3 mx-10">
-    <v-card-text>{{ sentence.title }}</v-card-text>
+  <v-card v-for="sentence in sentences" :key="sentence.id" class="my-3 mx-10">
+    <router-link :to="{ name: 'Sentence', params: { id: sentence.id } }" class="text-decoration-none">
+      <v-card-text>{{ sentence.title }}</v-card-text>
+    </router-link>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue"
+import { reactive } from "vue"
 import axios from "../../../plugins/axios"
 
 
 interface Sentence {
+  id: string
   title: string
 }
 
@@ -21,18 +24,15 @@ const fetchSentences = async (): Promise<void> => {
     console.log(res)
     res.data.map((sentence: Sentence) => {
       sentences.push({
+        id: sentence.id,
         title: sentence.title
       })
     })
-    // router.push({ name: "LoginIndex" })
   } catch(e) {
     console.log(e)
   }
 }
 fetchSentences()
-
-
-
 
 </script>
 

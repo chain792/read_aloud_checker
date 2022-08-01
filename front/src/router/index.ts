@@ -8,6 +8,7 @@ const SignupIndex = () => import("../pages/signup/index.vue")
 const LoginIndex = () => import("../pages/login/index.vue")
 const SentencesIndex = () => import("../pages/sentences/index.vue")
 const NewSentences = () => import("../pages/sentences/new.vue")
+const Sentence = () => import("../pages/sentences/show.vue")
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -40,6 +41,12 @@ const routes: Array<RouteRecordRaw> = [
     path: "/sentences/new",
     name: "NewSentences",
     component: NewSentences,
+  },
+  {
+    path: "/sentences/:id",
+    name: "Sentence",
+    component: Sentence,
+    props: true
   },
 ]
 
