@@ -4,6 +4,7 @@ class Training < ApplicationRecord
   belongs_to :user
   belongs_to :sentence
   has_many :result_words, dependent: :destroy
+  accepts_nested_attributes_for :result_words
 
   validates :word_count, presence: true
 end

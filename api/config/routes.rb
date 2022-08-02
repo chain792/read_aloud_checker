@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       resources :news_sentences, only: %i[index]
       namespace :user do
         resources :sentences, only: %i[create]
+        resources :trainings, only: %i[create]
       end
       post 'login', to: 'sessions#create'
       post 'refresh', to: 'sessions#refresh'
