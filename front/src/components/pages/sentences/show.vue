@@ -82,11 +82,6 @@ const playReadAloud = (): void => {
       if (event.results[i].isFinal) {
         //
       } else { 
-        if(wordCount === sentenceWords.length){
-          recognition.stop()
-          break
-        }
-
         const result = event.results[i][0]
         if (!result) continue
 
@@ -95,7 +90,7 @@ const playReadAloud = (): void => {
         console.log(transcriptWords)
         isSucceeded=false
         for(let j = 0; j < transcriptWords.length; j++){
-          if(sentenceWords[wordCount]?.toLowerCase() === transcriptWords[j].toLowerCase()){
+          if(wordCount < sentenceWords.length && sentenceWords[wordCount].toLowerCase() === transcriptWords[j].toLowerCase()){
             isSucceeded = true
             failedTimes = 0
             sentenceWords[wordCount] = `<span class="gray">${sentenceWords[wordCount]}</span>`
@@ -106,12 +101,16 @@ const playReadAloud = (): void => {
         if(!isSucceeded){
           failedTimes++
         }
-        if(failedTimes > 5){
+        if(wordCount < sentenceWords.length && failedTimes > 5){
           failedTimes = 0
           failedWords.push(sentenceWords[wordCount])
           sentenceWords[wordCount] = `<span class="red">${sentenceWords[wordCount]}</span>`
           sentence.value.body = sentenceWords.join(' ')
           wordCount++
+        }
+        if(wordCount === sentenceWords.length){
+          recognition.stop()
+          break
         }
       }
     }
