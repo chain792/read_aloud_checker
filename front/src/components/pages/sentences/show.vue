@@ -60,11 +60,16 @@ const startReadAloud = (): void => {
 }
 
 let recognition: any
-let wordCount = 0
+let wordCount: number
+let failedWords: Array<string>
 let sentenceWords: Array<string>
-let failedTimes = 0
+let failedTimes: number
 //音読でタイピングゲーム
 const playReadAloud = (): void => {
+  wordCount = 0
+  failedTimes = 0
+  failedWords = []
+
   const Recognition = window.webkitSpeechRecognition || window.SpeechRecognition;
   sentenceWords = sentenceBodyBeforeReadAloud.split(' ')
   let isSucceeded = false
@@ -103,6 +108,7 @@ const playReadAloud = (): void => {
         }
         if(failedTimes > 5){
           failedTimes = 0
+          failedWords.push(sentenceWords[wordCount])
           sentenceWords[wordCount] = `<span class="red">${sentenceWords[wordCount]}</span>`
           sentence.value.body = sentenceWords.join(' ')
           wordCount++
@@ -113,6 +119,7 @@ const playReadAloud = (): void => {
   recognition.onaudioend = (event) =>{
     isFinished.value = true
     console.log(event)
+    registerReadAloudResult()
   }
 
   recognition.start()
@@ -124,6 +131,7 @@ const stopReadAloud = (): void => {
 
 const skipWord = (): void => {
   failedTimes = 0
+  failedWords.push(sentenceWords[wordCount])
   sentenceWords[wordCount] = `<span class="red">${sentenceWords[wordCount]}</span>`
   sentence.value.body = sentenceWords.join(' ')
   wordCount++
@@ -133,11 +141,29 @@ const skipWord = (): void => {
 }
 
 const replayReadAloud = (): void => {
-  wordCount = 0
-  failedTimes = 0
   sentence.value.body = sentenceBodyBeforeReadAloud
   isFinished.value = false
   playReadAloud()
+}
+
+const registerReadAloudResult = async (): Promise<void> => {
+  const resultWord = failedWords.map((word: string) => {
+    return {
+      word
+    }
+  })
+  try{
+    const res = await axios.post("user/trainings", {
+      training: {
+        sentence_id: props.id,
+        word_count: wordCount,
+        result_words_attributes: resultWord
+      }
+    })
+    console.log(res)
+  } catch(e) {
+    console.log(e)
+  }
 }
 
 </script>
