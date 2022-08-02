@@ -23,6 +23,9 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue"
 import axios from "@/plugins/axios"
+import { useFlashStore } from "@/store/flashStore"
+
+const flashStore = useFlashStore()
 
 interface Props {
   id: string
@@ -52,6 +55,8 @@ const fetchSentence = async (): Promise<void> => {
 fetchSentence()
 
 const startReadAloud = (): void => {
+  flashStore.$reset()
+  flashStore.playReadAloud()
   status.value = "playing"
   playReadAloud()
 }
@@ -113,6 +118,8 @@ const playReadAloud = (): void => {
     }
   }
   recognition.onaudioend = (event) =>{
+    flashStore.$reset()
+    flashStore.finishReadAloud()
     status.value = "finished"
     console.log(event)
     registerReadAloudResult()
@@ -138,8 +145,7 @@ const skipWord = (): void => {
 
 const replayReadAloud = (): void => {
   sentence.value.body = sentenceBodyBeforeReadAloud
-  status.value = "playing"
-  playReadAloud()
+  startReadAloud()
 }
 
 const registerReadAloudResult = async (): Promise<void> => {
@@ -149,14 +155,13 @@ const registerReadAloudResult = async (): Promise<void> => {
     }
   })
   try{
-    const res = await axios.post("user/trainings", {
+    await axios.post("user/trainings", {
       training: {
         sentence_id: props.id,
         word_count: wordCount,
         result_words_attributes: resultWord
       }
     })
-    console.log(res)
   } catch(e) {
     console.log(e)
   }
