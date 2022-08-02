@@ -1,7 +1,7 @@
 <template>
   <v-card width="400" class="mx-auto mt-10 px-5 py-3">
     <v-card-item>
-      <v-card-title class="text-center text-h5">ユーザー登録</v-card-title>
+      <v-card-title class="text-center text-h5">ログイン</v-card-title>
       <v-card-subtitle v-if="errorMessages.length" class="mt-3">
         <ErrorMessages :error-messages="errorMessages" />
       </v-card-subtitle>
@@ -13,18 +13,7 @@
         lazy-validation
       >
         <v-text-field
-          v-model="user.name"
-          label="名前"
-          placeholder="名前を入力"
-          color="blue"
-          density="comfortable"
-          variant="outlined"
-          required
-          :rules="nameRules"
-        ></v-text-field>
-
-        <v-text-field
-          v-model="user.email"
+          v-model="loginInfo.email"
           type="email"
           label="メールアドレス"
           placeholder="メールアドレスを入力"
@@ -36,7 +25,7 @@
         ></v-text-field>
 
         <v-text-field
-          v-model="user.password"
+          v-model="loginInfo.password"
           :type="isVisiblePassword ? 'text' : 'password'"
           label="パスワード"
           placeholder="半角英数字6文字以上"
@@ -54,9 +43,9 @@
           color="success"
           class="mr-4"
           width="400"
-          @click="register"
+          @click="login"
         >
-          登録
+          ログイン
         </v-btn>
 
       </v-form>
@@ -66,12 +55,11 @@
 
 <script setup lang="ts">
 import { ref, reactive } from "vue"
-import axios from "../../plugins/axios"
-import Axios from "axios"
-import ErrorMessages from "../../components/shared/ErrorMessages.vue"
-import { useUserStore }  from "../../store/userStore"
-import { useFlashStore } from "../../store/flashStore"
-import { useTokenStore } from "../../store/tokenStore"
+import axios from "@/plugins/axios"
+import ErrorMessages from "@/components/shared/ErrorMessages.vue"
+import { useUserStore }  from "@/store/userStore"
+import { useFlashStore } from "@/store/flashStore"
+import { useTokenStore } from "@/store/tokenStore"
 import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
@@ -82,16 +70,10 @@ const router = useRouter()
 
 const valid = ref(true)
 
-const user = reactive({
-  name: "",
+const loginInfo = reactive({
   email: "",
   password: ""
 })
-
-const nameRules = [
-  (v: string) => !!v || '名前を入力してください',
-  (v: string) => (v && v.length <= 16) || '16文字以内で入力してください' 
-]
 
 const emailRules = [
   (v: string) => !!v || 'メールアドレスを入力してください',
@@ -107,24 +89,17 @@ const isVisiblePassword = ref(false)
 
 let errorMessages: string[] = reactive([])
 
-const register = async (): Promise<void> => {
+const login = async (): Promise<void> => {
   flashStore.$reset()
   try{
     errorMessages.splice(0)
-    const res = await axios.post("users", { user: user })
+    const res = await axios.post("login", loginInfo)
     userStore.setUser(res.data.user)
     tokenStore.setToken(res.data.token, res.data.expiredTime)
-    flashStore.succeedSignup()
-    router.push({ name: "SentencesIndex" })
+    flashStore.succeedLogin()
+    router.push({ name: "Sentences" })
   } catch(e) {
-    if(Axios.isAxiosError(e) && e.response && e.response.data && Array.isArray(e.response.data)){
-      e.response.data.forEach(v => {
-        errorMessages.push(v)
-      })
-    }else{
-      console.log(e)
-    }
-    flashStore.failSignup()
+    flashStore.failLogin()
   }
 }
 

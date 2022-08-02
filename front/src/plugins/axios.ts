@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios"
-import { silentRefresh } from "../common/refresh"
-import { useTokenStore } from "../store/tokenStore"
+import { silentRefresh } from "@/common/refresh"
+import { useTokenStore } from "@/store/tokenStore"
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: "http://localhost:8000/api/v1",

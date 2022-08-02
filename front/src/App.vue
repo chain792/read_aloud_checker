@@ -23,3 +23,9 @@ const userStore = useUserStore()
 refresh()
 
 </script>
+
+<style>
+body {
+  font-family: 'Meiryo';
+}
+</style>

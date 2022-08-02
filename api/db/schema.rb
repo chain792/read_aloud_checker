@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_29_065710) do
+ActiveRecord::Schema.define(version: 2022_08_02_135739) do
 
   create_table "news", charset: "utf8mb4", force: :cascade do |t|
     t.string "title", null: false
@@ -26,6 +26,14 @@ ActiveRecord::Schema.define(version: 2022_07_29_065710) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "result_words", charset: "utf8mb4", force: :cascade do |t|
+    t.string "training_id", null: false
+    t.string "word", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["training_id"], name: "index_result_words_on_training_id"
+  end
+
   create_table "sentences", id: { type: :string, limit: 36 }, charset: "utf8mb4", force: :cascade do |t|
     t.string "creater_type", null: false
     t.bigint "creater_id", null: false
@@ -35,6 +43,17 @@ ActiveRecord::Schema.define(version: 2022_07_29_065710) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["creater_type", "creater_id"], name: "index_sentences_on_creater"
+  end
+
+  create_table "trainings", id: { type: :string, limit: 36 }, charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "sentence_id", null: false
+    t.string "voice"
+    t.integer "word_count", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["sentence_id"], name: "index_trainings_on_sentence_id"
+    t.index ["user_id"], name: "index_trainings_on_user_id"
   end
 
   create_table "users", charset: "utf8mb4", force: :cascade do |t|
@@ -56,4 +75,7 @@ ActiveRecord::Schema.define(version: 2022_07_29_065710) do
   end
 
   add_foreign_key "news", "news_categories"
+  add_foreign_key "result_words", "trainings"
+  add_foreign_key "trainings", "sentences"
+  add_foreign_key "trainings", "users"
 end

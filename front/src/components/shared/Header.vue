@@ -8,11 +8,11 @@
 
     <v-spacer></v-spacer>
 
-    <router-link :to="{ name: 'SentencesIndex' }" class="mr-5 text-white font-weight-bold">
+    <router-link :to="{ name: 'Sentences' }" class="mr-5 text-white font-weight-bold">
       英文一覧
     </router-link>
 
-    <router-link :to="{ name: 'NewSentences' }" class="mr-5 text-white font-weight-bold">
+    <router-link :to="{ name: 'NewSentence' }" class="mr-5 text-white font-weight-bold">
       英文投稿
     </router-link>
 
@@ -41,10 +41,10 @@
 </template>
 
 <script setup lang="ts">
-import axios from "../../plugins/axios"
-import { useUserStore }  from "../../store/userStore"
-import { useFlashStore } from "../../store/flashStore"
-import { useTokenStore } from "../../store/tokenStore"
+import axios from "@/plugins/axios"
+import { useUserStore }  from "@/store/userStore"
+import { useFlashStore } from "@/store/flashStore"
+import { useTokenStore } from "@/store/tokenStore"
 import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()

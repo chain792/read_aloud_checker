@@ -1,6 +1,4 @@
 class Api::V1::User::SentencesController < ApplicationController
-  before_action :sentence_params, only: %i[create]
-
   def create
     sentence = current_user.sentences.build(sentence_params)
     if sentence.save

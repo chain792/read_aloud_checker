@@ -53,5 +53,15 @@ export const useFlashStore = defineStore("flash", {
       this.message = "英文の作成に失敗しました"
       this.color = "red-accent-3"
     },
+    playReadAloud(): void {
+      this.status = true
+      this.message = "音読を開始しました"
+      this.color = "green-accent-4"
+    },
+    finishReadAloud(): void {
+      this.status = true
+      this.message = "音読を終了しました"
+      this.color = "green-accent-4"
+    },
   },
 })
