@@ -6,10 +6,10 @@
       <div class="sentence-body text-h6" v-html="sentence.body"></div>   
       </v-card-text>
     </v-card>
-    <div v-if="!isPlaying" class="mt-5 d-flex justify-center">
+    <div v-if="status === 'unplayed'" class="mt-5 d-flex justify-center">
       <v-btn :border="true" @click="startReadAloud">音読開始</v-btn>
     </div>
-    <div v-else-if="!isFinished" class="mt-5 d-flex justify-center">
+    <div v-else-if="status === 'playing'" class="mt-5 d-flex justify-center">
       <v-btn :border="true" @click="stopReadAloud">音読を終了する</v-btn>
       <v-btn :border="true" @click="skipWord">パス</v-btn>
     </div>
@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, Ref } from "vue"
 import axios from "@/plugins/axios"
 
 interface Props {
@@ -36,12 +36,9 @@ const sentence = ref({
   body: ""
 })
 
-const isPlaying = ref(false)
-
-const isFinished = ref(false)
+const status: Ref<"unplayed" | "playing" | "finished"> = ref("unplayed")
 
 let sentenceBodyBeforeReadAloud: string
-
 
 const fetchSentence = async (): Promise<void> => {
   try{
@@ -55,7 +52,7 @@ const fetchSentence = async (): Promise<void> => {
 fetchSentence()
 
 const startReadAloud = (): void => {
-  isPlaying.value = true
+  status.value = "playing"
   playReadAloud()
 }
 
@@ -116,7 +113,7 @@ const playReadAloud = (): void => {
     }
   }
   recognition.onaudioend = (event) =>{
-    isFinished.value = true
+    status.value = "finished"
     console.log(event)
     registerReadAloudResult()
   }
@@ -141,7 +138,7 @@ const skipWord = (): void => {
 
 const replayReadAloud = (): void => {
   sentence.value.body = sentenceBodyBeforeReadAloud
-  isFinished.value = false
+  status.value = "playing"
   playReadAloud()
 }
 
