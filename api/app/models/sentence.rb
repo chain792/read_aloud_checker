@@ -2,6 +2,7 @@ class Sentence < ApplicationRecord
   include UuidPk
 
   belongs_to :creater, polymorphic: true
+  has_many :trainings, dependent: :destroy
 
   enum status: { public_state: 0, private_state: 1 }
 
