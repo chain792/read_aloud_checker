@@ -1,6 +1,8 @@
 <template>
   <v-container>
     <h1 class="text-center text-h5">{{ sentence.title }}</h1>
+    <p v-if="status === 'playing'" class="red text-center mt-5">音読中</p>
+    <p v-else-if="status === 'finished'" class="red text-center mt-5">結果</p>
     <v-card variant="outlined" :elevation="2" class="mx-auto mt-5 px-5 py-3">
       <v-card-text class="mt-3">
       <div class="sentence-body text-h6" v-html="sentence.body"></div>   
