@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 2022_08_02_135739) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "result_words", id: { type: :string, limit: 36 }, charset: "utf8mb4", force: :cascade do |t|
+  create_table "result_words", charset: "utf8mb4", force: :cascade do |t|
     t.string "training_id", null: false
     t.string "word", null: false
     t.datetime "created_at", precision: 6, null: false

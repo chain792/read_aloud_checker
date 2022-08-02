@@ -1,7 +1,6 @@
 class CreateResultWords < ActiveRecord::Migration[6.1]
   def change
-    create_table :result_words, id: false do |t|
-      t.string :id, limit: 36, primary_key: true
+    create_table :result_words do |t|
       t.references :training, null: false, type: :string, foreign_key: true
       t.string :word, null: false
 
