@@ -24,6 +24,9 @@ services:
       - "$API_PORT:$CONTAINER_PORT"
     depends_on:
       - db
+    # Docker環境でbinding.pryを使用できるようにする
+    tty: true
+    stdin_open: true
 
   front:
     build:
