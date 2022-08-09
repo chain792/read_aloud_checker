@@ -1,6 +1,11 @@
 class Api::V1::UsersController < ApplicationController
   skip_before_action :authenticate!, only: %i[index create]
   def index
+    logger.info '----------start------------'
+    logger.info request.headers['Authorization']
+    logger.info request.base_url
+    logger.info cookies[:refresh_token]
+    logger.info '----------start------------'
     render json: 'index'
   end
 
