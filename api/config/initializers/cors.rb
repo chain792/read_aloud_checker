@@ -7,7 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins 'localhost:3000','https://ondoku-star.com'
+    origins ENV.fetch("FRONT_DOMAIN", '')
 
     resource '/api/v1/*',
       headers: :any,
