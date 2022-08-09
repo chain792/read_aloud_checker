@@ -2,8 +2,7 @@ FROM node:16.16.0-alpine
 
 ARG WORKDIR
 
-ENV HOME=/${WORKDIR} \
-    TZ=Asia/Tokyo
+ENV HOME=/${WORKDIR}
 
 WORKDIR ${HOME}
 
