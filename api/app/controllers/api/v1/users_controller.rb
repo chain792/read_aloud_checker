@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  skip_before_action :authenticate!, only: %i[create]
+  skip_before_action :authenticate!, only: %i[index create]
   def index
     p '------------------------'
     p 'index'
