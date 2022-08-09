@@ -6,7 +6,7 @@ export async function refresh(): Promise<void> {
   const tokenStore = useTokenStore()
   const userStore = useUserStore()
   try {
-    const res = await axios.post("http://localhost:8000/api/v1/refresh", "", {
+    const res = await axios.post(`${import.meta.env.VITE_API_DOMAIN}/api/v1/refresh`, "", {
       headers: {
         "Content-type": "application/json",
         'X-Requested-With': 'XMLHttpRequest'
