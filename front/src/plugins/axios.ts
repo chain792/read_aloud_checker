@@ -3,7 +3,7 @@ import { silentRefresh } from "@/common/refresh"
 import { useTokenStore } from "@/store/tokenStore"
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: "http://localhost:8000/api/v1",
+  baseURL: `${import.meta.env.VITE_API_DOMAIN}/api/v1`,
   headers: {
     "Content-type": "application/json",
     'X-Requested-With': 'XMLHttpRequest'
