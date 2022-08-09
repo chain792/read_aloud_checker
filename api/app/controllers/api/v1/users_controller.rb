@@ -4,7 +4,8 @@ class Api::V1::UsersController < ApplicationController
     p '------------------------'
     p 'index'
     p '------------------------'
-    render json: current_user
+    logger.debug '------------debug----------'
+    render json: 'index'
   end
 
   def create
