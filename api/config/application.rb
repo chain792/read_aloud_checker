@@ -45,5 +45,6 @@ module App
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
 
     config.middleware.use ActionDispatch::Cookies
+    config.action_dispatch.cookies_same_site_protection = :none
   end
 end
