@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       post 'login', to: 'sessions#create'
       post 'refresh', to: 'sessions#refresh'
       delete 'logout', to: 'sessions#destroy'
+      get 'health_check', to: 'health_checks#index'
     end
   end
 end
