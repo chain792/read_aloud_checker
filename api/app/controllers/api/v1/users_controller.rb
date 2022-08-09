@@ -4,8 +4,11 @@ class Api::V1::UsersController < ApplicationController
     logger.info '----------start------------'
     logger.info request.headers['Authorization']
     logger.info request.base_url
+    logger.info request.headers[:host]
+    logger.info request.headers[:referer]
+    logger.info request.headers[:origin]
     logger.info cookies[:refresh_token]
-    logger.info '----------start------------'
+    logger.info '----------end------------'
     render json: 'index'
   end
 
