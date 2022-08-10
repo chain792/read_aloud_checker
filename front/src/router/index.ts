@@ -9,6 +9,7 @@ const LoginIndex = () => import("@/components/pages/login/index.vue")
 const Sentences = () => import("@/components/pages/sentences/index.vue")
 const NewSentence = () => import("@/components/pages/sentences/new.vue")
 const Sentence = () => import("@/components/pages/sentences/show.vue")
+const Profile = () => import("@/components/pages/profile/index.vue")
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -47,6 +48,12 @@ const routes: Array<RouteRecordRaw> = [
     name: "Sentence",
     component: Sentence,
     props: true
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile,
+    meta: { requiresAuth: true }
   },
 ]
 

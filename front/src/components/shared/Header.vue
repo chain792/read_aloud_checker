@@ -54,7 +54,7 @@ const router = useRouter()
 
 const items = [
   { title: "マイページ", click: logout },
-  { title: "プロフィール", click: logout },
+  { title: "プロフィール", click: linkToProfile },
   { title: "ログアウト", click: logout },
 ]
 
@@ -70,6 +70,10 @@ async function logout(): Promise<void>{
     console.log(e)
     flashStore.failLogout()
   }
+}
+
+async function linkToProfile(): Promise<void>{
+  router.push({ name: "Profile" })
 }
 
 </script>
