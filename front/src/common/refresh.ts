@@ -14,7 +14,7 @@ export async function refresh(): Promise<void> {
       withCredentials: true
     })
     console.log(res)
-    userStore.setUser(res.data.user)
+    userStore.setUser(JSON.parse(res.data.user))
     tokenStore.setToken(res.data.token, res.data.expiredTime)
   } catch(e) {
     console.log(e)
