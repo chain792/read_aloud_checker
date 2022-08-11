@@ -2,7 +2,7 @@ module Api::UserAuthenticator
   extend ActiveSupport::Concern
 
   def current_user
-    return @_current_user if @current_user
+    return @_current_user if @_current_user
 
     return unless bearer_token
 

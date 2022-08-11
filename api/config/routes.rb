@@ -9,6 +9,11 @@ Rails.application.routes.draw do
         resources :sentences, only: %i[create]
         resources :trainings, only: %i[create]
       end
+      resource :profile, only: %i[update]
+      namespace :profile do
+        resource :email, only: %i[update]
+        resource :password, only: %i[update]
+      end
       post 'login', to: 'sessions#create'
       post 'refresh', to: 'sessions#refresh'
       delete 'logout', to: 'sessions#destroy'

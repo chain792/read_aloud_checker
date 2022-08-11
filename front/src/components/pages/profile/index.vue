@@ -36,9 +36,8 @@
       </v-card-item>
       <v-card-text class="mt-3">
         <v-form
-          ref="form"
+          ref="profileForm"
           v-model="validProfile"
-          lazy-validation
         >
           <div class="text-center">
             <img src="/public/cat.jpeg" alt="アバター" class="avatar">
@@ -56,14 +55,14 @@
             ></v-text-field>
           </div>
           <div class="d-flex justify-space-around">
-            <v-btn color="secondary" @click="profileDialog = false">キャンセル</v-btn>
+            <v-btn color="success" @click="profileDialog = false">キャンセル</v-btn>
             <v-btn
               :disabled="!validProfile"
               color="success"
               class="mr-4"
               @click="editProfile"
             >
-              登録
+              この内容で編集する
             </v-btn>
           </div>
         </v-form>
@@ -73,22 +72,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue"
-// import axios from "@/plugins/axios"
-// import Axios from "axios"
+import { ref, reactive, watch, Ref } from "vue"
+
+import axios from "@/plugins/axios"
+import Axios from "axios"
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 import { useUserStore } from "@/store/userStore"
-
+import { useFlashStore } from "@/store/flashStore"
 
 const userStore = useUserStore()
-const currentUser = userStore.authUser!
+const flashStore = useFlashStore()
+const currentUser = reactive(userStore.authUser!)
 const errorMessages: string[] = reactive([])
 
 const user = reactive({
   name: "",
   avatar: ""
 })
+user.name = currentUser.name
+user.avatar = currentUser.avatar
 
+const profileForm: Ref<any> = ref(null)
 const profileDialog = ref(false)
 const validProfile = ref(true)
 const nameRules = [
@@ -96,9 +100,33 @@ const nameRules = [
   (v: string) => (v && v.length <= 16) || '16文字以内で入力してください' 
 ]
 
-const editProfile = (): void => {
-
+const editProfile = async (): Promise<void> => {
+  flashStore.$reset()
+  try{
+    errorMessages.splice(0)
+    const res = await axios.patch("profile", { user: user })
+    userStore.setUser(res.data)
+    flashStore.succeedEditProfile()
+    currentUser.name = res.data.name
+    profileDialog.value = false
+  } catch(e) {
+    if(Axios.isAxiosError(e) && e.response && e.response.data && Array.isArray(e.response.data)){
+      e.response.data.forEach(v => {
+        errorMessages.push(v)
+      })
+    }else{
+      console.log(e)
+    }
+    flashStore.failEditProfile()
+  }
 }
+
+//プロフィールモーダルを出した時はvalidProfileがnullのため、validete()を実行しvalidProfileをtrueにさせる
+watch(profileForm, () => {
+  if(profileForm.value){
+    profileForm.value.validate()
+  }
+})
 
 
 </script>

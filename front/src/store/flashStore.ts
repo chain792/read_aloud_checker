@@ -63,5 +63,15 @@ export const useFlashStore = defineStore("flash", {
       this.message = "音読を終了しました"
       this.color = "green-accent-4"
     },
+    succeedEditProfile(): void {
+      this.status = true
+      this.message = "プロフィールを編集しました"
+      this.color = "green-accent-4"
+    },
+    failEditProfile(): void {
+      this.status = true
+      this.message = "プロフィールの編集に失敗しました"
+      this.color = "red-accent-3"
+    },
   },
 })
