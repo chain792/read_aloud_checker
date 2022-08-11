@@ -40,7 +40,13 @@
           v-model="validProfile"
         >
           <div class="text-center">
-            <img src="/public/cat.jpeg" alt="アバター" class="avatar">
+            <div class="editable-avatar">
+              <img src="/public/cat.jpeg" ref="preview" alt="アバター" class="avatar pointer" @click="changeAvatar">
+              <v-icon class="icon" color="grey-lighten-4">
+                mdi-camera-enhance-outline
+              </v-icon>
+            </div>
+            <input ref="fileInput" type="file" accept="image/*" style="display: none;" @change="updateAvatar">
           </div>
           <div class="mt-5">
             <v-text-field
@@ -60,7 +66,7 @@
               :disabled="!validProfile"
               color="success"
               class="mr-4"
-              @click="editProfile"
+              @click="updateProfile"
             >
               この内容で編集する
             </v-btn>
@@ -79,6 +85,7 @@ import Axios from "axios"
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 import { useUserStore } from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
+
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
@@ -99,14 +106,38 @@ const nameRules = [
   (v: string) => !!v || '名前を入力してください',
   (v: string) => (v && v.length <= 16) || '16文字以内で入力してください' 
 ]
+const fileInput = ref<HTMLInputElement>()
+const preview = ref<HTMLImageElement>()
 
-const editProfile = async (): Promise<void> => {
+//プロフィールモーダルを出した時はvalidProfileがnullのため、validete()を実行しvalidProfileをtrueにさせる
+watch(profileForm, () => {
+  if(profileForm.value){
+    profileForm.value.validate()
+  }
+})
+
+const changeAvatar = (): void => {
+  fileInput.value!.click()
+}
+
+const updateAvatar = (): void => {
+  const file = fileInput.value!.files![0]
+  const reader = new FileReader()
+  reader.onloadend = (): void => {
+    preview.value!.src = reader.result as string
+  }
+  if(file){
+    reader.readAsDataURL(file)
+  }
+}
+
+const updateProfile = async (): Promise<void> => {
   flashStore.$reset()
   try{
     errorMessages.splice(0)
     const res = await axios.patch("profile", { user: user })
     userStore.setUser(res.data)
-    flashStore.succeedEditProfile()
+    flashStore.succeedUpdateProfile()
     currentUser.name = res.data.name
     profileDialog.value = false
   } catch(e) {
@@ -117,17 +148,9 @@ const editProfile = async (): Promise<void> => {
     }else{
       console.log(e)
     }
-    flashStore.failEditProfile()
+    flashStore.failUpdateProfile()
   }
 }
-
-//プロフィールモーダルを出した時はvalidProfileがnullのため、validete()を実行しvalidProfileをtrueにさせる
-watch(profileForm, () => {
-  if(profileForm.value){
-    profileForm.value.validate()
-  }
-})
-
 
 </script>
 
@@ -136,5 +159,23 @@ watch(profileForm, () => {
   border-radius: 50%;
   width: 60px;
   height: 60px;
+}
+
+.pointer{
+  cursor: pointer;
+}
+
+.editable-avatar{
+  position: relative;
+}
+
+.icon{
+  background-color: rgba(100,100,100,0.8);
+  border-radius: 50%;
+  padding: 16px;
+  position: absolute;
+  left: calc(50% - 16px);
+  top: calc(50% - 18px);
+  pointer-events: none;
 }
 </style>
