@@ -91,7 +91,7 @@ const bodyRules = [
 ]
 
 
-let errorMessages: string[] = reactive([])
+const errorMessages: string[] = reactive([])
 
 const createSentences = async (): Promise<void> => {
   try{

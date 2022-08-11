@@ -105,7 +105,7 @@ const passwordRules = [
 const isVisiblePassword = ref(false)
 
 
-let errorMessages: string[] = reactive([])
+const errorMessages: string[] = reactive([])
 
 const register = async (): Promise<void> => {
   flashStore.$reset()
