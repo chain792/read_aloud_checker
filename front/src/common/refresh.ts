@@ -2,7 +2,7 @@ import axios from "axios"
 import { useUserStore } from "@/store/userStore"
 import { useTokenStore } from "@/store/tokenStore"
 
-export async function refresh(): Promise<void> {
+export async function refresh(): Promise<boolean> {
   const tokenStore = useTokenStore()
   const userStore = useUserStore()
   try {
@@ -16,10 +16,12 @@ export async function refresh(): Promise<void> {
     console.log(res)
     userStore.setUser(JSON.parse(res.data.user))
     tokenStore.setToken(res.data.token, res.data.expiredTime)
+    return true
   } catch(e) {
     console.log(e)
     userStore.$reset()
     tokenStore.$reset()
+    return false
   }
 }
 
