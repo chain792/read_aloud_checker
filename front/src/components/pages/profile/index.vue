@@ -5,7 +5,7 @@
     </v-card-item>
     <v-card-text class="mt-3">
       <div class="text-center">
-        <img src="/public/cat.jpeg" alt="アバター" class="avatar">
+        <img :src="imageUrl('avatar', currentUser)" alt="アバター" class="avatar">
       </div>
       <div class="text-center mt-3">
         <p class="text-h6">名前</p>
@@ -41,12 +41,12 @@
         >
           <div class="text-center">
             <div class="editable-avatar">
-              <img src="/public/cat.jpeg" ref="preview" alt="アバター" class="avatar pointer" @click="changeAvatar">
+              <img ref="preview" :src="imageUrl('avatar', currentUser)" alt="アバター" class="avatar pointer" @click="changeAvatar">
               <v-icon class="icon" color="grey-lighten-4">
                 mdi-camera-enhance-outline
               </v-icon>
             </div>
-            <input ref="fileInput" type="file" accept="image/*" style="display: none;" @change="updateAvatar">
+            <input ref="fileInput" type="file" accept="image/*" style="display: none;" @change="previewAvatar">
           </div>
           <div class="mt-5">
             <v-text-field
@@ -85,6 +85,7 @@ import Axios from "axios"
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 import { useUserStore } from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
+import { imageUrl } from "@/common/imageUrl"
 
 
 const userStore = useUserStore()
@@ -93,11 +94,15 @@ const currentUser = reactive(userStore.authUser!)
 const errorMessages: string[] = reactive([])
 
 const user = reactive({
+  id: 0,
   name: "",
   avatar: ""
 })
+user.id = currentUser.id
 user.name = currentUser.name
 user.avatar = currentUser.avatar
+console.log(currentUser.avatar)
+let uploadFile: File
 
 const profileForm: Ref<any> = ref(null)
 const profileDialog = ref(false)
@@ -120,7 +125,7 @@ const changeAvatar = (): void => {
   fileInput.value!.click()
 }
 
-const updateAvatar = (): void => {
+const previewAvatar = (): void => {
   const file = fileInput.value!.files![0]
   const reader = new FileReader()
   reader.onloadend = (): void => {
@@ -128,17 +133,43 @@ const updateAvatar = (): void => {
   }
   if(file){
     reader.readAsDataURL(file)
+    user.avatar = file.name
+    uploadFile = file
+  }
+}
+
+const uploadAvatarToS3 = async (file: File): Promise<void> => {
+  try{
+    const res = await axios.get("profile/presign", {
+      params: {
+        name: user.avatar
+      }
+    })
+    const formData = new FormData()
+    for(let key in res.data.fields) {
+      formData.append(key, res.data.fields[key])
+    }
+    formData.append('file', file)
+    await Axios.post(res.data.url, formData, {
+      headers: {
+        'accept': 'multipart/form-data'
+      }
+    })
+  } catch(e) {
+    console.log(e)
   }
 }
 
 const updateProfile = async (): Promise<void> => {
   flashStore.$reset()
   try{
+    await uploadAvatarToS3(uploadFile)
     errorMessages.splice(0)
     const res = await axios.patch("profile", { user: user })
     userStore.setUser(res.data)
     flashStore.succeedUpdateProfile()
     currentUser.name = res.data.name
+    currentUser.avatar = res.data.avatar
     profileDialog.value = false
   } catch(e) {
     if(Axios.isAxiosError(e) && e.response && e.response.data && Array.isArray(e.response.data)){
