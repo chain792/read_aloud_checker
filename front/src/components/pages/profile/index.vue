@@ -20,7 +20,7 @@
       </div>
       <div class="d-flex justify-space-around mt-5">
         <p  class="blue-text" @click="emailDialog = true">メールアドレスを変更する</p>
-        <p>パスワードを変更する</p>
+        <p  class="blue-text" @click="passwordDialog = true">パスワードを変更する</p>
       </div>
     </v-card-text>
   </v-card>
@@ -122,6 +122,75 @@
               color="success"
               class="mr-4"
               @click="updateEmail"
+            >
+              この内容で編集する
+            </v-btn>
+          </div>
+        </v-form>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
+
+  <!-- パスワード変更モーダル -->
+  <v-dialog v-model="passwordDialog">
+    <v-card width="400" class="mx-auto mt-10 px-5 py-3">
+      <v-card-item>
+        <v-card-title class="text-center text-h5">パスワードの変更</v-card-title>
+        <v-card-subtitle v-if="errorMessages.length" class="mt-3">
+          <ErrorMessages :error-messages="errorMessages" />
+        </v-card-subtitle>
+      </v-card-item>
+      <v-card-text class="mt-3">
+        <v-form
+          v-model="validPassword"
+        >
+          <div class="mt-5 mb-n4">
+            <v-text-field
+              v-model="currentPassword"
+              type="password"
+              label="現在のパスワード"
+              placeholder="現在のパスワードを入力"
+              color="blue"
+              density="comfortable"
+              variant="outlined"
+              required
+              :rules="passwordRules"
+            ></v-text-field>
+          </div>
+          <v-divider class="mx-n10"></v-divider>
+          <div class="mt-5">
+            <v-text-field
+              v-model="newPassword"
+              type="password"
+              label="新しいパスワード"
+              placeholder="新しいパスワードを入力"
+              color="blue"
+              density="comfortable"
+              variant="outlined"
+              required
+              :rules="passwordRules"
+            ></v-text-field>
+          </div>
+          <div>
+            <v-text-field
+              v-model="newPasswordConfirmation"
+              type="password"
+              label="新しいパスワード（確認）"
+              placeholder="新しいパスワード（確認）を入力"
+              color="blue"
+              density="comfortable"
+              variant="outlined"
+              required
+              :rules="passwordRules"
+            ></v-text-field>
+          </div>
+          <div class="d-flex justify-space-around">
+            <v-btn color="success" @click="passwordDialog = false">キャンセル</v-btn>
+            <v-btn
+              :disabled="!validPassword"
+              color="success"
+              class="mr-4"
+              @click="updatePassword"
             >
               この内容で編集する
             </v-btn>
@@ -292,10 +361,51 @@ const updateEmail = async (): Promise<void> => {
   }
 }
 
-watch(profileDialog, () => {
-  if(!profileDialog.value){
+watch(emailDialog, () => {
+  if(!emailDialog.value){
     emailFormValue.value = ''
     passwordForChangeEmail.value = ''
+  }
+})
+
+/***************************************************
+  パスワード変更
+ ***************************************************/
+const passwordDialog = ref(false)
+const validPassword = ref(true)
+const currentPassword = ref('')
+const newPassword = ref('')
+const newPasswordConfirmation = ref('')
+
+const updatePassword = async (): Promise<void> => {
+  flashStore.$reset()
+  try{
+    errorMessages.splice(0)
+    const res = await axios.patch("profile/password", {
+      current_password: currentPassword.value,
+      password: newPassword.value,
+      password_confirmation: newPasswordConfirmation.value
+    })
+    userStore.setUser(res.data)
+    flashStore.succeedUpdatePassword()
+    passwordDialog.value = false
+  } catch(e) {
+    if(Axios.isAxiosError(e) && e.response && e.response.data && Array.isArray(e.response.data)){
+      e.response.data.forEach(v => {
+        errorMessages.push(v)
+      })
+    }else{
+      console.log(e)
+    }
+    flashStore.failUpdatePassword()
+  }
+}
+
+watch(passwordDialog, () => {
+  if(!passwordDialog.value){
+    currentPassword.value = ''
+    newPassword.value = ''
+    newPasswordConfirmation.value = ''
   }
 })
 
