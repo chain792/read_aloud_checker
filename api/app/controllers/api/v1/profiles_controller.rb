@@ -1,4 +1,10 @@
 class Api::V1::ProfilesController < ApplicationController
+  include Api::PresignedPost
+
+  def presign
+    render json: presigned_post("user/avatar/#{current_user.id}/#{params[:name]}")
+  end
+
   def update
     user = User.find(current_user.id)
     if user.update(user_params)

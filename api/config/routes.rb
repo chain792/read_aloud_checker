@@ -9,7 +9,9 @@ Rails.application.routes.draw do
         resources :sentences, only: %i[create]
         resources :trainings, only: %i[create]
       end
-      resource :profile, only: %i[update]
+      resource :profile, only: %i[update] do
+        collection { get :presign }
+      end
       namespace :profile do
         resource :email, only: %i[update]
         resource :password, only: %i[update]
