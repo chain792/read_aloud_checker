@@ -73,5 +73,15 @@ export const useFlashStore = defineStore("flash", {
       this.message = "プロフィールの編集に失敗しました"
       this.color = "red-accent-3"
     },
+    succeedUpdateEmail(): void {
+      this.status = true
+      this.message = "メールアドレスを変更しました"
+      this.color = "green-accent-4"
+    },
+    failUpdateEmail(): void {
+      this.status = true
+      this.message = "メールアドレスの変更に失敗しました"
+      this.color = "red-accent-3"
+    },
   },
 })

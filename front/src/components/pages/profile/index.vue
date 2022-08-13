@@ -19,7 +19,7 @@
         <v-btn :border="true" class="mx-auto" @click="profileDialog = true">プロフィール編集</v-btn>
       </div>
       <div class="d-flex justify-space-around mt-5">
-        <p>メールアドレスを変更する</p>
+        <p  class="blue-text" @click="emailDialog = true">メールアドレスを変更する</p>
         <p>パスワードを変更する</p>
       </div>
     </v-card-text>
@@ -75,6 +75,61 @@
       </v-card-text>
     </v-card>
   </v-dialog>
+
+  <!-- メールアドレス変更モーダル -->
+  <v-dialog v-model="emailDialog">
+    <v-card width="400" class="mx-auto mt-10 px-5 py-3">
+      <v-card-item>
+        <v-card-title class="text-center text-h5">メールアドレスの変更</v-card-title>
+        <v-card-subtitle v-if="errorMessages.length" class="mt-3">
+          <ErrorMessages :error-messages="errorMessages" />
+        </v-card-subtitle>
+      </v-card-item>
+      <v-card-text class="mt-3">
+        <v-form
+          v-model="validEmail"
+        >
+          <div class="mt-5">
+            <v-text-field
+              v-model="emailFormValue"
+              type="email"
+              label="新しいメールアドレス"
+              placeholder="新しいメールアドレスを入力"
+              color="blue"
+              density="comfortable"
+              variant="outlined"
+              required
+              :rules="emailRules"
+            ></v-text-field>
+          </div>
+          <div class="mt-5">
+            <v-text-field
+              v-model="passwordForChangeEmail"
+              type="password"
+              label="現在のパスワード"
+              placeholder="現在のパスワードを入力"
+              color="blue"
+              density="comfortable"
+              variant="outlined"
+              required
+              :rules="passwordRules"
+            ></v-text-field>
+          </div>
+          <div class="d-flex justify-space-around">
+            <v-btn color="success" @click="emailDialog = false">キャンセル</v-btn>
+            <v-btn
+              :disabled="!validEmail"
+              color="success"
+              class="mr-4"
+              @click="updateEmail"
+            >
+              この内容で編集する
+            </v-btn>
+          </div>
+        </v-form>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
@@ -93,6 +148,10 @@ const flashStore = useFlashStore()
 const currentUser = reactive(userStore.authUser!)
 const errorMessages: string[] = reactive([])
 
+
+/***************************************************
+  プロフィール編集
+ ***************************************************/
 const user = reactive({
   id: 0,
   name: "",
@@ -193,6 +252,53 @@ watch(profileDialog, () => {
   }
 })
 
+/***************************************************
+  メールアドレス変更
+ ***************************************************/
+const emailDialog = ref(false)
+const validEmail = ref(true)
+const emailFormValue = ref('')
+const passwordForChangeEmail = ref('')
+const emailRules = [
+  (v: string) => !!v || 'メールアドレスを入力してください',
+  (v: string) => /.+@.+\..+/.test(v) || 'メールアドレスの形式が正しくありません',
+]
+const passwordRules = [
+  (v: string) => !!v || 'パスワードを入力してください',
+  (v: string) => (v && v.length >= 6) || '6文字以上で入力してください',
+]
+
+const updateEmail = async (): Promise<void> => {
+  flashStore.$reset()
+  try{
+    errorMessages.splice(0)
+    const res = await axios.patch("profile/email", {
+      email: emailFormValue.value,
+      password: passwordForChangeEmail.value
+    })
+    userStore.setUser(res.data)
+    flashStore.succeedUpdateEmail()
+    currentUser.email = res.data.email
+    emailDialog.value = false
+  } catch(e) {
+    if(Axios.isAxiosError(e) && e.response && e.response.data && Array.isArray(e.response.data)){
+      e.response.data.forEach(v => {
+        errorMessages.push(v)
+      })
+    }else{
+      console.log(e)
+    }
+    flashStore.failUpdateEmail()
+  }
+}
+
+watch(profileDialog, () => {
+  if(!profileDialog.value){
+    emailFormValue.value = ''
+    passwordForChangeEmail.value = ''
+  }
+})
+
 </script>
 
 <style scoped>
@@ -218,5 +324,16 @@ watch(profileDialog, () => {
   left: calc(50% - 16px);
   top: calc(50% - 18px);
   pointer-events: none;
+}
+
+.blue-text{
+  color: #0030ff;
+  cursor: pointer;
+  padding: 10px;
+}
+
+
+.blue-text:hover{
+  text-decoration: underline;
 }
 </style>
