@@ -41,7 +41,7 @@
         >
           <div class="text-center">
             <div class="editable-avatar">
-              <img ref="preview" :src="imageUrl('avatar', currentUser)" alt="アバター" class="avatar pointer" @click="changeAvatar">
+              <img ref="preview" :src="imageUrl('avatar', user)" alt="アバター" class="avatar pointer" @click="changeAvatar">
               <v-icon class="icon" color="grey-lighten-4">
                 mdi-camera-enhance-outline
               </v-icon>
@@ -101,8 +101,8 @@ const user = reactive({
 user.id = currentUser.id
 user.name = currentUser.name
 user.avatar = currentUser.avatar
-console.log(currentUser.avatar)
-let uploadFile: File
+
+let uploadFile: File | null = null
 
 const profileForm: Ref<any> = ref(null)
 const profileDialog = ref(false)
@@ -138,7 +138,9 @@ const previewAvatar = (): void => {
   }
 }
 
-const uploadAvatarToS3 = async (file: File): Promise<void> => {
+const uploadAvatarToS3 = async (file: File | null): Promise<void> => {
+  if(!file) return
+  console.log('a')
   try{
     const res = await axios.get("profile/presign", {
       params: {
@@ -182,6 +184,14 @@ const updateProfile = async (): Promise<void> => {
     flashStore.failUpdateProfile()
   }
 }
+
+watch(profileDialog, () => {
+  if(!profileDialog.value){
+    user.name = currentUser.name
+    user.avatar = currentUser.avatar
+    uploadFile = null
+  }
+})
 
 </script>
 
