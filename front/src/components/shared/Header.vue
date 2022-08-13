@@ -22,7 +22,7 @@
           color="rgba(0,200,255,1)"
           v-bind="props"
         >
-          <img src="/public/cat.jpeg" alt="">
+          <img :src="imageUrl('avatar', userStore.authUser!)" alt="">
         </v-btn>
       </template>
       <v-list>
@@ -46,6 +46,7 @@ import { useUserStore }  from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
 import { useTokenStore } from "@/store/tokenStore"
 import { useRouter } from 'vue-router'
+import { imageUrl } from "@/common/imageUrl"
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
@@ -54,7 +55,7 @@ const router = useRouter()
 
 const items = [
   { title: "マイページ", click: logout },
-  { title: "プロフィール", click: logout },
+  { title: "プロフィール", click: linkToProfile },
   { title: "ログアウト", click: logout },
 ]
 
@@ -70,6 +71,10 @@ async function logout(): Promise<void>{
     console.log(e)
     flashStore.failLogout()
   }
+}
+
+async function linkToProfile(): Promise<void>{
+  router.push({ name: "Profile" })
 }
 
 </script>

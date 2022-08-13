@@ -27,6 +27,6 @@ class Api::V1::SessionsController < ApplicationController
   end
 
   def destroy
-    cookies.delete(:refresh_token)
+    cookies.delete(:refresh_token, secure: true)
   end
 end

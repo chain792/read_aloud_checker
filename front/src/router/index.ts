@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw, RouteLocationNormalized } from "vue-router"
 import TopIndex from "@/components/pages/top/index.vue"
 import { useUserStore } from "@/store/userStore"
-import { silentRefresh } from "@/common/refresh"
+import { refresh, silentRefresh } from "@/common/refresh"
 
 const TestIndex = () => import("@/components/pages/test/index.vue")
 const SignupIndex = () => import("@/components/pages/signup/index.vue")
@@ -9,6 +9,7 @@ const LoginIndex = () => import("@/components/pages/login/index.vue")
 const Sentences = () => import("@/components/pages/sentences/index.vue")
 const NewSentence = () => import("@/components/pages/sentences/new.vue")
 const Sentence = () => import("@/components/pages/sentences/show.vue")
+const Profile = () => import("@/components/pages/profile/index.vue")
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -48,6 +49,12 @@ const routes: Array<RouteRecordRaw> = [
     component: Sentence,
     props: true
   },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile,
+    meta: { requiresAuth: true }
+  },
 ]
 
 const router = createRouter({
@@ -55,11 +62,23 @@ const router = createRouter({
   routes,
 })
 
+let isFirstBeforeEach: boolean = true
+
 router.beforeEach(async (to: RouteLocationNormalized) => {
   await silentRefresh()
   const authUser = useUserStore().authUser
-  if (to.matched.some(record => record.meta.requiresAuth) && !authUser) {
-    return { name: "LoginIndex" }
+
+  // piniaのセットアップより先に1回目のrouter.beforeEachが実行されるため1回目と2回目以降で条件を変更させる
+  if(isFirstBeforeEach){
+    isFirstBeforeEach = false
+    const isSuccessRefresh = await refresh()
+    if (to.matched.some(record => record.meta.requiresAuth) && !isSuccessRefresh ) {
+      return { name: "LoginIndex" }
+    }
+  }else{
+    if (to.matched.some(record => record.meta.requiresAuth) && !authUser) {
+      return { name: "LoginIndex" }
+    }
   }
 })
 

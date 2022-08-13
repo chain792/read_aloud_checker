@@ -87,14 +87,14 @@ const passwordRules = [
 const isVisiblePassword = ref(false)
 
 
-let errorMessages: string[] = reactive([])
+const errorMessages: string[] = reactive([])
 
 const login = async (): Promise<void> => {
   flashStore.$reset()
   try{
     errorMessages.splice(0)
     const res = await axios.post("login", loginInfo)
-    userStore.setUser(res.data.user)
+    userStore.setUser(JSON.parse(res.data.user))
     tokenStore.setToken(res.data.token, res.data.expiredTime)
     flashStore.succeedLogin()
     router.push({ name: "Sentences" })
