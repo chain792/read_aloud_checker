@@ -1,0 +1,69 @@
+class Api::V1::Oauth::TwittersController < ApplicationController
+  skip_before_action :authenticate!
+  skip_before_action :xhr_request?, only: %i[callback]
+
+  def new
+    callback_url = "#{ENV['API_DOMAIN']}/api/v1/oauth/twitter/callback"
+    request_token = TwitterConsumer.get_request_token(oauth_callback: callback_url)
+
+    cookies[:token] = {
+      value: request_token.token,
+      http_only: true,
+      secure: true,
+      expires: 1.hour.from_now
+    }
+    cookies[:token_secret] = {
+      value: request_token.secret,
+      http_only: true,
+      secure: true,
+      expires: 1.hour.from_now
+    }
+
+    render json: request_token.authorize_url(oauth_callback: callback_url)
+  end
+
+  def callback
+    hash = { oauth_token: cookies[:token], oauth_token_secret: cookies[:token_secret] }
+    request_token = OAuth::RequestToken.from_hash(TwitterConsumer, hash)
+
+    access_token = request_token.get_access_token(
+      {},
+      oauth_token: params[:oauth_token],
+      oauth_verifier: params[:oauth_verifier]
+    )
+    response = TwitterConsumer.request(
+      :get,
+      '/1.1/account/verify_credentials.json?include_entities=false&skip_status=true&include_email=true',
+      access_token,
+      { scheme: :query_string }
+    )
+
+    case response
+    when Net::HTTPSuccess
+      user_info = JSON.parse(response.body)
+
+      if user_info["screen_name"]
+        user = User.find_or_create_from_oauth(
+          'twitter',
+          user_info["id"],
+          user_info["screen_name"],
+          user_info["email"],
+          user_info["profile_image_url_https"].sub('normal', 'bigger')
+        )
+
+        if user.valid?
+          refresh_token = user.refresh_me!
+          set_refresh_token_to_cookie(refresh_token)
+        else
+          logger.error "Failed to create user. user: #{user}"
+        end
+      else
+        logger.error "Failed to get user info via OAuth. user_info: #{user_info}"
+      end
+    else
+      logger.error "Failed OAuth. Code: #{response.code}"
+    end
+
+    render html: "<script>if(window.location.href.indexOf('oauth/twitter/callback')>0)window.close()</script>".html_safe
+  end
+end

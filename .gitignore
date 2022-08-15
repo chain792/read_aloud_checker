@@ -35,6 +35,7 @@ api/.irb_history
 api/.viminfo
 api/.local
 api/.DS_Store
+api/.lesshst
 
 #==========================================================
 # front側の設定
