@@ -3,7 +3,6 @@ class Api::V1::Oauth::TwittersController < ApplicationController
   skip_before_action :xhr_request?, only: %i[callback]
 
   def new
-    callback_url = "#{ENV['API_DOMAIN']}/api/v1/oauth/twitter/callback"
     request_token = TwitterConsumer.get_request_token(oauth_callback: callback_url)
 
     cookies[:token] = {
@@ -42,7 +41,7 @@ class Api::V1::Oauth::TwittersController < ApplicationController
     when Net::HTTPSuccess
       user_info = JSON.parse(response.body)
 
-      if user_info["screen_name"]
+      if user_info["email"]
         user = User.find_or_create_from_oauth(
           'twitter',
           user_info["id"],
@@ -65,5 +64,11 @@ class Api::V1::Oauth::TwittersController < ApplicationController
     end
 
     render html: "<script>if(window.location.href.indexOf('oauth/twitter/callback')>0)window.close()</script>".html_safe
+  end
+
+  private
+
+  def callback_url
+    "#{ENV['API_DOMAIN']}/api/v1/oauth/twitter/callback"
   end
 end
