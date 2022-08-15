@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_02_135739) do
+ActiveRecord::Schema.define(version: 2022_08_15_063326) do
 
   create_table "news", charset: "utf8mb4", force: :cascade do |t|
     t.string "title", null: false
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(version: 2022_08_02_135739) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "refresh_token"
     t.datetime "refresh_token_expires_at"
+    t.string "oauth_avatar"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["refresh_token"], name: "index_users_on_refresh_token", unique: true

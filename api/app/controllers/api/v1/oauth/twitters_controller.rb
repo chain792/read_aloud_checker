@@ -48,7 +48,7 @@ class Api::V1::Oauth::TwittersController < ApplicationController
           user_info["id"],
           user_info["screen_name"],
           user_info["email"],
-          user_info["profile_image_url_https"]
+          user_info["profile_image_url_https"].sub('normal', 'bigger')
         )
 
         if user.valid?

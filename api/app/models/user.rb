@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   include AccessToken
   include RefreshToken
+  mount_uploader :oauth_avatar, AvatarUploader
   authenticates_with_sorcery!
 
   has_many :sentences, as: :creater, dependent: :destroy
@@ -20,7 +21,8 @@ class User < ApplicationRecord
     User.find_or_create_by(provider: provider, uid: uid) do |user|
       user.name = name
       user.email = email
-      user.avatar = ''
+      user.remote_oauth_avatar_url = image
+      user.avatar = user.oauth_avatar.filename
       user.password = random_value
       user.password_confirmation = random_value
     end
