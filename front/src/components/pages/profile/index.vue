@@ -237,7 +237,7 @@ const profileDialog = ref(false)
 const validProfile = ref(true)
 const nameRules = [
   (v: string) => !!v || '名前を入力してください',
-  (v: string) => (v && v.length <= 16) || '16文字以内で入力してください' 
+  (v: string) => (v && v.length <= 50) || '50文字以内で入力してください' 
 ]
 const fileInput = ref<HTMLInputElement>()
 const preview = ref<HTMLImageElement>()

@@ -50,6 +50,7 @@
 
         <v-btn @click="twitterLogin">Twitterログイン</v-btn>
         <v-btn @click="googleLogin">Googleログイン</v-btn>
+        <v-btn @click="yahooLogin">Yahooログイン</v-btn>
 
       </v-form>
     </v-card-text>
@@ -96,7 +97,7 @@ const login = async (): Promise<void> => {
     userStore.setUser(JSON.parse(res.data.user))
     tokenStore.setToken(res.data.token, res.data.expiredTime)
     flashStore.succeedLogin()
-    router.push({ name: "Sentences" })
+    router.push({ name: "Profile" })
   } catch(e) {
     flashStore.failLogin()
   }
@@ -127,12 +128,24 @@ const googleLogin = async (): Promise<void> => {
   }
 }
 
+const yahooLogin = async (): Promise<void> => {
+  flashStore.$reset()
+  try{
+    const res = await axios.get("oauth/yahoo/new")
+    windowLogin = window.open(res.data)
+    setTimeout(CheckLoginStatus, 1000)
+  } catch(e) {
+    console.log(e)
+    flashStore.failLogin()
+  }
+}
+
 const CheckLoginStatus = async (): Promise<void> => {
   if (windowLogin!.closed) {
     const isLoginSucceed = await refresh()
     if(isLoginSucceed){
       flashStore.succeedLogin()
-      router.push({ name: "Sentences" })
+      router.push({ name: "Profile" })
     }else{
       flashStore.failLogin()
     }

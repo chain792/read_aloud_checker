@@ -26,6 +26,9 @@ Rails.application.routes.draw do
         resource :google, only: %i[new] do
           collection { get :callback }
         end
+        resource :yahoo, only: %i[new] do
+          collection { get :callback }
+        end
       end
       get 'health_check', to: 'health_checks#index'
     end
