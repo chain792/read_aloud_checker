@@ -9,4 +9,4 @@ class CustomLogger < Rails::Rack::Logger
     end
   end
 end
-Webapi::Application.config.middleware.swap Rails::Rack::Logger, CustomLogger
+App::Application.config.middleware.swap Rails::Rack::Logger, CustomLogger
