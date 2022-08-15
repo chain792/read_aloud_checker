@@ -13,3 +13,14 @@ GoogleClient = OAuth2::Client.new(
     token_url: '/token'
   }
 )
+
+YahooClient = OAuth2::Client.new(
+  Rails.application.credentials.dig(:yahoo, :client_id),
+  Rails.application.credentials.dig(:yahoo, :client_secret),
+  {
+    site: 'https://auth.login.yahoo.co.jp',
+    authorize_url: '/yconnect/v2/authorization',
+    token_url: '/yconnect/v2/token',
+    auth_scheme: :basic_auth
+  }
+)
