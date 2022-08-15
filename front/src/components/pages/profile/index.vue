@@ -268,7 +268,7 @@ const previewAvatar = (): void => {
 
 const uploadAvatarToS3 = async (file: File | null): Promise<void> => {
   if(!file) return
-  console.log('a')
+
   try{
     const res = await axios.get("profile/presign", {
       params: {
