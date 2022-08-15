@@ -96,7 +96,7 @@ const login = async (): Promise<void> => {
     userStore.setUser(JSON.parse(res.data.user))
     tokenStore.setToken(res.data.token, res.data.expiredTime)
     flashStore.succeedLogin()
-    router.push({ name: "Sentences" })
+    router.push({ name: "Profile" })
   } catch(e) {
     flashStore.failLogin()
   }
@@ -132,7 +132,7 @@ const CheckLoginStatus = async (): Promise<void> => {
     const isLoginSucceed = await refresh()
     if(isLoginSucceed){
       flashStore.succeedLogin()
-      router.push({ name: "Sentences" })
+      router.push({ name: "Profile" })
     }else{
       flashStore.failLogin()
     }

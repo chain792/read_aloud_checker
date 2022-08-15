@@ -90,7 +90,7 @@ const user = reactive({
 
 const nameRules = [
   (v: string) => !!v || '名前を入力してください',
-  (v: string) => (v && v.length <= 16) || '16文字以内で入力してください' 
+  (v: string) => (v && v.length <= 50) || '50文字以内で入力してください' 
 ]
 
 const emailRules = [
@@ -115,7 +115,7 @@ const register = async (): Promise<void> => {
     userStore.setUser(JSON.parse(res.data.user))
     tokenStore.setToken(res.data.token, res.data.expiredTime)
     flashStore.succeedSignup()
-    router.push({ name: "Sentences" })
+    router.push({ name: "Profile" })
   } catch(e) {
     if(Axios.isAxiosError(e) && e.response && e.response.data && Array.isArray(e.response.data)){
       e.response.data.forEach(v => {
