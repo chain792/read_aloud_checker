@@ -33,7 +33,7 @@ class Api::V1::Oauth::GooglesController < ApplicationController
           refresh_token = user.refresh_me!
           set_refresh_token_to_cookie(refresh_token)
         else
-          logger.error "Failed to create user. user: #{user}"
+          logger.error "Failed to create user. user: #{user.inspect}"
         end
       else
         logger.error "Failed to get user info via OAuth. user_info: #{user_info}"

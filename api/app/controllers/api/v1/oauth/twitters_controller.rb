@@ -45,7 +45,7 @@ class Api::V1::Oauth::TwittersController < ApplicationController
         user = User.find_or_create_from_oauth(
           'twitter',
           user_info["id"],
-          user_info["screen_name"],
+          user_info["name"],
           user_info["email"],
           user_info["profile_image_url_https"].sub('normal', 'bigger')
         )
@@ -54,7 +54,7 @@ class Api::V1::Oauth::TwittersController < ApplicationController
           refresh_token = user.refresh_me!
           set_refresh_token_to_cookie(refresh_token)
         else
-          logger.error "Failed to create user. user: #{user}"
+          logger.error "Failed to create user. user: #{user.inspect}"
         end
       else
         logger.error "Failed to get user info via OAuth. user_info: #{user_info}"
