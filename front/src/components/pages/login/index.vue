@@ -49,6 +49,7 @@
         </v-btn>
 
         <v-btn @click="twitterLogin">Twitterログイン</v-btn>
+        <v-btn @click="googleLogin">Googleログイン</v-btn>
 
       </v-form>
     </v-card-text>
@@ -106,6 +107,18 @@ const twitterLogin = async (): Promise<void> => {
   flashStore.$reset()
   try{
     const res = await axios.get("oauth/twitter/new")
+    windowLogin = window.open(res.data)
+    setTimeout(CheckLoginStatus, 1000)
+  } catch(e) {
+    console.log(e)
+    flashStore.failLogin()
+  }
+}
+
+const googleLogin = async (): Promise<void> => {
+  flashStore.$reset()
+  try{
+    const res = await axios.get("oauth/google/new")
     windowLogin = window.open(res.data)
     setTimeout(CheckLoginStatus, 1000)
   } catch(e) {
