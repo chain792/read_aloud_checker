@@ -48,6 +48,8 @@
           ログイン
         </v-btn>
 
+        <v-btn @click="twitterLogin">Twitterログイン</v-btn>
+
       </v-form>
     </v-card-text>
   </v-card>
@@ -61,15 +63,16 @@ import { useUserStore }  from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
 import { useTokenStore } from "@/store/tokenStore"
 import { useRouter } from 'vue-router'
+import { refresh } from "@/common/refresh.js"
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
 const tokenStore = useTokenStore()
 const router = useRouter()
 
-
+const errorMessages: string[] = reactive([])
 const valid = ref(true)
-
+const isVisiblePassword = ref(false)
 const loginInfo = reactive({
   email: "",
   password: ""
@@ -79,15 +82,10 @@ const emailRules = [
   (v: string) => !!v || 'メールアドレスを入力してください',
   (v: string) => /.+@.+\..+/.test(v) || 'メールアドレスの形式が正しくありません',
 ]
-
 const passwordRules = [
   (v: string) => !!v || 'パスワードを入力してください',
   (v: string) => (v && v.length >= 6) || '6文字以上で入力してください',
 ]
-const isVisiblePassword = ref(false)
-
-
-const errorMessages: string[] = reactive([])
 
 const login = async (): Promise<void> => {
   flashStore.$reset()
@@ -100,6 +98,34 @@ const login = async (): Promise<void> => {
     router.push({ name: "Sentences" })
   } catch(e) {
     flashStore.failLogin()
+  }
+}
+
+let windowLogin: Window | null
+const twitterLogin = async (): Promise<void> => {
+  flashStore.$reset()
+  try{
+    const res = await axios.get("oauth/twitter/new")
+    windowLogin = window.open(res.data)
+    setTimeout(CheckLoginStatus, 1000)
+  } catch(e) {
+    console.log(e)
+    flashStore.failLogin()
+  }
+}
+
+const CheckLoginStatus = async (): Promise<void> => {
+  if (windowLogin!.closed) {
+    const isLoginSucceed = await refresh()
+    if(isLoginSucceed){
+      flashStore.succeedLogin()
+      router.push({ name: "Sentences" })
+    }else{
+      flashStore.failLogin()
+    }
+  }
+  else{
+    setTimeout(CheckLoginStatus, 1000)
   }
 }
 
