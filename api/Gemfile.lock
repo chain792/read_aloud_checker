@@ -261,6 +261,7 @@ DEPENDENCIES
   net-imap
   net-pop
   net-smtp
+  oauth
   pry-byebug
   puma (~> 5.0)
   rack-cors
