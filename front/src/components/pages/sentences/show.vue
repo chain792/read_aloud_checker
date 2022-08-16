@@ -34,15 +34,12 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-
 const sentence = ref({
   id: "",
   title: "",
   body: ""
 })
-
 const status: Ref<"unplayed" | "playing" | "finished"> = ref("unplayed")
-
 let sentenceBodyBeforeReadAloud: string
 
 const fetchSentence = async (): Promise<void> => {
@@ -56,6 +53,16 @@ const fetchSentence = async (): Promise<void> => {
 }
 fetchSentence()
 
+/***************************************************
+  音読機能
+ ***************************************************/
+let recognition: any
+let wordCount: number
+let failedWords: Array<string>
+let sentenceWords: Array<string>
+let failedTimes: number
+
+//音読スタート
 const startReadAloud = (): void => {
   flashStore.$reset()
   flashStore.playReadAloud()
@@ -63,11 +70,6 @@ const startReadAloud = (): void => {
   playReadAloud()
 }
 
-let recognition: any
-let wordCount: number
-let failedWords: Array<string>
-let sentenceWords: Array<string>
-let failedTimes: number
 //音読でタイピングゲーム
 const playReadAloud = (): void => {
   wordCount = 0
@@ -119,6 +121,7 @@ const playReadAloud = (): void => {
       }
     }
   }
+  //音読終了後の処理
   recognition.onaudioend = (event) =>{
     flashStore.$reset()
     flashStore.finishReadAloud()
@@ -130,10 +133,12 @@ const playReadAloud = (): void => {
   recognition.start()
 }
 
+//音読終了
 const stopReadAloud = (): void => {
   recognition.stop()
 }
 
+//1単語パス機能
 const skipWord = (): void => {
   failedTimes = 0
   failedWords.push(sentenceWords[wordCount])
@@ -145,12 +150,15 @@ const skipWord = (): void => {
   }
 }
 
+//再音読
 const replayReadAloud = (): void => {
   sentence.value.body = sentenceBodyBeforeReadAloud
   startReadAloud()
 }
 
+//音読の結果をapiへ送信
 const registerReadAloudResult = async (): Promise<void> => {
+  const successWordCount: number = wordCount - failedWords.length
   const resultWord = failedWords.map((word: string) => {
     return {
       word
@@ -160,7 +168,7 @@ const registerReadAloudResult = async (): Promise<void> => {
     await axios.post("user/trainings", {
       training: {
         sentence_id: props.id,
-        word_count: wordCount,
+        word_count: successWordCount,
         result_words_attributes: resultWord
       }
     })
