@@ -22,6 +22,11 @@ class Api::V1::Oauth::TwittersController < ApplicationController
   end
 
   def callback
+    if params[:denied]
+      render html: "<script>if(window.location.href.indexOf('oauth/twitter/callback')>0)window.close()</script>".html_safe
+      return
+    end
+
     hash = { oauth_token: cookies[:token], oauth_token_secret: cookies[:token_secret] }
     request_token = OAuth::RequestToken.from_hash(TwitterConsumer, hash)
 
