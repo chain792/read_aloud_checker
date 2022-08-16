@@ -54,7 +54,7 @@ const tokenStore = useTokenStore()
 const router = useRouter()
 
 const items = [
-  { title: "マイページ", click: logout },
+  { title: "マイページ", click: linkToMypage },
   { title: "プロフィール", click: linkToProfile },
   { title: "ログアウト", click: logout },
 ]
@@ -75,6 +75,10 @@ async function logout(): Promise<void>{
 
 async function linkToProfile(): Promise<void>{
   router.push({ name: "Profile" })
+}
+
+async function linkToMypage(): Promise<void>{
+  router.push({ name: "Mypage" })
 }
 
 </script>
