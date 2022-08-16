@@ -18,7 +18,7 @@
 
       <v-window v-model="tab">
         <v-window-item value="tab-1">
-          111
+          <Record />
         </v-window-item>
         <v-window-item value="tab-2">
           222
@@ -30,6 +30,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
+import Record from "./components/Record.vue"
 
 const tab = ref(null)
 
