@@ -27,7 +27,7 @@
 
   <!-- プロフィール編集モーダル -->
   <v-dialog v-model="profileDialog">
-    <v-card width="400" class="mx-auto mt-10 px-5 py-3">
+    <v-card width="400" class="mx-auto px-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">プロフィール編集</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
@@ -78,7 +78,7 @@
 
   <!-- メールアドレス変更モーダル -->
   <v-dialog v-model="emailDialog">
-    <v-card width="400" class="mx-auto mt-10 px-5 py-3">
+    <v-card width="400" class="mx-auto px-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">メールアドレスの変更</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
@@ -133,7 +133,7 @@
 
   <!-- パスワード変更モーダル -->
   <v-dialog v-model="passwordDialog">
-    <v-card width="400" class="mx-auto mt-10 px-5 py-3">
+    <v-card width="400" class="mx-auto px-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">パスワードの変更</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
