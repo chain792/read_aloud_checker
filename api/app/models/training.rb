@@ -7,4 +7,6 @@ class Training < ApplicationRecord
   accepts_nested_attributes_for :result_words
 
   validates :word_count, presence: true
+
+  scope :in_month, ->(year, month) { where(created_at: Time.new(year, month).all_month) }
 end
