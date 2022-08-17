@@ -10,6 +10,7 @@ const Sentences = () => import("@/components/pages/sentences/index.vue")
 const NewSentence = () => import("@/components/pages/sentences/new.vue")
 const Sentence = () => import("@/components/pages/sentences/show.vue")
 const Profile = () => import("@/components/pages/profile/index.vue")
+const Mypage = () => import("@/components/pages/mypage/index.vue")
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -53,6 +54,12 @@ const routes: Array<RouteRecordRaw> = [
     path: "/profile",
     name: "Profile",
     component: Profile,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/mypage",
+    name: "Mypage",
+    component: Mypage,
     meta: { requiresAuth: true }
   },
 ]
