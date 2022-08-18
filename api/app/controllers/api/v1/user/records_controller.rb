@@ -1,20 +1,24 @@
 class Api::V1::User::RecordsController < ApplicationController
   def index
-    trainings = current_user.trainings.in_month(params[:year], params[:month])
-      .select('date(created_at) as date, sum(word_count) as sum').group('date').order('date asc').to_a
-    result_words = current_user.trainings.in_month(params[:year], params[:month]).joins(:result_words)
-      .select('date(result_words.created_at) as date, count(*) as count').group('date').order('date asc').to_a
+    succeeded_results = current_user.trainings.in_month(params[:year], params[:month])
+      .joins(:result_words).merge(ResultWord.succeeded)
+      .select('date(result_words.created_at) as date, count(*) as count')
+      .group('date').order('date asc').to_a
+    failed_results = current_user.trainings.in_month(params[:year], params[:month])
+      .joins(:result_words).merge(ResultWord.failed)
+      .select('date(result_words.created_at) as date, count(*) as count')
+      .group('date').order('date asc').to_a
     day = Date.new(params[:year].to_i, params[:month].to_i, -1).day
 
     monthly_results = []
     1.upto day do |i|
       succeeded_number = 0
       failed_number = 0
-      if !trainings.empty? && trainings[0].date.day == i
-        succeeded_number = trainings.shift.sum
+      if !succeeded_results.empty? && succeeded_results[0].date.day == i
+        succeeded_number = succeeded_results.shift.count
       end
-      if !result_words.empty? && result_words[0].date.day == i
-        failed_number = result_words.shift.count
+      if !failed_results.empty? && failed_results[0].date.day == i
+        failed_number = failed_results.shift.count
       end
       monthly_results << { succeededNumber: succeeded_number , failedNumber: failed_number }
     end

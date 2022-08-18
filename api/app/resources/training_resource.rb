@@ -3,7 +3,7 @@ class TrainingResource
 
   root_key :training, :trainings
 
-  attributes :id, :sentence_id, :voice, :word_count, :created_at, :updated_at
+  attributes :id, :sentence_id, :voice, :created_at, :updated_at
   transform_keys :lower_camel
 
   many :result_words, resource: ResultWordResource

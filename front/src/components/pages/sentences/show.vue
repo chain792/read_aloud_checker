@@ -57,8 +57,7 @@ fetchSentence()
   音読機能
  ***************************************************/
 let recognition: any
-let wordCount: number
-let failedWords: Array<string>
+let results: Array<"succeeded" | "failed">
 let sentenceWords: Array<string>
 let failedTimes: number
 
@@ -72,9 +71,8 @@ const startReadAloud = (): void => {
 
 //音読でタイピングゲーム
 const playReadAloud = (): void => {
-  wordCount = 0
   failedTimes = 0
-  failedWords = []
+  results = []
 
   const Recognition = window.webkitSpeechRecognition || window.SpeechRecognition;
   sentenceWords = sentenceBodyBeforeReadAloud.split(' ')
@@ -96,25 +94,24 @@ const playReadAloud = (): void => {
         console.log(transcriptWords)
         isSucceeded=false
         for(let j = 0; j < transcriptWords.length; j++){
-          if(wordCount < sentenceWords.length && sentenceWords[wordCount].toLowerCase() === transcriptWords[j].toLowerCase()){
+          if(results.length < sentenceWords.length && sentenceWords[results.length].toLowerCase() === transcriptWords[j].toLowerCase()){
             isSucceeded = true
             failedTimes = 0
-            sentenceWords[wordCount] = `<span class="gray">${sentenceWords[wordCount]}</span>`
+            sentenceWords[results.length] = `<span class="gray">${sentenceWords[results.length]}</span>`
             sentence.value.body = sentenceWords.join(' ')
-            wordCount++
+            results.push("succeeded")
           }
         }
         if(!isSucceeded){
           failedTimes++
         }
-        if(wordCount < sentenceWords.length && failedTimes > 5){
+        if(results.length < sentenceWords.length && failedTimes > 5){
           failedTimes = 0
-          failedWords.push(sentenceWords[wordCount])
-          sentenceWords[wordCount] = `<span class="red">${sentenceWords[wordCount]}</span>`
+          sentenceWords[results.length] = `<span class="red">${sentenceWords[results.length]}</span>`
           sentence.value.body = sentenceWords.join(' ')
-          wordCount++
+          results.push("failed")
         }
-        if(wordCount === sentenceWords.length){
+        if(results.length === sentenceWords.length){
           recognition.stop()
           break
         }
@@ -141,11 +138,10 @@ const stopReadAloud = (): void => {
 //1単語パス機能
 const skipWord = (): void => {
   failedTimes = 0
-  failedWords.push(sentenceWords[wordCount])
-  sentenceWords[wordCount] = `<span class="red">${sentenceWords[wordCount]}</span>`
+  sentenceWords[results.length] = `<span class="red">${sentenceWords[results.length]}</span>`
   sentence.value.body = sentenceWords.join(' ')
-  wordCount++
-  if(wordCount === sentenceWords.length){
+  results.push("failed")
+  if(results.length === sentenceWords.length){
     recognition.stop()
   }
 }
@@ -158,18 +154,17 @@ const replayReadAloud = (): void => {
 
 //音読の結果をapiへ送信
 const registerReadAloudResult = async (): Promise<void> => {
-  const successWordCount: number = wordCount - failedWords.length
-  const resultWord = failedWords.map((word: string) => {
+  const resultWords = results.map((result, index) => {
     return {
-      word
+      position: index,
+      result
     }
   })
   try{
     await axios.post("user/trainings", {
       training: {
         sentence_id: props.id,
-        word_count: successWordCount,
-        result_words_attributes: resultWord
+        result_words_attributes: resultWords
       }
     })
   } catch(e) {

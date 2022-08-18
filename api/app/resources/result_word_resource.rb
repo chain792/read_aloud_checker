@@ -3,7 +3,7 @@ class ResultWordResource
 
   root_key :word, :words
 
-  attributes :id, :word, :created_at, :updated_at
+  attributes :id, :position, :result, :created_at, :updated_at
 
   transform_keys :lower_camel
 end
