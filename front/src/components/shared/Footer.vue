@@ -20,6 +20,7 @@
         variant="text"
         class="mx-2"
         rounded="xl"
+        :to="{ name: 'Privacy' }"
       >
         プライバシーポリシー
       </v-btn>

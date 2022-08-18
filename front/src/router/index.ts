@@ -12,6 +12,7 @@ const Sentence = () => import("@/components/pages/sentences/show.vue")
 const Profile = () => import("@/components/pages/profile/index.vue")
 const Mypage = () => import("@/components/pages/mypage/index.vue")
 const History = () => import("@/components/pages/history/show.vue")
+const Privacy = () => import("@/components/pages/privacy/index.vue")
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -69,6 +70,11 @@ const routes: Array<RouteRecordRaw> = [
     component: History,
     props: true,
     meta: { requiresAuth: true }
+  },
+  {
+    path: "/privacy",
+    name: "Privacy",
+    component: Privacy,
   },
 ]
 
