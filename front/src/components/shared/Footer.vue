@@ -28,6 +28,8 @@
         variant="text"
         class="mx-2"
         rounded="xl"
+        href="https://docs.google.com/forms/d/e/1FAIpQLSfFvUX5OG5vdFZYL2qqrn5PTVzzi8FGost6k1xucXdta1qI2Q/viewform?usp=sf_link"
+        target="_blank"
       >
         お問い合わせ
       </v-btn>
