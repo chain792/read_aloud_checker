@@ -11,6 +11,7 @@ const NewSentence = () => import("@/components/pages/sentences/new.vue")
 const Sentence = () => import("@/components/pages/sentences/show.vue")
 const Profile = () => import("@/components/pages/profile/index.vue")
 const Mypage = () => import("@/components/pages/mypage/index.vue")
+const History = () => import("@/components/pages/history/show.vue")
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -60,6 +61,13 @@ const routes: Array<RouteRecordRaw> = [
     path: "/mypage",
     name: "Mypage",
     component: Mypage,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/history/:id",
+    name: "History",
+    component: History,
+    props: true,
     meta: { requiresAuth: true }
   },
 ]

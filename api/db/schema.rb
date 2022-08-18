@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_15_063326) do
+ActiveRecord::Schema.define(version: 2022_08_18_072629) do
 
   create_table "news", charset: "utf8mb4", force: :cascade do |t|
     t.string "title", null: false
@@ -28,9 +28,10 @@ ActiveRecord::Schema.define(version: 2022_08_15_063326) do
 
   create_table "result_words", charset: "utf8mb4", force: :cascade do |t|
     t.string "training_id", null: false
-    t.string "word", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "position", null: false
+    t.integer "result", default: 0, null: false
     t.index ["training_id"], name: "index_result_words_on_training_id"
   end
 
@@ -49,7 +50,6 @@ ActiveRecord::Schema.define(version: 2022_08_15_063326) do
     t.bigint "user_id", null: false
     t.string "sentence_id", null: false
     t.string "voice"
-    t.integer "word_count", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["sentence_id"], name: "index_trainings_on_sentence_id"

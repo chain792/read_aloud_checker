@@ -1,5 +1,7 @@
 class ResultWord < ApplicationRecord
   belongs_to :training
 
-  validates :word, presence: true
+  validates :position, presence: true
+
+  enum result: { succeeded: 0, failed: 1 }
 end

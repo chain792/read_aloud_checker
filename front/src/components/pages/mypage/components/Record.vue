@@ -77,7 +77,7 @@ const chartData: any[][] = reactive([
 
 const fetchRecord = async (year: number | string, month: number | string): Promise<void> => {
   try{
-    const res = await axios.get(`user/trainings`, {
+    const res = await axios.get(`user/records`, {
       params: {
         year,
         month
