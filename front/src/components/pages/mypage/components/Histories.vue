@@ -35,13 +35,17 @@ interface Training {
   title: string
   sentence: Sentence
   createdAt: string
-  wordCount: number
+  resultWords: Array<ResultWord>
 }
 interface History {
   id: string
   title: string
   createdAt: string
   wordCount: number
+}
+interface ResultWord {
+  position: number
+  result: "succeeded" | "failed"
 }
 
 
@@ -56,7 +60,7 @@ const fetchTrainings = async (): Promise<void> => {
         id: training.id,
         title: training.sentence.title,
         createdAt: training.createdAt,
-        wordCount: training.wordCount
+        wordCount: training.resultWords.filter(resultWord => resultWord.result === "succeeded").length
       })
     })
   } catch(e) {
