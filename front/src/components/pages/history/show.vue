@@ -16,6 +16,10 @@ import axios from "@/plugins/axios"
 interface Props {
   id: string
 }
+interface ResultWord {
+  position: number
+  result: "succeeded" | "failed"
+}
 
 const props = defineProps<Props>()
 const sentence = ref({
@@ -24,12 +28,21 @@ const sentence = ref({
   body: ""
 })
 
+const decorateSentence = (body: string, resultWords: Array<ResultWord>) => {
+  const sentenceWords = body.split(' ')
+  for(let resultWord of resultWords){
+    sentenceWords[resultWord.position] = resultWord.result === "succeeded" 
+      ? `<span class="gray">${sentenceWords[resultWord.position]}</span>`
+      : `<span class="red">${sentenceWords[resultWord.position]}</span>`
+  }
+  return sentenceWords.join(' ')
+}
+
 const fetchTraining = async (): Promise<void> => {
   try{
     const res = await axios.get(`user/trainings/${props.id}`)
-    console.log(res.data.training)
     sentence.value = res.data.training.sentence
-    res.data.training
+    sentence.value.body = decorateSentence(sentence.value.body, res.data.training.resultWords)
   } catch(e) {
     console.log(e)
   }
