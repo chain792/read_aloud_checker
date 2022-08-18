@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw, RouteLocationNormalized } from "vue-router"
-import TopIndex from "@/components/pages/top/index.vue"
+import TopPage from "@/components/pages/static/TopPage.vue"
 import { useUserStore } from "@/store/userStore"
 import { refresh, silentRefresh } from "@/common/refresh"
 
@@ -12,13 +12,13 @@ const Sentence = () => import("@/components/pages/sentences/show.vue")
 const Profile = () => import("@/components/pages/profile/index.vue")
 const Mypage = () => import("@/components/pages/mypage/index.vue")
 const History = () => import("@/components/pages/history/show.vue")
-const Privacy = () => import("@/components/pages/privacy/index.vue")
+const Privacy = () => import("@/components/pages/static/Privacy.vue")
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "TopIndex",
-    component: TopIndex,
+    name: "TopPage",
+    component: TopPage,
   },
   {
     path: "/test",
