@@ -6,12 +6,19 @@
       <div class="sentence-body text-h6" v-html="sentence.body"></div>   
       </v-card-text>
     </v-card>
+    <div class="mt-5 d-flex justify-center">
+      <v-btn :border="true" @click="linkToSentence">この英文を音読する</v-btn>
+      <v-btn :border="true">音声を再生する</v-btn>
+    </div>
   </v-container>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue"
 import axios from "@/plugins/axios"
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 interface Props {
   id: string
@@ -28,7 +35,7 @@ const sentence = ref({
   body: ""
 })
 
-const decorateSentence = (body: string, resultWords: Array<ResultWord>) => {
+const decorateSentence = (body: string, resultWords: Array<ResultWord>): string => {
   const sentenceWords = body.split(' ')
   for(let resultWord of resultWords){
     sentenceWords[resultWord.position] = resultWord.result === "succeeded" 
@@ -48,6 +55,10 @@ const fetchTraining = async (): Promise<void> => {
   }
 }
 fetchTraining()
+
+const linkToSentence = (): void => {
+  router.push({ name: "Sentence", params: { id: sentence.value.id } })
+}
 
 </script>
 
