@@ -3,7 +3,6 @@ import TopPage from "@/components/pages/static/TopPage.vue"
 import { useUserStore } from "@/store/userStore"
 import { refresh, silentRefresh } from "@/common/refresh"
 
-const TestIndex = () => import("@/components/pages/test/index.vue")
 const SignupIndex = () => import("@/components/pages/signup/index.vue")
 const LoginIndex = () => import("@/components/pages/login/index.vue")
 const Sentences = () => import("@/components/pages/sentences/index.vue")
@@ -20,12 +19,6 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "TopPage",
     component: TopPage,
-  },
-  {
-    path: "/test",
-    name: "TestIndex",
-    component: TestIndex,
-    meta: { requiresAuth: true }
   },
   {
     path: "/signup",
