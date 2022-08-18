@@ -1,9 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw, RouteLocationNormalized } from "vue-router"
-import TopIndex from "@/components/pages/top/index.vue"
+import TopPage from "@/components/pages/static/TopPage.vue"
 import { useUserStore } from "@/store/userStore"
 import { refresh, silentRefresh } from "@/common/refresh"
 
-const TestIndex = () => import("@/components/pages/test/index.vue")
 const SignupIndex = () => import("@/components/pages/signup/index.vue")
 const LoginIndex = () => import("@/components/pages/login/index.vue")
 const Sentences = () => import("@/components/pages/sentences/index.vue")
@@ -12,18 +11,14 @@ const Sentence = () => import("@/components/pages/sentences/show.vue")
 const Profile = () => import("@/components/pages/profile/index.vue")
 const Mypage = () => import("@/components/pages/mypage/index.vue")
 const History = () => import("@/components/pages/history/show.vue")
+const Privacy = () => import("@/components/pages/static/Privacy.vue")
+const Terms = () => import("@/components/pages/static/Terms.vue")
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "TopIndex",
-    component: TopIndex,
-  },
-  {
-    path: "/test",
-    name: "TestIndex",
-    component: TestIndex,
-    meta: { requiresAuth: true }
+    name: "TopPage",
+    component: TopPage,
   },
   {
     path: "/signup",
@@ -69,6 +64,16 @@ const routes: Array<RouteRecordRaw> = [
     component: History,
     props: true,
     meta: { requiresAuth: true }
+  },
+  {
+    path: "/privacy",
+    name: "Privacy",
+    component: Privacy,
+  },
+  {
+    path: "/terms",
+    name: "Terms",
+    component: Terms,
   },
 ]
 

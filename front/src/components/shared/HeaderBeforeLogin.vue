@@ -2,7 +2,7 @@
   <v-app-bar
     color="rgba(0,200,255,1)"
   >
-    <router-link :to="{ name: 'TopIndex' }">
+    <router-link :to="{ name: 'TopPage' }">
       <v-app-bar-title class="text-white font-weight-bold">音読スター</v-app-bar-title>
     </router-link>
 
