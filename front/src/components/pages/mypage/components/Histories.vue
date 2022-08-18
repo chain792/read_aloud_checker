@@ -1,6 +1,6 @@
 <template>
   <v-card v-for="history in histories" :key="history.id" class="my-3 mx-10">
-    <!--<router-link :to="{ name: 'Sentence', params: { id: history.id } }" class="text-decoration-none">-->
+    <router-link :to="{ name: 'History', params: { id: history.id } }" class="text-decoration-none">
       <v-card-text class="pb-2">
         <div>
           {{ history.title }}
@@ -17,7 +17,7 @@
           <p class="ml-3 date-text">{{ displayDate(history.createdAt) }}</p>
         </div>
       </v-card-text>
-    <!--</router-link>-->
+    </router-link>
   </v-card>
 </template>
 

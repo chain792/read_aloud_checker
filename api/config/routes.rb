@@ -7,7 +7,7 @@ Rails.application.routes.draw do
       resources :news_sentences, only: %i[index]
       namespace :user do
         resources :sentences, only: %i[create]
-        resources :trainings, only: %i[index create]
+        resources :trainings, only: %i[index create show]
         resources :records, only: %i[index]
       end
       resource :profile, only: %i[update] do

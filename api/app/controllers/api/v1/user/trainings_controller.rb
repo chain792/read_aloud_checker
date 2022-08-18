@@ -13,6 +13,11 @@ class Api::V1::User::TrainingsController < ApplicationController
     end
   end
 
+  def show
+    training = current_user.trainings.find(params[:id])
+    render json: TrainingResource.new(training).serialize
+  end
+
   private
 
   def training_params

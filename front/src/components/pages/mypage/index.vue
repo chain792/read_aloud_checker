@@ -21,7 +21,7 @@
           <Record />
         </v-window-item>
         <v-window-item value="tab-2">
-          <History />
+          <Histories />
         </v-window-item>
       </v-window>
     </v-card>
@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue"
 import Record from "./components/Record.vue"
-import History from "./components/History.vue"
+import Histories from "./components/Histories.vue"
 
 const initilaTabValue: string = sessionStorage.mypageTab ? sessionStorage.mypageTab : "tab-1"
 const tab = ref(initilaTabValue)
