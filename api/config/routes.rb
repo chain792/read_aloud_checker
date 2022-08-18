@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       namespace :user do
         resources :sentences, only: %i[create]
         resources :trainings, only: %i[index create]
+        resources :records, only: %i[index]
       end
       resource :profile, only: %i[update] do
         collection { get :presign }
