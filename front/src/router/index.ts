@@ -13,6 +13,7 @@ const Profile = () => import("@/components/pages/profile/index.vue")
 const Mypage = () => import("@/components/pages/mypage/index.vue")
 const History = () => import("@/components/pages/history/show.vue")
 const Privacy = () => import("@/components/pages/static/Privacy.vue")
+const Terms = () => import("@/components/pages/static/Terms.vue")
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -75,6 +76,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/privacy",
     name: "Privacy",
     component: Privacy,
+  },
+  {
+    path: "/terms",
+    name: "Terms",
+    component: Terms,
   },
 ]
 

@@ -12,6 +12,7 @@
         variant="text"
         class="mx-2"
         rounded="xl"
+        :to="{ name: 'Terms' }"
       >
         利用規約
       </v-btn>
