@@ -22,7 +22,7 @@ const fetchSentences = async (): Promise<void> => {
   try{
     const res = await axios.get("news_sentences")
     console.log(res)
-    res.data.map((sentence: Sentence) => {
+    res.data.sentences.map((sentence: Sentence) => {
       sentences.push({
         id: sentence.id,
         title: sentence.title

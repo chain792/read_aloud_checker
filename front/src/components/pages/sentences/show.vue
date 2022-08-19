@@ -53,7 +53,7 @@ let sentenceBodyBeforeReadAloud: string
 const fetchSentence = async (): Promise<void> => {
   try{
     const res = await axios.get(`sentences/${props.id}`)
-    sentence.value = res.data
+    sentence.value = res.data.sentence
     sentenceBodyBeforeReadAloud = sentence.value.body
   } catch(e) {
     console.log(e)
