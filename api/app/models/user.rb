@@ -6,6 +6,8 @@ class User < ApplicationRecord
 
   has_many :sentences, as: :creater, dependent: :destroy
   has_many :trainings, dependent: :destroy
+  has_many :bookmarks, dependent: :destroy
+  has_many :bookmark_sentences, through: :bookmarks, source: :sentence
 
   validates :password, length: { minimum: 6 }, if: -> { new_record? || changes[:crypted_password] }
   validates :password, confirmation: true, if: -> { new_record? || changes[:crypted_password] }
@@ -26,5 +28,13 @@ class User < ApplicationRecord
       user.password = random_value
       user.password_confirmation = random_value
     end
+  end
+
+  def bookmark(sentence)
+    bookmark_sentences << sentence
+  end
+
+  def unbookmark(sentence)
+    bookmarks.find_by(sentence_id: sentence.id).destroy!
   end
 end

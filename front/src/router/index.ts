@@ -3,11 +3,12 @@ import TopPage from "@/components/pages/static/TopPage.vue"
 import { useUserStore } from "@/store/userStore"
 import { refresh, silentRefresh } from "@/common/refresh"
 
-const SignupIndex = () => import("@/components/pages/signup/index.vue")
-const LoginIndex = () => import("@/components/pages/login/index.vue")
+const Signup = () => import("@/components/pages/signup/index.vue")
+const Login = () => import("@/components/pages/login/index.vue")
 const Sentences = () => import("@/components/pages/sentences/index.vue")
 const NewSentence = () => import("@/components/pages/sentences/new.vue")
 const Sentence = () => import("@/components/pages/sentences/show.vue")
+const BookmarkSentences = () => import("@/components/pages/sentences/bookmark.vue")
 const Profile = () => import("@/components/pages/profile/index.vue")
 const Mypage = () => import("@/components/pages/mypage/index.vue")
 const History = () => import("@/components/pages/history/show.vue")
@@ -22,13 +23,13 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/signup",
-    name: "SignupIndex",
-    component: SignupIndex,
+    name: "Signup",
+    component: Signup,
   },
   {
     path: "/login",
-    name: "LoginIndex",
-    component: LoginIndex,
+    name: "Login",
+    component: Login,
   },
   {
     path: "/sentences",
@@ -45,6 +46,12 @@ const routes: Array<RouteRecordRaw> = [
     name: "Sentence",
     component: Sentence,
     props: true
+  },
+  {
+    path: "/sentences/bookmark",
+    name: "BookmarkSentences",
+    component: BookmarkSentences,
+    meta: { requiresAuth: true }
   },
   {
     path: "/profile",
@@ -93,11 +100,11 @@ router.beforeEach(async (to: RouteLocationNormalized) => {
     isFirstBeforeEach = false
     const isSuccessRefresh = await refresh()
     if (to.matched.some(record => record.meta.requiresAuth) && !isSuccessRefresh ) {
-      return { name: "LoginIndex" }
+      return { name: "Login" }
     }
   }else{
     if (to.matched.some(record => record.meta.requiresAuth) && !authUser) {
-      return { name: "LoginIndex" }
+      return { name: "Login" }
     }
   }
 })

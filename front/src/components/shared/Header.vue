@@ -16,6 +16,10 @@
       英文投稿
     </router-link>
 
+    <router-link :to="{ name: 'BookmarkSentences' }" class="mr-5 text-white font-weight-bold">
+      ブックマーク
+    </router-link>
+
     <v-menu>
       <template v-slot:activator="{ props }">
         <v-btn
@@ -73,11 +77,11 @@ async function logout(): Promise<void>{
   }
 }
 
-async function linkToProfile(): Promise<void>{
+function linkToProfile(): void{
   router.push({ name: "Profile" })
 }
 
-async function linkToMypage(): Promise<void>{
+function linkToMypage(): void{
   router.push({ name: "Mypage" })
 }
 

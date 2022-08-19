@@ -20,7 +20,7 @@ const sentences: Array<Sentence> = reactive([])
 
 const fetchSentences = async (): Promise<void> => {
   try{
-    const res = await axios.get("news_sentences")
+    const res = await axios.get("sentences/bookmark")
     console.log(res)
     res.data.sentences.map((sentence: Sentence) => {
       sentences.push({

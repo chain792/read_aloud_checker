@@ -8,7 +8,7 @@ class Api::V1::SessionsController < ApplicationController
       refresh_token = user.refresh_me!
       set_refresh_token_to_cookie(refresh_token)
       access_token = user.create_access_token.transform_keys{|k| k.to_s.camelize(:lower)}
-      render json: access_token.merge(user: UserResource.new(user).serialize)
+      render json: access_token.merge(JSON.parse UserResource.new(user).serialize)
     else
       head :unauthorized
     end
@@ -20,7 +20,7 @@ class Api::V1::SessionsController < ApplicationController
 
     if user
       access_token = user.create_access_token.transform_keys{|k| k.to_s.camelize(:lower)}
-      render json: access_token.merge(user: UserResource.new(user).serialize)
+      render json: access_token.merge(JSON.parse UserResource.new(user).serialize)
     else
       head :unauthorized
     end

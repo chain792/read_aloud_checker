@@ -1,8 +1,35 @@
 <template>
   <v-container>
     <h1 class="text-center text-h5">{{ sentence.title }}</h1>
+    <!-- ブックマークボタン -->
+    <div class="d-flex justify-end">
+      <!-- Array.includesが配列の要素と異なる型の値を受け取るとコンパイルエラーが起こるためany[]型にキャストして対処 
+        https://qiita.com/namtok/items/34292d482f67a6064bbb -->
+      <div v-if="progress" class="mr-5 bookmark-btn">
+        <v-progress-circular
+          size="20"
+          color="grey-darken-5"
+          indeterminate
+          width="3"
+          class="progress"
+        ></v-progress-circular>
+      </div>
+      <v-btn v-else-if="(bookmarkUserIds as any[]).includes(userStore.authUser?.id)" class="bookmark-btn mr-5" elevation="0" icon @click="unbookmark">
+        <v-tooltip activator="parent" location="top">
+          <p class="tooltip">ブックマーク解除</p>
+        </v-tooltip>
+        <v-icon class="bookmark-icon" color="grey-darken-3">mdi-bookmark-check</v-icon>
+      </v-btn>
+      <v-btn v-else class="bookmark-btn mr-5" elevation="0" icon @click="bookmark">
+        <v-tooltip activator="parent" location="top">
+          <p class="tooltip">ブックマーク</p>
+        </v-tooltip>
+        <v-icon class="bookmark-icon" color="grey-darken-3">mdi-bookmark-multiple-outline</v-icon>
+      </v-btn>
+    </div>
     <p v-if="status === 'playing'" class="red text-center mt-5">音読中</p>
     <p v-else-if="status === 'finished'" class="red text-center mt-5">結果</p>
+    <!-- 英文 -->
     <v-card variant="outlined" :elevation="2" class="mx-auto mt-5 px-5 py-3">
       <v-card-text class="mt-3">
       <div class="sentence-body text-h6" v-html="sentence.body"></div>   
@@ -20,17 +47,27 @@
       <v-btn :border="true">音声を保存する</v-btn>
     </div>
   </v-container>
+  <!-- 要ログインモーダル -->
+  <v-dialog v-model="loginRequiredDialog">
+    <LoginRequiredModal @close-modal="closeLoginRequiredModal" />
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref } from "vue"
+import { ref, Ref, reactive } from "vue"
 import axios from "@/plugins/axios"
+import { useUserStore } from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
+import LoginRequiredModal from "@/components/shared/LoginRequiredModal.vue"
 
 const flashStore = useFlashStore()
+const userStore = useUserStore()
 
 interface Props {
   id: string
+}
+interface Bookmark {
+  userId: number
 }
 
 const props = defineProps<Props>()
@@ -39,19 +76,60 @@ const sentence = ref({
   title: "",
   body: ""
 })
+const bookmarkUserIds: Array<number> = reactive([])
+const progress = ref(false)
 const status: Ref<"unplayed" | "playing" | "finished"> = ref("unplayed")
 let sentenceBodyBeforeReadAloud: string
 
 const fetchSentence = async (): Promise<void> => {
   try{
     const res = await axios.get(`sentences/${props.id}`)
-    sentence.value = res.data
+    sentence.value = res.data.sentence
+    res.data.sentence.bookmarks.forEach((bookmark: Bookmark) => bookmarkUserIds.push(bookmark.userId))
     sentenceBodyBeforeReadAloud = sentence.value.body
   } catch(e) {
     console.log(e)
   }
 }
 fetchSentence()
+
+const animationProgress = () => {
+  progress.value = true
+  setTimeout(()=>{
+    progress.value = false
+  }, 450)
+}
+
+const bookmark = async (): Promise<void> => {
+  if(!userStore.authUser){
+    loginRequiredDialog.value = true
+    return
+  }
+  try{
+    await axios.post(`sentences/${props.id}/bookmark`)
+    bookmarkUserIds.push(userStore.authUser!.id)
+    animationProgress()
+  } catch(e) {
+    console.log(e)
+  }
+}
+
+const unbookmark = async (): Promise<void> => {
+  try{
+    await axios.delete(`sentences/${props.id}/bookmark`)
+    const index = bookmarkUserIds.indexOf(userStore.authUser!.id)
+    bookmarkUserIds.splice(index, 1)
+    animationProgress()
+  } catch(e) {
+    console.log(e)
+  }
+}
+
+const loginRequiredDialog = ref(false)
+
+const closeLoginRequiredModal = (): void => {
+  loginRequiredDialog.value = false
+}
 
 /***************************************************
   音読機能
@@ -178,6 +256,21 @@ const registerReadAloudResult = async (): Promise<void> => {
 .sentence-body{
   font-weight: 350;
   line-height: 1.5;
+}
+.bookmark-btn{
+  border: 1px solid gray;
+  border-radius: 50%;
+}
+.bookmark-icon{
+
+}
+.tooltip{
+  font-size: 12px;
+  margin: -3px -10px;
+  color: #fff;
+}
+.progress{
+  margin: 9px;
 }
 </style>
 <style>

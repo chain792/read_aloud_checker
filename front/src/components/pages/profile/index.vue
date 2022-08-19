@@ -296,10 +296,10 @@ const updateProfile = async (): Promise<void> => {
     await uploadAvatarToS3(uploadFile)
     errorMessages.splice(0)
     const res = await axios.patch("profile", { user: user })
-    userStore.setUser(res.data)
+    userStore.setUser(res.data.user)
     flashStore.succeedUpdateProfile()
-    currentUser.name = res.data.name
-    currentUser.avatar = res.data.avatar
+    currentUser.name = res.data.user.name
+    currentUser.avatar = res.data.user.avatar
     profileDialog.value = false
   } catch(e) {
     if(Axios.isAxiosError(e) && e.response && e.response.data && Array.isArray(e.response.data)){
@@ -345,9 +345,9 @@ const updateEmail = async (): Promise<void> => {
       email: emailFormValue.value,
       password: passwordForChangeEmail.value
     })
-    userStore.setUser(res.data)
+    userStore.setUser(res.data.user)
     flashStore.succeedUpdateEmail()
-    currentUser.email = res.data.email
+    currentUser.email = res.data.user.email
     emailDialog.value = false
   } catch(e) {
     if(Axios.isAxiosError(e) && e.response && e.response.data && Array.isArray(e.response.data)){
@@ -386,7 +386,7 @@ const updatePassword = async (): Promise<void> => {
       password: newPassword.value,
       password_confirmation: newPasswordConfirmation.value
     })
-    userStore.setUser(res.data)
+    userStore.setUser(res.data.user)
     flashStore.succeedUpdatePassword()
     passwordDialog.value = false
   } catch(e) {
