@@ -15,9 +15,15 @@
         ></v-progress-circular>
       </div>
       <v-btn v-else-if="(bookmarkUserIds as any[]).includes(userStore.authUser?.id)" class="bookmark-btn mr-5" elevation="0" icon @click="unbookmark">
+        <v-tooltip activator="parent" location="top">
+          <p class="tooltip">ブックマーク解除</p>
+        </v-tooltip>
         <v-icon class="bookmark-icon" color="grey-darken-3">mdi-bookmark-check</v-icon>
       </v-btn>
       <v-btn v-else class="bookmark-btn mr-5" elevation="0" icon @click="bookmark">
+        <v-tooltip activator="parent" location="top">
+          <p class="tooltip">ブックマーク</p>
+        </v-tooltip>
         <v-icon class="bookmark-icon" color="grey-darken-3">mdi-bookmark-multiple-outline</v-icon>
       </v-btn>
     </div>
@@ -242,7 +248,11 @@ const registerReadAloudResult = async (): Promise<void> => {
 .bookmark-icon{
 
 }
-
+.tooltip{
+  font-size: 12px;
+  margin: -3px -10px;
+  color: #fff;
+}
 .progress{
   margin: 9px;
 }
