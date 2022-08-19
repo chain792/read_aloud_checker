@@ -1,7 +1,8 @@
 class UserResource
   include Alba::Resource
 
-  attributes :id, :email, :name, :avatar, :created_at, :updated_at
+  root_key :user, :users
 
+  attributes :id, :email, :name, :avatar, :created_at, :updated_at
   transform_keys :lower_camel
 end
