@@ -16,6 +16,10 @@
       英文投稿
     </router-link>
 
+    <router-link :to="{ name: 'BookmarkSentences' }" class="mr-5 text-white font-weight-bold">
+      ブックマーク
+    </router-link>
+
     <v-menu>
       <template v-slot:activator="{ props }">
         <v-btn
