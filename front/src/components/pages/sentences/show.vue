@@ -2,11 +2,13 @@
   <v-container>
     <h1 class="text-center text-h5">{{ sentence.title }}</h1>
     <div class="d-flex justify-end">
-      <v-btn class="bookmark-btn mr-3" elevation="0" icon @click="bookmark">
-          <v-icon class="bookmark-icon" color="grey-darken-3">mdi-bookmark-multiple-outline</v-icon>
+      <!-- Array.includesが配列の要素と異なる型の値を受け取るとコンパイルエラーが起こるためany[]型にキャストして対処 
+        https://qiita.com/namtok/items/34292d482f67a6064bbb -->
+      <v-btn v-if="(bookmarkUserIds as any[]).includes(userStore.authUser?.id)" class="bookmark-btn mr-3" elevation="0" icon @click="unbookmark">
+        <v-icon class="bookmark-icon" color="grey-darken-3">mdi-bookmark-check</v-icon>
       </v-btn>
-      <v-btn class="bookmark-btn mr-3" elevation="0" icon @click="unbookmark">
-          <v-icon class="bookmark-icon" color="grey-darken-3">mdi-bookmark-multiple</v-icon>
+      <v-btn v-else class="bookmark-btn mr-3" elevation="0" icon @click="bookmark">
+        <v-icon class="bookmark-icon" color="grey-darken-3">mdi-bookmark-multiple-outline</v-icon>
       </v-btn>
     </div>
     <p v-if="status === 'playing'" class="red text-center mt-5">音読中</p>
@@ -31,14 +33,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref } from "vue"
+import { ref, Ref, reactive } from "vue"
 import axios from "@/plugins/axios"
+import { useUserStore } from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
 
 const flashStore = useFlashStore()
+const userStore = useUserStore()
 
 interface Props {
   id: string
+}
+interface Bookmark {
+  userId: number
 }
 
 const props = defineProps<Props>()
@@ -47,6 +54,7 @@ const sentence = ref({
   title: "",
   body: ""
 })
+const bookmarkUserIds: Array<number> = reactive([])
 const status: Ref<"unplayed" | "playing" | "finished"> = ref("unplayed")
 let sentenceBodyBeforeReadAloud: string
 
@@ -54,6 +62,7 @@ const fetchSentence = async (): Promise<void> => {
   try{
     const res = await axios.get(`sentences/${props.id}`)
     sentence.value = res.data.sentence
+    res.data.sentence.bookmarks.forEach((bookmark: Bookmark) => bookmarkUserIds.push(bookmark.userId))
     sentenceBodyBeforeReadAloud = sentence.value.body
   } catch(e) {
     console.log(e)
@@ -63,8 +72,8 @@ fetchSentence()
 
 const bookmark = async (): Promise<void> => {
   try{
-    const res = await axios.post(`sentences/${props.id}/bookmark`)
-    console.log(res)
+    await axios.post(`sentences/${props.id}/bookmark`)
+    bookmarkUserIds.push(userStore.authUser!.id)
   } catch(e) {
     console.log(e)
   }
@@ -72,8 +81,9 @@ const bookmark = async (): Promise<void> => {
 
 const unbookmark = async (): Promise<void> => {
   try{
-    const res = await axios.delete(`sentences/${props.id}/bookmark`)
-    console.log(res)
+    await axios.delete(`sentences/${props.id}/bookmark`)
+    const index = bookmarkUserIds.indexOf(userStore.authUser!.id)
+    bookmarkUserIds.splice(index, 1)
   } catch(e) {
     console.log(e)
   }
