@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_19_015752) do
+ActiveRecord::Schema.define(version: 2022_08_19_153710) do
 
   create_table "bookmarks", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -80,9 +80,14 @@ ActiveRecord::Schema.define(version: 2022_08_19_015752) do
     t.string "refresh_token"
     t.datetime "refresh_token_expires_at"
     t.string "oauth_avatar"
+    t.string "reset_password_token"
+    t.datetime "reset_password_token_expires_at"
+    t.datetime "reset_password_email_sent_at"
+    t.integer "access_count_to_reset_password_page", default: 0
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["refresh_token"], name: "index_users_on_refresh_token", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token"
   end
 
   add_foreign_key "bookmarks", "sentences"
