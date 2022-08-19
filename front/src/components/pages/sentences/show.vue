@@ -1,13 +1,23 @@
 <template>
   <v-container>
     <h1 class="text-center text-h5">{{ sentence.title }}</h1>
+
     <div class="d-flex justify-end">
       <!-- Array.includesが配列の要素と異なる型の値を受け取るとコンパイルエラーが起こるためany[]型にキャストして対処 
         https://qiita.com/namtok/items/34292d482f67a6064bbb -->
-      <v-btn v-if="(bookmarkUserIds as any[]).includes(userStore.authUser?.id)" class="bookmark-btn mr-3" elevation="0" icon @click="unbookmark">
+      <div v-if="progress" class="mr-5 bookmark-btn">
+        <v-progress-circular
+          size="20"
+          color="grey-darken-5"
+          indeterminate
+          width="3"
+          class="progress"
+        ></v-progress-circular>
+      </div>
+      <v-btn v-else-if="(bookmarkUserIds as any[]).includes(userStore.authUser?.id)" class="bookmark-btn mr-5" elevation="0" icon @click="unbookmark">
         <v-icon class="bookmark-icon" color="grey-darken-3">mdi-bookmark-check</v-icon>
       </v-btn>
-      <v-btn v-else class="bookmark-btn mr-3" elevation="0" icon @click="bookmark">
+      <v-btn v-else class="bookmark-btn mr-5" elevation="0" icon @click="bookmark">
         <v-icon class="bookmark-icon" color="grey-darken-3">mdi-bookmark-multiple-outline</v-icon>
       </v-btn>
     </div>
@@ -55,6 +65,7 @@ const sentence = ref({
   body: ""
 })
 const bookmarkUserIds: Array<number> = reactive([])
+const progress = ref(false)
 const status: Ref<"unplayed" | "playing" | "finished"> = ref("unplayed")
 let sentenceBodyBeforeReadAloud: string
 
@@ -70,10 +81,18 @@ const fetchSentence = async (): Promise<void> => {
 }
 fetchSentence()
 
+const animationProgress = () => {
+  progress.value = true
+  setTimeout(()=>{
+    progress.value = false
+  }, 450)
+}
+
 const bookmark = async (): Promise<void> => {
   try{
     await axios.post(`sentences/${props.id}/bookmark`)
     bookmarkUserIds.push(userStore.authUser!.id)
+    animationProgress()
   } catch(e) {
     console.log(e)
   }
@@ -84,6 +103,7 @@ const unbookmark = async (): Promise<void> => {
     await axios.delete(`sentences/${props.id}/bookmark`)
     const index = bookmarkUserIds.indexOf(userStore.authUser!.id)
     bookmarkUserIds.splice(index, 1)
+    animationProgress()
   } catch(e) {
     console.log(e)
   }
@@ -221,6 +241,10 @@ const registerReadAloudResult = async (): Promise<void> => {
 }
 .bookmark-icon{
 
+}
+
+.progress{
+  margin: 9px;
 }
 </style>
 <style>
