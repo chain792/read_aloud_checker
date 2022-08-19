@@ -1,6 +1,14 @@
 <template>
   <v-container>
     <h1 class="text-center text-h5">{{ sentence.title }}</h1>
+    <div class="d-flex justify-end">
+      <v-btn class="bookmark-btn mr-3" elevation="0" icon @click="bookmark">
+          <v-icon class="bookmark-icon" color="grey-darken-3">mdi-bookmark-multiple-outline</v-icon>
+      </v-btn>
+      <v-btn class="bookmark-btn mr-3" elevation="0" icon @click="unbookmark">
+          <v-icon class="bookmark-icon" color="grey-darken-3">mdi-bookmark-multiple</v-icon>
+      </v-btn>
+    </div>
     <p v-if="status === 'playing'" class="red text-center mt-5">音読中</p>
     <p v-else-if="status === 'finished'" class="red text-center mt-5">結果</p>
     <v-card variant="outlined" :elevation="2" class="mx-auto mt-5 px-5 py-3">
@@ -52,6 +60,24 @@ const fetchSentence = async (): Promise<void> => {
   }
 }
 fetchSentence()
+
+const bookmark = async (): Promise<void> => {
+  try{
+    const res = await axios.post(`sentences/${props.id}/bookmark`)
+    console.log(res)
+  } catch(e) {
+    console.log(e)
+  }
+}
+
+const unbookmark = async (): Promise<void> => {
+  try{
+    const res = await axios.delete(`sentences/${props.id}/bookmark`)
+    console.log(res)
+  } catch(e) {
+    console.log(e)
+  }
+}
 
 /***************************************************
   音読機能
@@ -178,6 +204,13 @@ const registerReadAloudResult = async (): Promise<void> => {
 .sentence-body{
   font-weight: 350;
   line-height: 1.5;
+}
+.bookmark-btn{
+  border: 1px solid gray;
+  border-radius: 50%;
+}
+.bookmark-icon{
+
 }
 </style>
 <style>

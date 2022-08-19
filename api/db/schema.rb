@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_18_072629) do
+ActiveRecord::Schema.define(version: 2022_08_19_015752) do
+
+  create_table "bookmarks", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "sentence_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["sentence_id"], name: "index_bookmarks_on_sentence_id"
+    t.index ["user_id", "sentence_id"], name: "index_bookmarks_on_user_id_and_sentence_id", unique: true
+    t.index ["user_id"], name: "index_bookmarks_on_user_id"
+  end
 
   create_table "news", charset: "utf8mb4", force: :cascade do |t|
     t.string "title", null: false
@@ -75,6 +85,8 @@ ActiveRecord::Schema.define(version: 2022_08_18_072629) do
     t.index ["refresh_token"], name: "index_users_on_refresh_token", unique: true
   end
 
+  add_foreign_key "bookmarks", "sentences"
+  add_foreign_key "bookmarks", "users"
   add_foreign_key "news", "news_categories"
   add_foreign_key "result_words", "trainings"
   add_foreign_key "trainings", "sentences"
