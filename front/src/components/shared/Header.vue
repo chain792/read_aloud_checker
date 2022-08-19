@@ -77,11 +77,11 @@ async function logout(): Promise<void>{
   }
 }
 
-async function linkToProfile(): Promise<void>{
+function linkToProfile(): void{
   router.push({ name: "Profile" })
 }
 
-async function linkToMypage(): Promise<void>{
+function linkToMypage(): void{
   router.push({ name: "Mypage" })
 }
 

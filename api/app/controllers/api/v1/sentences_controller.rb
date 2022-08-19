@@ -1,4 +1,6 @@
 class Api::V1::SentencesController < ApplicationController
+  skip_before_action :authenticate!, only: %i[show]
+
   def show
     sentence = Sentence.find(params[:id])
     render json: SentenceResource.new(sentence).serialize

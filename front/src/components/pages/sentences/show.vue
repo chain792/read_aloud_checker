@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <h1 class="text-center text-h5">{{ sentence.title }}</h1>
-
+    <!-- ブックマークボタン -->
     <div class="d-flex justify-end">
       <!-- Array.includesが配列の要素と異なる型の値を受け取るとコンパイルエラーが起こるためany[]型にキャストして対処 
         https://qiita.com/namtok/items/34292d482f67a6064bbb -->
@@ -29,6 +29,7 @@
     </div>
     <p v-if="status === 'playing'" class="red text-center mt-5">音読中</p>
     <p v-else-if="status === 'finished'" class="red text-center mt-5">結果</p>
+    <!-- 英文 -->
     <v-card variant="outlined" :elevation="2" class="mx-auto mt-5 px-5 py-3">
       <v-card-text class="mt-3">
       <div class="sentence-body text-h6" v-html="sentence.body"></div>   
@@ -46,6 +47,10 @@
       <v-btn :border="true">音声を保存する</v-btn>
     </div>
   </v-container>
+  <!-- 要ログインモーダル -->
+  <v-dialog v-model="loginRequiredDialog">
+    <LoginRequiredModal @close-modal="closeLoginRequiredModal" />
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
@@ -53,6 +58,7 @@ import { ref, Ref, reactive } from "vue"
 import axios from "@/plugins/axios"
 import { useUserStore } from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
+import LoginRequiredModal from "@/components/shared/LoginRequiredModal.vue"
 
 const flashStore = useFlashStore()
 const userStore = useUserStore()
@@ -95,6 +101,10 @@ const animationProgress = () => {
 }
 
 const bookmark = async (): Promise<void> => {
+  if(!userStore.authUser){
+    loginRequiredDialog.value = true
+    return
+  }
   try{
     await axios.post(`sentences/${props.id}/bookmark`)
     bookmarkUserIds.push(userStore.authUser!.id)
@@ -113,6 +123,12 @@ const unbookmark = async (): Promise<void> => {
   } catch(e) {
     console.log(e)
   }
+}
+
+const loginRequiredDialog = ref(false)
+
+const closeLoginRequiredModal = (): void => {
+  loginRequiredDialog.value = false
 }
 
 /***************************************************

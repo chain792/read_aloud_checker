@@ -8,6 +8,10 @@
 
     <v-spacer></v-spacer>
 
+    <router-link :to="{ name: 'Sentences' }" class="mr-5 text-white font-weight-bold">
+      英文一覧
+    </router-link>
+
     <v-btn
       density="compact"
       color="white"
@@ -15,7 +19,7 @@
       variant="text"
       class="mr-2 font-weight-bold"
       rounded="xl"
-      :to="{ name: 'LoginIndex' }"
+      :to="{ name: 'Login' }"
     >
       ログイン
     </v-btn>
@@ -28,7 +32,7 @@
       variant="text"
       class="mr-2 font-weight-bold"
       rounded="xl"
-      :to="{ name: 'SignupIndex' }"
+      :to="{ name: 'Signup' }"
     >
       新規登録
     </v-btn>
