@@ -11,6 +11,9 @@ Rails.application.routes.draw do
       namespace :user do
         resources :sentences, only: %i[create]
         resources :trainings, only: %i[index create show]
+        resources :voices, only: %i[create] do
+          collection { get :presigned_post }
+        end
         resources :records, only: %i[index]
       end
       resource :profile, only: %i[update] do

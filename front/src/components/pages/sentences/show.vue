@@ -42,9 +42,14 @@
       <v-btn :border="true" @click="stopReadAloud">音読を終了する</v-btn>
       <v-btn :border="true" @click="skipWord">パス</v-btn>
     </div>
-    <div v-else class="mt-5 d-flex justify-center">
-      <v-btn :border="true" @click="replayReadAloud">再音読する</v-btn>
-      <v-btn :border="true">音声を保存する</v-btn>
+    <div v-else class="mt-5">
+      <div class="d-flex justify-center">
+          <audio ref="audio"  controls></audio>
+      </div>
+      <div class="d-flex justify-center mt-5">
+        <v-btn :border="true" @click="replayReadAloud">再音読する</v-btn>
+        <v-btn :border="true" @click="saveVoice">音声を保存する</v-btn>
+      </div>
     </div>
   </v-container>
   <!-- 要ログインモーダル -->
@@ -56,6 +61,7 @@
 <script setup lang="ts">
 import { ref, Ref, reactive } from "vue"
 import axios from "@/plugins/axios"
+import Axios from "axios"
 import { useUserStore } from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
 import LoginRequiredModal from "@/components/shared/LoginRequiredModal.vue"
@@ -138,6 +144,11 @@ let recognition: any
 let results: Array<"succeeded" | "failed">
 let sentenceWords: Array<string>
 let failedTimes: number
+let mediaRecorder: MediaRecorder;
+let localStream: MediaStream;
+const audio = ref<HTMLAudioElement>()
+let trainingId: number
+let voiceBlob: Blob
 
 //音読スタート
 const startReadAloud = (): void => {
@@ -148,13 +159,18 @@ const startReadAloud = (): void => {
 }
 
 //音読でタイピングゲーム
-const playReadAloud = (): void => {
+const playReadAloud = async (): Promise<void> => {
   failedTimes = 0
   results = []
-
   const Recognition = window.webkitSpeechRecognition || window.SpeechRecognition;
   sentenceWords = sentenceBodyBeforeReadAloud.split(' ')
   let isSucceeded = false
+
+  const stream = await navigator.mediaDevices.getUserMedia({audio: true })
+  localStream = stream;
+  mediaRecorder = new MediaRecorder(stream);
+  mediaRecorder.start();
+
   recognition = new Recognition();
   recognition.lang = 'en-US'
   recognition.interimResults = true;
@@ -197,11 +213,17 @@ const playReadAloud = (): void => {
     }
   }
   //音読終了後の処理
-  recognition.onaudioend = (event) =>{
+  recognition.onaudioend = (e1) =>{
+    mediaRecorder.ondataavailable = (e2) => {
+      const blob_url = window.URL.createObjectURL(e2.data)
+      audio.value!.src = blob_url
+      voiceBlob = e2.data
+    }
+    localStream.getTracks().forEach(track => track.stop())
+
     flashStore.$reset()
     flashStore.finishReadAloud()
     status.value = "finished"
-    console.log(event)
     registerReadAloudResult()
   }
 
@@ -239,15 +261,43 @@ const registerReadAloudResult = async (): Promise<void> => {
     }
   })
   try{
-    await axios.post("user/trainings", {
+    const res = await axios.post("user/trainings", {
       training: {
         sentence_id: props.id,
         result_words_attributes: resultWords
       }
     })
+    trainingId = res.data.training.id
   } catch(e) {
     console.log(e)
   }
+}
+
+const uploadVoiceToS3 = async (file: Blob): Promise<void> => {
+  try{
+    const res = await axios.get("user/voices/presigned_post")
+    const formData = new FormData()
+    for(let key in res.data.fields) {
+      formData.append(key, res.data.fields[key])
+    }
+    formData.append('file', file)
+    await Axios.post(res.data.url, formData, {
+      headers: {
+        'accept': 'multipart/form-data'
+      }
+    })
+    await axios.post("user/voices", {
+      training_id: trainingId,
+      voice: res.data.fields.key.replace(/.*\//, "")
+
+    })
+  } catch(e) {
+    console.log(e)
+  }
+}
+
+const saveVoice = async (): Promise<void> => {
+  await uploadVoiceToS3(voiceBlob)
 }
 
 </script>
