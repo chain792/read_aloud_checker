@@ -20,6 +20,7 @@ Rails.application.routes.draw do
         resource :email, only: %i[update]
         resource :password, only: %i[update]
       end
+      resources :password_resets, only: %i[create edit update]
       post 'login', to: 'sessions#create'
       post 'refresh', to: 'sessions#refresh'
       delete 'logout', to: 'sessions#destroy'

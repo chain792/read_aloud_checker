@@ -38,6 +38,10 @@
           @click:append-inner="isVisiblePassword = !isVisiblePassword"
         ></v-text-field>
 
+        <div>
+          パスワードを忘れた場合は<router-link :to="{ name: 'NewPasswordReset' }">こちら</router-link>
+        </div>
+
         <v-btn
           :disabled="!valid"
           color="success"

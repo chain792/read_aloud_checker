@@ -18,7 +18,7 @@ services:
       - "./api:/$WORKDIR"
     environment:
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-      FRONT_DOMAIN: "localhost:$FRONT_PORT"
+      FRONT_DOMAIN: "http://localhost:$FRONT_PORT"
       API_DOMAIN: "http://localhost:$API_PORT"
       EDITOR: vim
       BUCKET_NAME: $BUCKET_NAME
@@ -41,3 +41,8 @@ services:
       - "$FRONT_PORT:$CONTAINER_PORT"
     depends_on:
       - api
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.0
+    ports:
+      - '8025:8025'
