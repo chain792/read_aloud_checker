@@ -21,7 +21,6 @@ services:
       FRONT_DOMAIN: "http://localhost:$FRONT_PORT"
       API_DOMAIN: "http://localhost:$API_PORT"
       EDITOR: vim
-      BUCKET_NAME: $BUCKET_NAME
     ports:
       - "$API_PORT:$CONTAINER_PORT"
     depends_on:

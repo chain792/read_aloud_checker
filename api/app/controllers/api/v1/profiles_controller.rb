@@ -1,8 +1,8 @@
 class Api::V1::ProfilesController < ApplicationController
-  include Api::PresignedPost
+  include Api::AwsS3
 
-  def presign
-    render json: presigned_post("user/avatar/#{current_user.id}/#{params[:name]}")
+  def presigned_post
+    render json: presigned_post_of_public_bucket("user/avatar/#{current_user.id}/#{params[:name]}")
   end
 
   def update

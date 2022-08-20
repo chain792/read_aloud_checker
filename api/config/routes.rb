@@ -14,7 +14,7 @@ Rails.application.routes.draw do
         resources :records, only: %i[index]
       end
       resource :profile, only: %i[update] do
-        collection { get :presign }
+        collection { get :presigned_post }
       end
       namespace :profile do
         resource :email, only: %i[update]

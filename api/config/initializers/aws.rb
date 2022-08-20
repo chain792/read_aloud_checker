@@ -6,4 +6,10 @@ Aws.config.update({
   )
 })
 
-S3_BUCKET = Aws::S3::Resource.new.bucket(ENV['BUCKET_NAME'])
+PUBLIC_BUCKET = Aws::S3::Resource.new.bucket(
+  Rails.application.credentials.dig(:aws, :public_bucket_name)
+)
+PRIVATE_BUCKET = Aws::S3::Resource.new.bucket(
+  Rails.application.credentials.dig(:aws, :private_bucket_name)
+)
+Signer = Aws::S3::Presigner.new
