@@ -26,7 +26,7 @@
           color="success"
           class="mr-4"
           width="400"
-          @click="login"
+          @click="sendEmail"
         >
           メール送信
         </v-btn>
@@ -49,18 +49,16 @@ const emailRules = [
   (v: string) => /.+@.+\..+/.test(v) || 'メールアドレスの形式が正しくありません',
 ]
 
-const login = async (): Promise<void> => {
+const sendEmail = async (): Promise<void> => {
   flashStore.$reset()
   try{
-    const res = await axios.post("password_resets", {
+    await axios.post("password_resets", {
       email: email.value
     })
-    console.log(res)
-    //flashStore.succeedLogin()
   } catch(e) {
-    //flashStore.failLogin()
     console.log(e)
   }
+  flashStore.succeedSendEmail()
 }
 
 </script>
