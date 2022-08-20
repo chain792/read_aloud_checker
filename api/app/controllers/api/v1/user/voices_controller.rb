@@ -12,6 +12,6 @@ class Api::V1::User::VoicesController < ApplicationController
   end
 
   def presigned_post
-    render json: presigned_post_of_private_bucket("user/voice/#{current_user.id}/#{SecureRandom.urlsafe_base64}")
+    render json: presigned_post_of_private_bucket("training/voice/#{current_user.id}/#{SecureRandom.urlsafe_base64}")
   end
 end

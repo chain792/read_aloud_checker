@@ -273,7 +273,7 @@ const registerReadAloudResult = async (): Promise<void> => {
   }
 }
 
-const uploadVoiceToS3 = async (file: Blob): Promise<void> => {
+const uploadVoiceToS3 = async (file: Blob): Promise<string | undefined> => {
   try{
     const res = await axios.get("user/voices/presigned_post")
     const formData = new FormData()
@@ -286,18 +286,22 @@ const uploadVoiceToS3 = async (file: Blob): Promise<void> => {
         'accept': 'multipart/form-data'
       }
     })
-    await axios.post("user/voices", {
-      training_id: trainingId,
-      voice: res.data.fields.key.replace(/.*\//, "")
-
-    })
+    return res.data.fields.key.replace(/.*\//, "")
   } catch(e) {
     console.log(e)
   }
 }
 
 const saveVoice = async (): Promise<void> => {
-  await uploadVoiceToS3(voiceBlob)
+  try{
+    const name = await uploadVoiceToS3(voiceBlob)
+    await axios.post("user/voices", {
+      training_id: trainingId,
+      voice: name
+    })
+  }catch(e){
+    console.log(e)
+  }
 }
 
 </script>
