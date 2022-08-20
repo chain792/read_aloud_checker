@@ -8,8 +8,8 @@ class Api::V1::PasswordResetsController < ApplicationController
   end
 
   def edit
-    @token = params[:id]
-    @user = User.load_from_reset_password_token(params[:id])
+    token = params[:id]
+    user = User.load_from_reset_password_token(params[:id])
 
     if @user.blank?
       head :unauthorized
