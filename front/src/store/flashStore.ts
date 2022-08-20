@@ -93,5 +93,20 @@ export const useFlashStore = defineStore("flash", {
       this.message = "パスワードの変更に失敗しました"
       this.color = "red-accent-3"
     },
+    succeedResetPassword(): void {
+      this.status = true
+      this.message = "パスワードを変更しました"
+      this.color = "green-accent-4"
+    },
+    failResetPassword(): void {
+      this.status = true
+      this.message = "パスワードの変更に失敗しました"
+      this.color = "red-accent-3"
+    },
+    failVerifyToken(): void {
+      this.status = true
+      this.message = "無効なURLです"
+      this.color = "red-accent-3"
+    },
   },
 })
