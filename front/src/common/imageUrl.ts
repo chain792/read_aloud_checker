@@ -13,5 +13,5 @@ export function imageUrl(type: ImageType, object: S3Object): string {
       }
       imagePath = `user/avatar/${object.id}/${object.avatar}`
   }
-  return `${import.meta.env.VITE_CLOUD_FRONT}/public/uploads/${imagePath}`
+  return `${import.meta.env.VITE_CLOUD_FRONT}/public/${import.meta.env.MODE}/uploads/${imagePath}`
 }

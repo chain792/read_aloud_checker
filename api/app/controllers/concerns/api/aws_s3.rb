@@ -3,7 +3,7 @@ module Api::AwsS3
 
   def presigned_post_of_public_bucket(key)
     post = PUBLIC_BUCKET.presigned_post(
-      key: "public/uploads/#{key}",
+      key: "public/#{ENV['RAILS_ENV']}/uploads/#{key}",
       success_action_status: '201',
       acl: 'private'
     )
@@ -13,7 +13,7 @@ module Api::AwsS3
 
   def presigned_post_of_private_bucket(key)
     post = PRIVATE_BUCKET.presigned_post(
-      key: "private/uploads/#{key}",
+      key: "private/#{ENV['RAILS_ENV']}/uploads/#{key}",
       success_action_status: '201',
       acl: 'private'
     )
