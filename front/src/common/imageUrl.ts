@@ -5,7 +5,6 @@ interface S3Object {
 }
 
 export function imageUrl(type: ImageType, object: S3Object): string {
-  const basePath: string = import.meta.env.VITE_S3_BUCKET
   let imagePath = ''
   switch (type) {
     case 'avatar':
@@ -14,5 +13,5 @@ export function imageUrl(type: ImageType, object: S3Object): string {
       }
       imagePath = `user/avatar/${object.id}/${object.avatar}`
   }
-  return `${basePath}/uploads/${imagePath}`
+  return `${import.meta.env.VITE_CLOUD_FRONT}/public/${import.meta.env.MODE}/uploads/${imagePath}`
 }

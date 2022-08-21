@@ -11,10 +11,16 @@ Rails.application.routes.draw do
       namespace :user do
         resources :sentences, only: %i[create]
         resources :trainings, only: %i[index create show]
+        resources :voices, only: %i[create] do
+          collection do
+            get :presigned_post
+            get :presign
+          end
+        end
         resources :records, only: %i[index]
       end
       resource :profile, only: %i[update] do
-        collection { get :presign }
+        collection { get :presigned_post }
       end
       namespace :profile do
         resource :email, only: %i[update]

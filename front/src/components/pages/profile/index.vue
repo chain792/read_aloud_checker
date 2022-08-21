@@ -270,7 +270,7 @@ const uploadAvatarToS3 = async (file: File | null): Promise<void> => {
   if(!file) return
 
   try{
-    const res = await axios.get("profile/presign", {
+    const res = await axios.get("profile/presigned_post", {
       params: {
         name: user.avatar
       }

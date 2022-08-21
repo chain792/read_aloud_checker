@@ -6,6 +6,9 @@
       <div class="sentence-body text-h6" v-html="sentence.body"></div>   
       </v-card-text>
     </v-card>
+    <div v-if="isSavedVoice" class="d-flex justify-center">
+      <audio ref="audio"  controls></audio>
+    </div>
     <div class="mt-5 d-flex justify-center">
       <v-btn :border="true" @click="linkToSentence">この英文を音読する</v-btn>
       <v-btn :border="true">音声を再生する</v-btn>
@@ -14,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, onBeforeUnmount } from "vue"
 import axios from "@/plugins/axios"
 import { useRouter } from 'vue-router'
 
@@ -34,6 +37,9 @@ const sentence = ref({
   title: "",
   body: ""
 })
+const isSavedVoice = ref(false)
+const audio = ref<HTMLAudioElement>()
+let blob_url: string
 
 const decorateSentence = (body: string, resultWords: Array<ResultWord>): string => {
   const sentenceWords = body.split(' ')
@@ -50,15 +56,33 @@ const fetchTraining = async (): Promise<void> => {
     const res = await axios.get(`user/trainings/${props.id}`)
     sentence.value = res.data.training.sentence
     sentence.value.body = decorateSentence(sentence.value.body, res.data.training.resultWords)
+    await setAudio(res.data.training.voice)
   } catch(e) {
     console.log(e)
   }
 }
 fetchTraining()
 
+const setAudio = async (name: string): Promise<void> => {
+  if(!name) return
+
+  isSavedVoice.value = true
+  const res = await axios.get("user/voices/presign", {
+    params: {
+      name
+    }
+  })
+  blob_url = res.data
+  audio.value!.src = blob_url
+}
+
 const linkToSentence = (): void => {
   router.push({ name: "Sentence", params: { id: sentence.value.id } })
 }
+
+onBeforeUnmount(() => {
+  window.URL.revokeObjectURL(blob_url)
+})
 
 </script>
 
