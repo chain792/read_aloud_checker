@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue"
+import { ref, onBeforeUnmount } from "vue"
 import axios from "@/plugins/axios"
 import { useRouter } from 'vue-router'
 
@@ -39,6 +39,7 @@ const sentence = ref({
 })
 const isSavedVoice = ref(false)
 const audio = ref<HTMLAudioElement>()
+let blob_url: string
 
 const decorateSentence = (body: string, resultWords: Array<ResultWord>): string => {
   const sentenceWords = body.split(' ')
@@ -71,12 +72,17 @@ const setAudio = async (name: string): Promise<void> => {
       name
     }
   })
-  audio.value!.src = res.data
+  blob_url = res.data
+  audio.value!.src = blob_url
 }
 
 const linkToSentence = (): void => {
   router.push({ name: "Sentence", params: { id: sentence.value.id } })
 }
+
+onBeforeUnmount(() => {
+  window.URL.revokeObjectURL(blob_url)
+})
 
 </script>
 

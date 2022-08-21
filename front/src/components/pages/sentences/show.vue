@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, reactive } from "vue"
+import { ref, Ref, reactive, onBeforeUnmount } from "vue"
 import axios from "@/plugins/axios"
 import Axios from "axios"
 import { useUserStore } from "@/store/userStore"
@@ -161,6 +161,7 @@ let trainingId: string
 let voiceBlob: Blob
 const progress2 = ref(false)
 const isSavedVoice = ref(false)
+let blob_url: string
 
 //音読スタート
 const startReadAloud = (): void => {
@@ -227,7 +228,7 @@ const playReadAloud = async (): Promise<void> => {
   //音読終了後の処理
   recognition.onaudioend = (e1) =>{
     mediaRecorder.ondataavailable = (e2) => {
-      const blob_url = window.URL.createObjectURL(e2.data)
+      blob_url = window.URL.createObjectURL(e2.data)
       audio.value!.src = blob_url
       voiceBlob = e2.data
     }
@@ -324,6 +325,10 @@ const saveVoice = async (): Promise<void> => {
     console.log(e)
   }
 }
+
+onBeforeUnmount(() => {
+  window.URL.revokeObjectURL(blob_url)
+})
 
 </script>
 
