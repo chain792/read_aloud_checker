@@ -44,11 +44,21 @@
     </div>
     <div v-else class="mt-5">
       <div class="d-flex justify-center">
-          <audio ref="audio"  controls></audio>
+        <audio ref="audio"  controls></audio>
       </div>
       <div class="d-flex justify-center mt-5">
         <v-btn :border="true" @click="replayReadAloud">再音読する</v-btn>
-        <v-btn :border="true" @click="saveVoice">音声を保存する</v-btn>
+        <v-btn v-if="progress2" class="" :border="true" :width="140">
+          <v-progress-circular
+            size="20"
+            color="grey-darken-5"
+            indeterminate
+            width="3"
+            class="progress2"
+          ></v-progress-circular>
+        </v-btn>
+        <v-btn v-else-if="!isSavedVoice" :border="true" :width="140" @click="saveVoice">音声を保存する</v-btn>
+        <v-btn v-else :border="true" :disabled="true" :width="140" class="voice-saved-btn">音声を保存しました</v-btn>
       </div>
     </div>
   </v-container>
@@ -147,8 +157,10 @@ let failedTimes: number
 let mediaRecorder: MediaRecorder;
 let localStream: MediaStream;
 const audio = ref<HTMLAudioElement>()
-let trainingId: number
+let trainingId: string
 let voiceBlob: Blob
+const progress2 = ref(false)
+const isSavedVoice = ref(false)
 
 //音読スタート
 const startReadAloud = (): void => {
@@ -292,6 +304,13 @@ const uploadVoiceToS3 = async (file: Blob): Promise<string | undefined> => {
   }
 }
 
+const animationProgress2 = () => {
+  progress2.value = true
+  setTimeout(()=>{
+    progress2.value = false
+  }, 450)
+}
+
 const saveVoice = async (): Promise<void> => {
   try{
     const name = await uploadVoiceToS3(voiceBlob)
@@ -299,6 +318,8 @@ const saveVoice = async (): Promise<void> => {
       training_id: trainingId,
       voice: name
     })
+    animationProgress2()
+    isSavedVoice.value = true
   }catch(e){
     console.log(e)
   }
@@ -325,6 +346,9 @@ const saveVoice = async (): Promise<void> => {
 }
 .progress{
   margin: 9px;
+}
+.voice-saved-btn{
+  font-size: 0.8rem;
 }
 </style>
 <style>

@@ -25,7 +25,7 @@ module Api::AwsS3
     Signer.presigned_url(
       :get_object,
       bucket: Rails.application.credentials.dig(:aws, :private_bucket_name),
-      key: key
+      key: "private/#{ENV['RAILS_ENV']}/uploads/#{key}"
     )
   end
 end
