@@ -3,16 +3,6 @@
   <v-btn flat color="secondary" :size="a" class="ma-lg-5" @click="axiosTest">
     Secondary
   </v-btn>
-  <v-btn flat color="secondary" :size="a" class="ma-lg-5" @click="start">
-    start
-  </v-btn>
-  <v-btn flat color="secondary" :size="a" class="ma-lg-5" @click="stop">
-    stop
-  </v-btn>
-  <audio ref="audio" src="" controls></audio>
-
-    <a id="download">Download</a>
-  <button id="stop">Stop</button>
 </template>
 
 <script setup lang="ts">
