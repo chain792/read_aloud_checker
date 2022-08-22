@@ -53,7 +53,7 @@ set :rbenv_ruby, '3.1.2'
 set :unicorn_pid, -> { "#{shared_path}/tmp/pids/unicorn.pid" }
 
 # Unicornの設定ファイルの指定
-set :unicorn_config_path, -> { "#{current_path}/config/unicorn.rb" }
+set :unicorn_config_path, -> { "#{current_path}/api/config/unicorn.rb" }
 
 # Unicornを再起動するための記述
 after 'deploy:publishing', 'deploy:restart'
