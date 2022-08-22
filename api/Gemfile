@@ -29,6 +29,7 @@ gem 'net-smtp'
 gem 'net-imap'
 gem 'net-pop'
 
+gem 'rails-i18n', '~> 6.0' # For 6.x
 gem 'sorcery'
 gem 'alba'
 gem 'jwt'
