@@ -8,6 +8,9 @@ set :repo_url, "git@github.com:chain792/read_aloud_checker.git"
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 set :branch, "main"
 
+# deploy先のディレクトリ。
+set :deploy_to, '/var/www/ondoku-star/api'
+
 # Default deploy_to directory is /var/www/my_app_name
 # set :deploy_to, "/var/www/my_app_name"
 
