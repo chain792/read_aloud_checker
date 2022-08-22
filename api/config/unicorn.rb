@@ -1,11 +1,11 @@
 # rootパスのディレクトリを指定
-root_path = File.expand_path('../../../../', __FILE__)
+root_path = File.expand_path('../../../', __FILE__)
 
 # アプリケーションサーバの性能を決定する
 worker_processes 2
 
 # アプリケーションの設置されているディレクトリを指定
-working_directory "/var/www/ondoku-star/api/current/api"
+working_directory "#{root_path}/current"
 
 # プロセスIDの保存先を指定
 pid "#{root_path}/shared/tmp/pids/unicorn.pid"

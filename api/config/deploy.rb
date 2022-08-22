@@ -9,7 +9,8 @@ set :repo_url, "git@github.com:chain792/read_aloud_checker.git"
 set :branch, "main"
 
 # deploy先のディレクトリ。
-set :deploy_to, '/var/www/ondoku-star/api'
+set :deploy_to, '/var/www/ondoku-star'
+set :repo_tree, 'api'
 
 # Default deploy_to directory is /var/www/my_app_name
 # set :deploy_to, "/var/www/my_app_name"
@@ -53,7 +54,7 @@ set :rbenv_ruby, '3.1.2'
 set :unicorn_pid, -> { "#{shared_path}/tmp/pids/unicorn.pid" }
 
 # Unicornの設定ファイルの指定
-set :unicorn_config_path, -> { "/var/www/ondoku-star/api/current/api/config/unicorn.rb" }
+set :unicorn_config_path, -> { "#{current_path}/config/unicorn.rb" }
 
 # Unicornを再起動するための記述
 after 'deploy:publishing', 'deploy:restart'
