@@ -1,7 +1,7 @@
 <template>
-  <v-card width="400" class="mx-auto mt-10 px-5 py-3">
+  <v-card width="600" class="mx-auto mt-10 px-5 py-3">
     <v-card-item>
-      <v-card-title class="text-center text-h5">パスワードリセット</v-card-title>
+      <v-card-title class="text-center text-h5">パスワード再設定のご案内</v-card-title>
     </v-card-item>
     <v-card-text class="mt-3">
       <v-form
@@ -9,6 +9,10 @@
         v-model="valid"
         lazy-validation
       >
+        <div>
+          ご登録いただいたメールアドレスを入力してください。<br>
+          ご登録メールアドレス宛てに、再設定ページの案内をお送りします。
+        </div>
         <v-text-field
           v-model="email"
           type="email"
@@ -19,13 +23,14 @@
           variant="outlined"
           required
           :rules="emailRules"
+          class="mt-5"
         ></v-text-field>
 
         <v-btn
           :disabled="!valid"
           color="success"
           class="mr-4"
-          width="400"
+          width="600"
           @click="sendEmail"
         >
           メール送信
@@ -39,8 +44,10 @@
 import { ref } from "vue"
 import axios from "@/plugins/axios"
 import { useFlashStore } from "@/store/flashStore"
+import { useRouter } from 'vue-router'
 
 const flashStore = useFlashStore()
+const router = useRouter()
 
 const valid = ref(true)
 const email = ref("")
@@ -58,7 +65,7 @@ const sendEmail = async (): Promise<void> => {
   } catch(e) {
     console.log(e)
   }
-  flashStore.succeedSendEmail()
+  router.push({ name: "PasswordResetSent" })
 }
 
 </script>

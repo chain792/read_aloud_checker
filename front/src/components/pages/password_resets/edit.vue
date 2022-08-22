@@ -1,22 +1,23 @@
 <template>
-  <v-card width="400" class="mx-auto px-5 py-3">
+  <v-card width="400" class="mx-auto mt-10 px-5 py-3">
     <v-card-item>
-      <v-card-title class="text-center text-h5">パスワードの変更</v-card-title>
+      <v-card-title class="text-center text-h5">パスワード再設定</v-card-title>
       <v-card-subtitle v-if="errorMessages.length" class="mt-3">
         <ErrorMessages :error-messages="errorMessages" />
       </v-card-subtitle>
     </v-card-item>
-    <v-card-text class="mt-3">
+    <v-card-text class="">
       <v-form
         v-model="valid"
       >
         <v-divider class="mx-n10"></v-divider>
-        <div class="mt-5">
+        <div class="mt-6">新しいパスワードを入力してください</div>
+        <div class="mt-6">
           <v-text-field
             v-model="user.password"
             type="password"
             label="新しいパスワード"
-            placeholder="新しいパスワードを入力"
+            placeholder="パスワードを入力"
             color="blue"
             density="comfortable"
             variant="outlined"
@@ -29,7 +30,7 @@
             v-model="user.password_confirmation"
             type="password"
             label="新しいパスワード（確認）"
-            placeholder="新しいパスワード（確認）を入力"
+            placeholder="パスワード（確認）を入力"
             color="blue"
             density="comfortable"
             variant="outlined"
@@ -42,9 +43,10 @@
             :disabled="!valid"
             color="success"
             class="mr-4"
+            width="400"
             @click="resetPassword"
           >
-            パスワード変更
+            パスワード再設定
           </v-btn>
         </div>
       </v-form>

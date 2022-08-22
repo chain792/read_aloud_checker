@@ -15,6 +15,7 @@ const History = () => import("@/components/pages/history/show.vue")
 const Privacy = () => import("@/components/pages/static/Privacy.vue")
 const Terms = () => import("@/components/pages/static/Terms.vue")
 const NewPasswordReset = () => import("@/components/pages/password_resets/new.vue")
+const PasswordResetSent = () => import("@/components/pages/password_resets/sent.vue")
 const EditPasswordReset = () => import("@/components/pages/password_resets/edit.vue")
 
 const routes: Array<RouteRecordRaw> = [
@@ -88,6 +89,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/password_resets/new",
     name: "NewPasswordReset",
     component: NewPasswordReset,
+  },
+  {
+    path: "/password_resets/sent",
+    name: "PasswordResetSent",
+    component: PasswordResetSent,
   },
   {
     path: "/password_resets/:id/edit",
