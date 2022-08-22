@@ -2,7 +2,7 @@
 lock "~> 3.17.1"
 
 set :application, "app"
-set :repo_url, "git@example.com:chain792/read_aloud_checker.git"
+set :repo_url, "git@github.com:chain792/read_aloud_checker.git"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
@@ -38,7 +38,7 @@ set :keep_releases, 5
 # Uncomment the following to require manually verifying the host key before first deploy.
 set :ssh_options, {
   auth_methods: ['publickey'], 
-  keys: ['~/.ssh/ondoku-star-ssh-key'] 
+  keys: ['/root/.ssh/ondoku-star-ssh-key.pem'] 
 }
 
 # rbenvの設定
