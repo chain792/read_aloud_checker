@@ -8,10 +8,9 @@ class Api::V1::PasswordResetsController < ApplicationController
   end
 
   def edit
-    token = params[:id]
     user = User.load_from_reset_password_token(params[:id])
 
-    if @user.blank?
+    if user.blank?
       head :unauthorized
     else
       head :ok
@@ -19,7 +18,6 @@ class Api::V1::PasswordResetsController < ApplicationController
   end
 
   def update
-    token = params[:id]
     user = User.load_from_reset_password_token(params[:id])
 
     if user.blank?
