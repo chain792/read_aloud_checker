@@ -16,6 +16,7 @@ services:
         WORKDIR: $WORKDIR
     volumes:
       - "./api:/$WORKDIR"
+      - "~/.ssh:/root/.ssh"
     environment:
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
       FRONT_DOMAIN: "http://localhost:$FRONT_PORT"
