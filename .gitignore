@@ -36,6 +36,7 @@ api/.viminfo
 api/.local
 api/.DS_Store
 api/.lesshst
+api/.bash_history
 
 #==========================================================
 # front側の設定
