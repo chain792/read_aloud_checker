@@ -1,6 +1,6 @@
 class Api::V1::User::TrainingsController < ApplicationController
   def index
-    trainings = current_user.trainings.order(created_at: :desc)
+    trainings = current_user.trainings.includes(:sentence, :result_words).order(created_at: :desc)
     render json: TrainingResource.new(trainings).serialize
   end
 
