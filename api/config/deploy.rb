@@ -1,7 +1,7 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.17.1"
 
-set :application, "app"
+set :application, "ondoku-star"
 set :repo_url, "git@github.com:chain792/read_aloud_checker.git"
 
 # Default branch is :master
