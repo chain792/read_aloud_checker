@@ -267,6 +267,8 @@ const replayReadAloud = (): void => {
 
 //音読の結果をapiへ送信
 const registerReadAloudResult = async (): Promise<void> => {
+  if(!userStore.authUser) return
+
   const resultWords = results.map((result, index) => {
     return {
       position: index,
@@ -286,6 +288,7 @@ const registerReadAloudResult = async (): Promise<void> => {
   }
 }
 
+//音声をS3にダイレクトアップロード
 const uploadVoiceToS3 = async (file: Blob): Promise<string | undefined> => {
   try{
     const res = await axios.get("user/voices/presigned_post")
@@ -312,7 +315,13 @@ const animationProgress2 = () => {
   }, 450)
 }
 
+//音声を保存
 const saveVoice = async (): Promise<void> => {
+  if(!userStore.authUser){
+    loginRequiredDialog.value = true
+    return
+  }
+
   try{
     const name = await uploadVoiceToS3(voiceBlob)
     await axios.post("user/voices", {
