@@ -42,7 +42,8 @@ const audio = ref<HTMLAudioElement>()
 let blob_url: string
 
 const decorateSentence = (body: string, resultWords: Array<ResultWord>): string => {
-  const sentenceWords = body.split(/([\s()\-~[\]{}.,@=^*`:/?!<>"#$%&|])/g)
+  //アポストロフィ以外の記号で分割する
+  const sentenceWords = body.split(/(\s|[ -&]|[(-/]|[:-@]|[[-`]|[{-~]|[｢｣])/g)
   for(let resultWord of resultWords){
     if(resultWord.result === "succeeded"){
       sentenceWords[resultWord.position] = `<span class="gray">${sentenceWords[resultWord.position]}</span>`

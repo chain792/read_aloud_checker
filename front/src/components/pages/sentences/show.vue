@@ -175,8 +175,9 @@ const startReadAloud = (): void => {
 const playReadAloud = async (): Promise<void> => {
   failedTimes = 0
   results = []
-  const Recognition = window.webkitSpeechRecognition || window.SpeechRecognition;
-  sentenceWords = sentenceBodyBeforeReadAloud.split(/([\s()\-~[\]{}.,@=^*`:/?!<>"#$%&|])/g)
+  const Recognition = window.webkitSpeechRecognition || window.SpeechRecognition
+  //アポストロフィ以外の記号で分割する
+  sentenceWords = sentenceBodyBeforeReadAloud.split(/(\s|[ -&]|[(-/]|[:-@]|[[-`]|[{-~]|[｢｣])/g)
   let isSucceeded = false
 
   const stream = await navigator.mediaDevices.getUserMedia({audio: true })
@@ -253,11 +254,11 @@ const wordMatchesDecision = (sentenceWord: string, transcriptWords: string[], in
     return true
   }
 
-  //アポストロフィーを含む場合の判定条件
+  //アポストロフィを含む場合の判定条件
   if(!sentenceWord.includes("'")){
     return false
   }
-  if(transcriptWords[index + 1]){
+  if(!transcriptWords[index + 1]){
     return false
   }
   let apostropheWords: Array<string> = []
@@ -290,9 +291,10 @@ const wordMatchesDecision = (sentenceWord: string, transcriptWords: string[], in
   return false
 }
 
+//次の単語がセットされるまで記号、空白をスキップする
 const skipUpToWord = (): void => {
   if(results.length < sentenceWords.length && sentenceWords[results.length] === "" 
-      || /[\s()\-~[\]{}.,@=^*`:/?!<>"#$%&|]/.test(sentenceWords[results.length])){
+      || /\s|[ -&]|[(-/]|[:-@]|[[-`]|[{-~]|[｢｣]/.test(sentenceWords[results.length])){
     results.push("symbol")
     skipUpToWord()
   }
@@ -395,7 +397,7 @@ const saveVoice = async (): Promise<void> => {
 }
 
 onBeforeUnmount(() => {
-  if(mediaRecorder.state === "recording"){
+  if(mediaRecorder && mediaRecorder.state === "recording"){
     stopReadAloud()
   }
   if(blob_url){
