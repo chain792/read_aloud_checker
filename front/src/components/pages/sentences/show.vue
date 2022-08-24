@@ -75,6 +75,7 @@ import Axios from "axios"
 import { useUserStore } from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
 import LoginRequiredModal from "@/components/shared/LoginRequiredModal.vue"
+import { toWords } from "number-to-words"
 
 const flashStore = useFlashStore()
 const userStore = useUserStore()
@@ -103,6 +104,7 @@ const fetchSentence = async (): Promise<void> => {
     sentence.value = res.data.sentence
     res.data.sentence.bookmarks.forEach((bookmark: Bookmark) => bookmarkUserIds.push(bookmark.userId))
     sentenceBodyBeforeReadAloud = sentence.value.body
+    sentence.value.body = setUpReadAloud(sentenceBodyBeforeReadAloud)
   } catch(e) {
     console.log(e)
   }
@@ -151,9 +153,10 @@ const closeLoginRequiredModal = (): void => {
   音読機能
  ***************************************************/
 let recognition: any
-let results: Array<"succeeded" | "failed" | "symbol">
+let results: Array<"succeeded" | "failed" | "symbol" | "ignored" | "ruby_waved">
 let sentenceWords: Array<string>
 let failedTimes: number
+let numberWordPosition: number | null = null
 let mediaRecorder: MediaRecorder;
 let localStream: MediaStream;
 const audio = ref<HTMLAudioElement>()
@@ -162,6 +165,20 @@ let voiceBlob: Blob
 const progress2 = ref(false)
 const isSavedVoice = ref(false)
 let blob_url: string
+
+//音読でタイピングゲームをするための準備を行う
+const setUpReadAloud = (body: string): string => {
+  //カンマ区切りの数値をカンマなし表記に置き換えた後、アポストロフィ以外の記号で分割する
+  sentenceWords = body.replace(/(\d),(\d)/g,`$1$2`).split(/(\s|[ -&]|[(-/]|[:-@]|[[-`]|[{-~]|[｢｣])/g)
+  //数値にルビを振る
+  sentenceWords = sentenceWords.map((word: string) => {
+    if(word && !/\s|[ -&]|[(-/]|[:-@]|[[-`]|[{-~]|[｢｣]/.test(word) && !isNaN(word as any)){
+      return [`<ruby>${word}<rt>`,toWords(word).split(/(\s|[ -&]|[(-/]|[:-@]|[[-`]|[{-~]|[｢｣])/g), '</rt></ruby>'].flat()
+    }
+    return word
+  }).flat()
+  return sentenceWords.join('')
+}
 
 //音読スタート
 const startReadAloud = (): void => {
@@ -175,20 +192,18 @@ const startReadAloud = (): void => {
 const playReadAloud = async (): Promise<void> => {
   failedTimes = 0
   results = []
-  const Recognition = window.webkitSpeechRecognition || window.SpeechRecognition
-  //アポストロフィ以外の記号で分割する
-  sentenceWords = sentenceBodyBeforeReadAloud.split(/(\s|[ -&]|[(-/]|[:-@]|[[-`]|[{-~]|[｢｣])/g)
   let isSucceeded = false
 
   const stream = await navigator.mediaDevices.getUserMedia({audio: true })
-  localStream = stream;
-  mediaRecorder = new MediaRecorder(stream);
-  mediaRecorder.start();
+  localStream = stream
+  mediaRecorder = new MediaRecorder(stream)
+  mediaRecorder.start()
 
-  recognition = new Recognition();
+  const Recognition = window.webkitSpeechRecognition || window.SpeechRecognition
+  recognition = new Recognition()
   recognition.lang = 'en-US'
-  recognition.interimResults = true;
-  recognition.continuous = true;
+  recognition.interimResults = true
+  recognition.continuous = true
   recognition.onresult = (event) => {
     for (let i = 0; i < event.results.length; ++i) {
       if (event.results[i].isFinal) {
@@ -196,11 +211,17 @@ const playReadAloud = async (): Promise<void> => {
       } else { 
         const result = event.results[i][0]
         if (!result) continue
-
-        const transcriptWords = result.transcript.split(' ')
-        
-        console.log(transcriptWords)
         isSucceeded=false
+
+        //数字を音声認識で文字起こした時、数値で文字起こしされるか英語表記で文字起こしされる。数値で文字起こしされた場合は英語表記に変換して判定することにする。
+        const transcriptWords: Array<string> = result.transcript.split(' ').map((transcriptWord: string) => {
+          const word = transcriptWord.replace(/(\d),(\d)/g,`$1$2`)
+          if(word && !isNaN(word as any)){
+            return toWords(word).split(/\s|-|,/)
+          }
+          return word
+        }).flat()
+        
         for(let j = 0; j < transcriptWords.length; j++){
           if(results.length < sentenceWords.length && wordMatchesDecision(sentenceWords[results.length], transcriptWords, j)){
             isSucceeded = true
@@ -293,13 +314,34 @@ const wordMatchesDecision = (sentenceWord: string, transcriptWords: string[], in
 
 //次の単語がセットされるまで記号、空白をスキップする
 const skipUpToWord = (): void => {
-  if(results.length < sentenceWords.length && sentenceWords[results.length] === "" 
-      || /\s|[ -&]|[(-/]|[:-@]|[[-`]|[{-~]|[｢｣]/.test(sentenceWords[results.length])){
+  if(results.length === sentenceWords.length){
+    return
+  }
+
+  //空白をスキップ
+  if(sentenceWords[results.length] === "" || /\s/.test(sentenceWords[results.length])){
+    results.push("ignored")
+    skipUpToWord()
+  //ルビを振られた数値をスキップ
+  }else if(/<ruby>.+<rt>/.test(sentenceWords[results.length])){
+    numberWordPosition = results.length
+    results.push("ignored")
+    skipUpToWord()
+  //ルビ箇所の英文の音読が終了後、ルビを振られた数値をグレー色に変更する
+  }else if(/<\/rt><\/ruby>/.test(sentenceWords[results.length])){
+    if(!numberWordPosition) throw 'error'
+    results[numberWordPosition] = "ruby_waved"
+    sentenceWords[numberWordPosition] = sentenceWords[numberWordPosition].replace(/((?<=<ruby>).+(?=<rt>))/,`<span class="gray">$1</span>`)
+    sentence.value.body = sentenceWords.join('')
+    numberWordPosition = null
+    results.push("ignored")
+    skipUpToWord()
+  //記号をスキップ
+  }else if(/[ -&]|[(-/]|[:-@]|[[-`]|[{-~]|[｢｣]/.test(sentenceWords[results.length])){
+    sentenceWords[results.length] = `<span class="gray">${sentenceWords[results.length]}</span>`
+    sentence.value.body = sentenceWords.join('')
     results.push("symbol")
     skipUpToWord()
-  }
-  if(results.length === sentenceWords.length){
-    recognition.stop()
   }
 }
 
@@ -309,10 +351,10 @@ const skipWord = (): void => {
   sentenceWords[results.length] = `<span class="red">${sentenceWords[results.length]}</span>`
   sentence.value.body = sentenceWords.join('')
   results.push("failed")
+  skipUpToWord()
   if(results.length === sentenceWords.length){
     recognition.stop()
   }
-  skipUpToWord()
 }
 
 //音読終了
@@ -322,7 +364,7 @@ const stopReadAloud = (): void => {
 
 //再音読
 const replayReadAloud = (): void => {
-  sentence.value.body = sentenceBodyBeforeReadAloud
+  sentence.value.body = setUpReadAloud(sentenceBodyBeforeReadAloud)
   startReadAloud()
 }
 
@@ -432,6 +474,10 @@ onBeforeUnmount(() => {
 }
 </style>
 <style>
+rt{
+  font-size: 1.15rem;
+  padding: 0 10px;
+}
 .gray {
   color: gray;
   opacity: .7;
