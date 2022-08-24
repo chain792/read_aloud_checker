@@ -20,6 +20,7 @@
 import { ref, onBeforeUnmount } from "vue"
 import axios from "@/plugins/axios"
 import { useRouter } from 'vue-router'
+import { toWords } from "number-to-words";
 
 const router = useRouter()
 
@@ -28,7 +29,7 @@ interface Props {
 }
 interface ResultWord {
   position: number
-  result: "succeeded" | "failed"
+  result: "succeeded" | "failed" | "symbol" | "ignored" | "ruby_waved"
 }
 
 const props = defineProps<Props>()
@@ -42,13 +43,25 @@ const audio = ref<HTMLAudioElement>()
 let blob_url: string
 
 const decorateSentence = (body: string, resultWords: Array<ResultWord>): string => {
-  const sentenceWords = body.split(' ')
+  const sentenceWords = body.replace(/(\d),(\d)/g,`$1$2`).split(/(\s|[ -&]|[(-/]|[:-@]|[[-`]|[{-~]|[｢｣])/g).map((word: string) => {
+    if(word && !/\s|[ -&]|[(-/]|[:-@]|[[-`]|[{-~]|[｢｣]/.test(word) && !isNaN(word as any)){
+      return [`<ruby>${word}<rt>`,toWords(word).split(/(\s|[ -&]|[(-/]|[:-@]|[[-`]|[{-~]|[｢｣])/g), '</rt></ruby>'].flat()
+    }
+    return word
+  }).flat()
+
   for(let resultWord of resultWords){
-    sentenceWords[resultWord.position] = resultWord.result === "succeeded" 
-      ? `<span class="gray">${sentenceWords[resultWord.position]}</span>`
-      : `<span class="red">${sentenceWords[resultWord.position]}</span>`
+    if(resultWord.result === "succeeded"){
+      sentenceWords[resultWord.position] = `<span class="gray">${sentenceWords[resultWord.position]}</span>`
+    }else if(resultWord.result === "failed"){
+      sentenceWords[resultWord.position] = `<span class="red">${sentenceWords[resultWord.position]}</span>`
+    }else if(resultWord.result === "symbol"){
+      sentenceWords[resultWord.position] = `<span class="gray">${sentenceWords[resultWord.position]}</span>`      
+    }else if(resultWord.result === "ruby_waved"){
+      sentenceWords[resultWord.position] = sentenceWords[resultWord.position].replace(/((?<=<ruby>).+(?=<rt>))/,`<span class="gray">$1</span>`)  
+    }
   }
-  return sentenceWords.join(' ')
+  return sentenceWords.join('')
 }
 
 const fetchTraining = async (): Promise<void> => {
