@@ -230,8 +230,10 @@ const playReadAloud = async (): Promise<void> => {
   //音読終了後の処理
   recognition.onaudioend = (e1) =>{
     mediaRecorder.ondataavailable = (e2) => {
-      blob_url = window.URL.createObjectURL(e2.data)
-      audio.value!.src = blob_url
+      if(audio.value){
+        blob_url = window.URL.createObjectURL(e2.data)
+        audio.value.src = blob_url
+      }
       voiceBlob = e2.data
     }
     localStream.getTracks().forEach(track => track.stop())
@@ -393,7 +395,12 @@ const saveVoice = async (): Promise<void> => {
 }
 
 onBeforeUnmount(() => {
-  window.URL.revokeObjectURL(blob_url)
+  if(mediaRecorder.state === "recording"){
+    stopReadAloud()
+  }
+  if(blob_url){
+    window.URL.revokeObjectURL(blob_url)
+  }
 })
 
 </script>
