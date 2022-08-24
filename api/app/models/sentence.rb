@@ -1,4 +1,5 @@
 class Sentence < ApplicationRecord
+  require 'nkf'
   include UuidPk
 
   belongs_to :creater, polymorphic: true
@@ -11,4 +12,8 @@ class Sentence < ApplicationRecord
   validates :body, presence: true, length: { maximum: 10000 }
   validates :status, presence: true
 
+  before_save do
+    # 半角を全角にする
+    self.body = NKF.nkf('-w -Z1 -Z4 -x', self.body)
+  end
 end
