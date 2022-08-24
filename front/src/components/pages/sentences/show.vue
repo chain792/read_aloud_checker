@@ -151,7 +151,7 @@ const closeLoginRequiredModal = (): void => {
   音読機能
  ***************************************************/
 let recognition: any
-let results: Array<"succeeded" | "failed">
+let results: Array<"succeeded" | "failed" | "symbol">
 let sentenceWords: Array<string>
 let failedTimes: number
 let mediaRecorder: MediaRecorder;
@@ -176,7 +176,7 @@ const playReadAloud = async (): Promise<void> => {
   failedTimes = 0
   results = []
   const Recognition = window.webkitSpeechRecognition || window.SpeechRecognition;
-  sentenceWords = sentenceBodyBeforeReadAloud.split(' ')
+  sentenceWords = sentenceBodyBeforeReadAloud.split(/([\s()\-~[\]{}.,@=^*`:/?!<>"#$%&|])/g)
   let isSucceeded = false
 
   const stream = await navigator.mediaDevices.getUserMedia({audio: true })
@@ -201,12 +201,13 @@ const playReadAloud = async (): Promise<void> => {
         console.log(transcriptWords)
         isSucceeded=false
         for(let j = 0; j < transcriptWords.length; j++){
-          if(results.length < sentenceWords.length && sentenceWords[results.length].toLowerCase() === transcriptWords[j].toLowerCase()){
+          if(results.length < sentenceWords.length && wordMatchesDecision(sentenceWords[results.length], transcriptWords, j)){
             isSucceeded = true
             failedTimes = 0
             sentenceWords[results.length] = `<span class="gray">${sentenceWords[results.length]}</span>`
-            sentence.value.body = sentenceWords.join(' ')
+            sentence.value.body = sentenceWords.join('')
             results.push("succeeded")
+            skipUpToWord()
           }
         }
         if(!isSucceeded){
@@ -215,9 +216,10 @@ const playReadAloud = async (): Promise<void> => {
         if(results.length < sentenceWords.length && failedTimes > 5){
           failedTimes = 0
           sentenceWords[results.length] = `<span class="red">${sentenceWords[results.length]}</span>`
-          sentence.value.body = sentenceWords.join(' ')
+          sentence.value.body = sentenceWords.join('')
           results.push("failed")
         }
+        skipUpToWord()
         if(results.length === sentenceWords.length){
           recognition.stop()
           break
@@ -241,22 +243,77 @@ const playReadAloud = async (): Promise<void> => {
   }
 
   recognition.start()
+  skipUpToWord()
 }
 
-//音読終了
-const stopReadAloud = (): void => {
-  recognition.stop()
+const wordMatchesDecision = (sentenceWord: string, transcriptWords: string[], index: number): boolean => {
+  if(sentenceWord.toLowerCase() === transcriptWords[index].toLowerCase()){
+    return true
+  }
+
+  //アポストロフィーを含む場合の判定条件
+  if(!sentenceWord.includes("'")){
+    return false
+  }
+  if(transcriptWords[index + 1]){
+    return false
+  }
+  let apostropheWords: Array<string> = []
+  let apostropheWords2: Array<string> = []
+  if(sentenceWord.includes("'s")){
+    apostropheWords = sentenceWord.replace("'s", " is").split(" ")
+    apostropheWords2 = sentenceWord.replace("'s", " has").split(" ")
+  }else if(sentenceWord.includes("'m")){
+    apostropheWords = sentenceWord.replace("'m", " am").split(" ")
+  }else if(sentenceWord.includes("'ll")){
+    apostropheWords = sentenceWord.replace("'l", " will").split(" ")
+  }else if(sentenceWord.includes("'d")){
+    apostropheWords = sentenceWord.replace("'d", " would").split(" ")
+  }else if(sentenceWord.includes("'ve")){
+    apostropheWords = sentenceWord.replace("'ve", " have").split(" ")
+  }else if(sentenceWord.includes("'re")){
+    apostropheWords = sentenceWord.replace("'re", " are").split(" ")
+  }
+
+  if(apostropheWords[0].toLowerCase() === transcriptWords[index].toLowerCase() &&
+    apostropheWords[1].toLowerCase() === transcriptWords[index + 1].toLowerCase() ){
+      return true
+  }
+  if(apostropheWords2.length && 
+    apostropheWords2[0].toLowerCase() === transcriptWords[index].toLowerCase() &&
+    apostropheWords2[1].toLowerCase() === transcriptWords[index + 1].toLowerCase() ){
+      return true
+  }
+
+  return false
+}
+
+const skipUpToWord = (): void => {
+  if(results.length < sentenceWords.length && sentenceWords[results.length] === "" 
+      || /[\s()\-~[\]{}.,@=^*`:/?!<>"#$%&|]/.test(sentenceWords[results.length])){
+    results.push("symbol")
+    skipUpToWord()
+  }
+  if(results.length === sentenceWords.length){
+    recognition.stop()
+  }
 }
 
 //1単語パス機能
 const skipWord = (): void => {
   failedTimes = 0
   sentenceWords[results.length] = `<span class="red">${sentenceWords[results.length]}</span>`
-  sentence.value.body = sentenceWords.join(' ')
+  sentence.value.body = sentenceWords.join('')
   results.push("failed")
   if(results.length === sentenceWords.length){
     recognition.stop()
   }
+  skipUpToWord()
+}
+
+//音読終了
+const stopReadAloud = (): void => {
+  recognition.stop()
 }
 
 //再音読

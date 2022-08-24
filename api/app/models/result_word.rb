@@ -3,5 +3,5 @@ class ResultWord < ApplicationRecord
 
   validates :position, presence: true
 
-  enum result: { succeeded: 0, failed: 1 }
+  enum result: { succeeded: 0, failed: 1, symbol: 2 }
 end

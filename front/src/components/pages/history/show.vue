@@ -28,7 +28,7 @@ interface Props {
 }
 interface ResultWord {
   position: number
-  result: "succeeded" | "failed"
+  result: "succeeded" | "failed" | "symbol"
 }
 
 const props = defineProps<Props>()
@@ -42,13 +42,15 @@ const audio = ref<HTMLAudioElement>()
 let blob_url: string
 
 const decorateSentence = (body: string, resultWords: Array<ResultWord>): string => {
-  const sentenceWords = body.split(' ')
+  const sentenceWords = body.split(/([\s()\-~[\]{}.,@=^*`:/?!<>"#$%&|])/g)
   for(let resultWord of resultWords){
-    sentenceWords[resultWord.position] = resultWord.result === "succeeded" 
-      ? `<span class="gray">${sentenceWords[resultWord.position]}</span>`
-      : `<span class="red">${sentenceWords[resultWord.position]}</span>`
+    if(resultWord.result === "succeeded"){
+      sentenceWords[resultWord.position] = `<span class="gray">${sentenceWords[resultWord.position]}</span>`
+    }else if(resultWord.result === "failed"){
+      sentenceWords[resultWord.position] = `<span class="red">${sentenceWords[resultWord.position]}</span>`
+    }
   }
-  return sentenceWords.join(' ')
+  return sentenceWords.join('')
 }
 
 const fetchTraining = async (): Promise<void> => {
