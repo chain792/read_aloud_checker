@@ -69,7 +69,7 @@ import { useUserStore }  from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
 import { useTokenStore } from "@/store/tokenStore"
 import { useRouter } from 'vue-router'
-import { refresh } from "@/common/refresh.js"
+import { refresh } from "@/common/refresh"
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()

@@ -45,6 +45,7 @@
     <div v-else class="mt-5">
       <div class="d-flex justify-center">
         <audio ref="audio"  controls></audio>
+        <audio :src="speechUrl(sentence, 'female')"  controls></audio>
       </div>
       <div class="d-flex justify-center mt-5">
         <v-btn :border="true" @click="replayReadAloud">再音読する</v-btn>
@@ -75,6 +76,7 @@ import Axios from "axios"
 import { useUserStore } from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
 import LoginRequiredModal from "@/components/shared/LoginRequiredModal.vue"
+import { speechUrl } from "@/common/speechUrl"
 import { toWords } from "number-to-words"
 
 const flashStore = useFlashStore()
@@ -91,7 +93,9 @@ const props = defineProps<Props>()
 const sentence = ref({
   id: "",
   title: "",
-  body: ""
+  body: "",
+  maleSpeech: "",
+  femaleSpeech: ""
 })
 const bookmarkUserIds: Array<number> = reactive([])
 const progress = ref(false)

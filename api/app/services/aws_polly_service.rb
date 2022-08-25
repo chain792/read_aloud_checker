@@ -5,7 +5,7 @@ class AwsPollyService
       engine: "neural",
       language_code: "en-US",
       output_format: "mp3",
-      text: "Text",
+      text: text,
       voice_id: voice_id
     })
     speech_name = SecureRandom.urlsafe_base64
