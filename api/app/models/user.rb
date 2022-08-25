@@ -16,6 +16,7 @@ class User < ApplicationRecord
   validates :name, presence: true, length: { maximum: 50 }
 
   enum role: { general: 0, admin: 1, guest: 2 }
+  enum listening_sex: { female: 0, male: 1 }
 
   def self.find_or_create_from_oauth(provider, uid, name, email, image)
     random_value = SecureRandom.alphanumeric(10)

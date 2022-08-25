@@ -5,7 +5,7 @@ interface User {
   email: string
   name: string
   avatar: string
-  speechVoiceSex: "male" | "female" | undefined
+  listeningSex: "male" | "female" | undefined
   createdAt: string
   updatedAt: string
 }
@@ -22,11 +22,11 @@ export const useUserStore = defineStore("user", {
     setUser(user: User): void {
       this.authUser = user
     },
-    changeSpeechVoiceToMale(): void {
-      this.authUser!.speechVoiceSex = "male"
+    changeListeningSexToMale(): void {
+      this.authUser!.listeningSex = "male"
     },
-    changeSpeechVoiceToFemale(): void {
-      this.authUser!.speechVoiceSex = "female"
+    changeListeningSexToFemale(): void {
+      this.authUser!.listeningSex = "female"
     },
   },
 })

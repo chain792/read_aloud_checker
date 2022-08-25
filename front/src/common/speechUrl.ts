@@ -9,7 +9,7 @@ interface User {
   email: string
   name: string
   avatar: string
-  speechVoiceSex: "male" | "female" | undefined
+  listeningSex: "male" | "female" | undefined
   createdAt: string
   updatedAt: string
 }
@@ -21,7 +21,7 @@ export function speechUrl(object: S3Object, user: AuthUser): string {
   if(!user){
     speechPath = `sentence/speech/${object.id}/${object.femaleSpeech}`
   }else{
-    switch (user.speechVoiceSex) {
+    switch (user.listeningSex) {
       case 'male':
         speechPath = `sentence/speech/${object.id}/${object.maleSpeech}`
         break

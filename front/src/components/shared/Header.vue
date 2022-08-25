@@ -62,8 +62,8 @@
         </v-card-item>
         <v-card-text class="mt-3">
           <div class="d-flex justify-space-around mt-6">
-            <v-btn color="success" @click="changeSpeechVoiceToMale">男性ボイス</v-btn>
-            <v-btn color="success" @click="changeSpeechVoiceToFemale">女性ボイス</v-btn>
+            <v-btn color="success" @click="changeListeningSexToMale">男性ボイス</v-btn>
+            <v-btn color="success" @click="changeListeningSexToFemale">女性ボイス</v-btn>
           </div>
         </v-card-text>
       </v-card>
@@ -120,16 +120,36 @@ function openSettingsModal(): void{
   settingsDialog.value = true
 }
 
-function changeSpeechVoiceToMale(): void{
-  userStore.changeSpeechVoiceToMale()
-  settingsDialog.value = false
-  flashStore.chengedSpeechVoiceToMale()
+async function changeListeningSexToMale(): Promise<void>{
+  flashStore.$reset()
+  try{
+    await axios.patch("user/listening_sex", {
+      user: {
+        listening_sex: "male"
+      }
+    })
+    userStore.changeListeningSexToMale()
+    settingsDialog.value = false
+    flashStore.chengedListeningSexToMale()
+  } catch(e) {
+    console.log(e)
+  }
 }
 
-function changeSpeechVoiceToFemale(): void{
-  userStore.changeSpeechVoiceToFemale()
-  settingsDialog.value = false
-  flashStore.chengedSpeechVoiceToFemale()
+async function changeListeningSexToFemale(): Promise<void>{
+  flashStore.$reset()
+  try{
+    await axios.patch("user/listening_sex", {
+      user: {
+        listening_sex: "female"
+      }
+    })
+    userStore.changeListeningSexToFemale()
+    settingsDialog.value = false
+    flashStore.chengedListeningSexToFemale()
+  } catch(e) {
+    console.log(e)
+  }
 }
 
 </script>
