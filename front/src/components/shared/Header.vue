@@ -40,11 +40,39 @@
         </v-list-item>
       </v-list>
     </v-menu>
-
   </v-app-bar>
+
+  <!-- 設定画面モーダル -->
+  <teleport to="body">
+    <div v-show="settingsDialog" class="modal" @click="settingsDialog = false" ></div>
+    <div v-show="settingsDialog" class="modal-content">
+      <v-card width="500" class="mx-auto px-5 py-3">
+        <v-card-item>
+          <div class="d-flex">
+            <v-card-title class="text-h6 ml-auto">音声の性別を変更する</v-card-title>
+            <v-btn
+              icon
+              elevation="0"
+              class="ml-auto"
+              @click="settingsDialog = false"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </div>
+        </v-card-item>
+        <v-card-text class="mt-3">
+          <div class="d-flex justify-space-around mt-6">
+            <v-btn color="success" @click="changeSpeechVoiceToMale">男性ボイス</v-btn>
+            <v-btn color="success" @click="changeSpeechVoiceToFemale">女性ボイス</v-btn>
+          </div>
+        </v-card-text>
+      </v-card>
+    </div>
+  </teleport>
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue"
 import axios from "@/plugins/axios"
 import { useUserStore }  from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
@@ -60,8 +88,11 @@ const router = useRouter()
 const items = [
   { title: "マイページ", click: linkToMypage },
   { title: "プロフィール", click: linkToProfile },
+  { title: "音声設定", click: openSettingsModal },
   { title: "ログアウト", click: logout },
 ]
+
+const settingsDialog = ref(false)
 
 async function logout(): Promise<void>{
   flashStore.$reset()
@@ -85,6 +116,22 @@ function linkToMypage(): void{
   router.push({ name: "Mypage" })
 }
 
+function openSettingsModal(): void{
+  settingsDialog.value = true
+}
+
+function changeSpeechVoiceToMale(): void{
+  userStore.changeSpeechVoiceToMale()
+  settingsDialog.value = false
+  flashStore.chengedSpeechVoiceToMale()
+}
+
+function changeSpeechVoiceToFemale(): void{
+  userStore.changeSpeechVoiceToFemale()
+  settingsDialog.value = false
+  flashStore.chengedSpeechVoiceToFemale()
+}
+
 </script>
 
 <style scoped>
@@ -100,5 +147,25 @@ function linkToMypage(): void{
 
 .v-btn__overlay {
   opacity: 0  !important;
+}
+
+.modal{
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0,0,0,.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

@@ -113,5 +113,15 @@ export const useFlashStore = defineStore("flash", {
       this.message = "無効なURLです"
       this.color = "red-accent-3"
     },
+    chengedSpeechVoiceToMale(): void {
+      this.status = true
+      this.message = "男性のボイスに変更しました"
+      this.color = "blue-lighten-2"
+    },
+    chengedSpeechVoiceToFemale(): void {
+      this.status = true
+      this.message = "女性のボイスに変更しました"
+      this.color = "pink-accent-1"
+    },
   },
 })

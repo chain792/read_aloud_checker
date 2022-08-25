@@ -45,7 +45,7 @@
     <div v-else class="mt-5">
       <div class="d-flex justify-center">
         <audio ref="audio"  controls></audio>
-        <audio :src="speechUrl(sentence, 'female')"  controls></audio>
+        <audio :src="speechUrl(sentence, userStore.authUser)"  controls></audio>
       </div>
       <div class="d-flex justify-center mt-5">
         <v-btn :border="true" @click="replayReadAloud">再音読する</v-btn>
