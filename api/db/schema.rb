@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_19_153710) do
+ActiveRecord::Schema.define(version: 2022_08_25_161732) do
 
   create_table "bookmarks", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -53,6 +53,8 @@ ActiveRecord::Schema.define(version: 2022_08_19_153710) do
     t.integer "status", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "male_speech"
+    t.string "female_speech"
     t.index ["creater_type", "creater_id"], name: "index_sentences_on_creater"
   end
 

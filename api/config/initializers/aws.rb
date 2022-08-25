@@ -13,3 +13,5 @@ PRIVATE_BUCKET = Aws::S3::Resource.new.bucket(
   Rails.application.credentials.dig(:aws, :private_bucket_name)
 )
 Signer = Aws::S3::Presigner.new
+
+Polly = Aws::Polly::Client.new
