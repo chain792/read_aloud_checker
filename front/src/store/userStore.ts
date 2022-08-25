@@ -5,6 +5,7 @@ interface User {
   email: string
   name: string
   avatar: string
+  listeningSex: "male" | "female" | undefined
   createdAt: string
   updatedAt: string
 }
@@ -20,6 +21,12 @@ export const useUserStore = defineStore("user", {
   actions: {
     setUser(user: User): void {
       this.authUser = user
-    }
+    },
+    changeListeningSexToMale(): void {
+      this.authUser!.listeningSex = "male"
+    },
+    changeListeningSexToFemale(): void {
+      this.authUser!.listeningSex = "female"
+    },
   },
 })

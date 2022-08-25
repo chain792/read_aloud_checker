@@ -18,6 +18,7 @@ Rails.application.routes.draw do
           end
         end
         resources :records, only: %i[index]
+        resource :listening_sex, only: %i[update]
       end
       resource :profile, only: %i[update] do
         collection { get :presigned_post }

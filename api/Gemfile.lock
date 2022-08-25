@@ -81,6 +81,9 @@ GEM
     aws-sdk-kms (1.58.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sigv4 (~> 1.1)
+    aws-sdk-polly (1.57.0)
+      aws-sdk-core (~> 3, >= 3.127.0)
+      aws-sigv4 (~> 1.1)
     aws-sdk-rails (3.6.2)
       aws-record (~> 2)
       aws-sdk-ses (~> 1)
@@ -337,6 +340,7 @@ PLATFORMS
 
 DEPENDENCIES
   alba
+  aws-sdk-polly
   aws-sdk-rails (~> 3)
   aws-sdk-s3 (~> 1)
   bootsnap (>= 1.4.4)
