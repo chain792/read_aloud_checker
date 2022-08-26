@@ -1,22 +1,23 @@
 <template>
   <v-app-bar
-    color="rgba(0,200,255,1)"
+    color="rgba(255,255,255,0)"
+    elevation="0"
   >
     <router-link :to="{ name: 'TopPage' }">
-      <v-app-bar-title class="text-white font-weight-bold">音読スター</v-app-bar-title>
+      <v-app-bar-title class="text-black font-weight-bold">音読スター</v-app-bar-title>
     </router-link>
 
     <v-spacer></v-spacer>
 
-    <router-link :to="{ name: 'Sentences' }" class="mr-5 text-white font-weight-bold">
+    <router-link :to="{ name: 'Sentences' }" class="mr-5 font-weight-bold">
       英文一覧
     </router-link>
 
-    <router-link :to="{ name: 'NewSentence' }" class="mr-5 text-white font-weight-bold">
+    <router-link :to="{ name: 'NewSentence' }" class="mr-5 font-weight-bold">
       英文投稿
     </router-link>
 
-    <router-link :to="{ name: 'BookmarkSentences' }" class="mr-5 text-white font-weight-bold">
+    <router-link :to="{ name: 'BookmarkSentences' }" class="mr-5 font-weight-bold">
       ブックマーク
     </router-link>
 
