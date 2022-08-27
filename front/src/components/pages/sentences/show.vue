@@ -41,9 +41,6 @@
     <div v-else-if="status === 'playing'" class="mt-5 d-flex justify-center">
       <v-btn :border="true" @click="stopReadAloud">音読を終了する</v-btn>
       <v-btn :border="true" @click="skipWord">パス</v-btn>
-      <v-btn :border="true" @click="testtest">teset</v-btn>
-      <p>{{aiueo}}</p>
-      <audio ref="audiotest"  controls></audio>
     </div>
     <div v-else class="mt-5">
       <div class="d-flex justify-center">
@@ -167,13 +164,12 @@ let numberWordPosition: number | null = null
 let mediaRecorder: MediaRecorder;
 let localStream: MediaStream;
 const audio = ref<HTMLAudioElement>()
-const audiotest = ref<HTMLAudioElement>()
 let trainingId: string
 let voiceBlob: Blob
 const progress2 = ref(false)
 const isSavedVoice = ref(false)
 let blob_url: string
-const aiueo = ref('a')
+
 //音読でタイピングゲームをするための準備を行う
 const setUpReadAloud = (body: string): string => {
   //カンマ区切りの数値をカンマなし表記に置き換えた後、アポストロフィ以外の記号で分割する
@@ -207,10 +203,7 @@ const playReadAloud = async (): Promise<void> => {
   mediaRecorder = new MediaRecorder(stream)
   mediaRecorder.start()
 
-  const Recognition = window.webkitSpeechRecognition || window.SpeechRecognition || 'no'
-  if(Recognition === 'no'){
-aiueo.value='b'
-  }
+  const Recognition = window.webkitSpeechRecognition || window.SpeechRecognition
   recognition = new Recognition()
   recognition.lang = 'en-US'
   recognition.interimResults = true
@@ -279,20 +272,6 @@ aiueo.value='b'
 
   recognition.start()
   skipUpToWord()
-}
-
-const testtest = () => {
-  console.log(1)
-  mediaRecorder.stop()
-      mediaRecorder.ondataavailable = (e2) => {
-        console.log(2)
-      if(audiotest.value){
-        console.log(3)
-        blob_url = window.URL.createObjectURL(e2.data)
-        audiotest.value.src = blob_url
-      }
-    }
-    console.log(4)
 }
 
 const wordMatchesDecision = (sentenceWord: string, transcriptWords: string[], index: number): boolean => {
