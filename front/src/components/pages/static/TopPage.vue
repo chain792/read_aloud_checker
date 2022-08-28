@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="topDiv">
     <v-img
       src="/top_photo.jpg"
       class="top-img"
@@ -116,10 +116,14 @@
 import { computed, ComputedRef, ref, onMounted } from "vue"
 import { useDisplay } from "vuetify"
 import { useRouter } from "vue-router";
+import { useHeaderStore } from "@/store/headerStore"
 
 const router = useRouter()
-
+const headerStore = useHeaderStore()
 const display = useDisplay()
+
+headerStore.opacity()
+
 //960px以上
 const pcScreen: ComputedRef<boolean> = computed(() => {
   if (display.xs.value || display.sm.value) {
@@ -134,29 +138,44 @@ const linkToSentences = (): void => {
 }
 
 /***************************************************
-  Intersection Observerの処理
+  Intersection Observer API
  ***************************************************/
 const usageDiv1 = ref<HTMLDivElement>()
 const usageDiv2 = ref<HTMLDivElement>()
 const usageDiv3 = ref<HTMLDivElement>()
+const topDiv = ref<HTMLDivElement>()
 
-const callback = (entries: Array<IntersectionObserverEntry>, obs: IntersectionObserver) => {
+const callbackAnimation = (entries: Array<IntersectionObserverEntry>, obs: IntersectionObserver) => {
   entries.forEach(entry => {
-  if(!entry.isIntersecting) return
-  
-  entry.target.classList.add('usage-appear')
-  obs.unobserve(entry.target)
+    if(!entry.isIntersecting) return
+    
+    entry.target.classList.add('usage-appear')
+    obs.unobserve(entry.target)
   })
 }
 
-const observer = new IntersectionObserver(callback, {
+const callbackHeaderChange = (entries: Array<IntersectionObserverEntry>) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      headerStore.opacity()
+    }else{
+      headerStore.disOpacity()
+    }
+  })
+}
+
+const observer = new IntersectionObserver(callbackAnimation, {
   threshold: 0.3
+})
+const imgObserver = new IntersectionObserver(callbackHeaderChange, {
+  threshold: 0
 })
 
 onMounted(() => {
   observer.observe(usageDiv1.value!)
   observer.observe(usageDiv2.value!)
   observer.observe(usageDiv3.value!)
+  imgObserver.observe(topDiv.value!)
 })
 
 

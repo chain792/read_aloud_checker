@@ -1,7 +1,7 @@
 <template>
   <v-app-bar
-    color="rgba(255,255,255,0)"
-    elevation="0"
+    :color="headerColor"
+    :elevation="headerElevation"
   >
     <router-link :to="{ name: 'TopPage' }">
       <v-app-bar-title class="text-black font-weight-bold">音読スター</v-app-bar-title>
@@ -73,18 +73,36 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, computed, ComputedRef } from "vue"
 import axios from "@/plugins/axios"
 import { useUserStore }  from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
 import { useTokenStore } from "@/store/tokenStore"
+import { useHeaderStore } from "@/store/headerStore"
 import { useRouter } from 'vue-router'
 import { imageUrl } from "@/common/imageUrl"
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
 const tokenStore = useTokenStore()
+const headerStore = useHeaderStore()
 const router = useRouter()
+
+const headerColor: ComputedRef<string> = computed(() => {
+  if(headerStore.isOpacity){
+    return 'rgba(255,255,255,0)'
+  }else{
+    return 'rgba(255,255,255,1)'
+  }
+})
+
+const headerElevation: ComputedRef<string> = computed(() => {
+  if(headerStore.isOpacity){
+    return '0'
+  }else{
+    return '5'
+  }
+})
 
 const items = [
   { title: "マイページ", click: linkToMypage },
