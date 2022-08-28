@@ -22,7 +22,7 @@ const userStore = useUserStore()
 </script>
 
 <style>
-body {
+/* body {
   font-family: 'Meiryo';
-}
+} */
 </style>
