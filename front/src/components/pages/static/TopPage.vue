@@ -49,7 +49,7 @@
         <v-divider length="400" thickness="2" class="mx-auto my-2"></v-divider>
       </div>
       <div class="usage-container">
-        <div class="d-md-flex px-lg-5">
+        <div ref="usageDiv1" class="d-md-flex px-lg-5 usage-disappear">
           <div class="mt-md-12">
             <p class="text-h5 font-weight-bold text-center">音読してみよう</p>
             <div class="usage-description mt-3 text-center">
@@ -65,7 +65,7 @@
             </v-img>
           </div>
         </div>
-        <div class="d-md-flex flex-row-reverse px-lg-5  mt-md-3">
+        <div ref="usageDiv2" class="d-md-flex flex-row-reverse px-lg-5  mt-md-3  usage-disappear">
           <div class="mt-md-12">
             <p class="text-h5 font-weight-bold text-center">英文を作成してみよう</p>
             <div class="usage-description mt-3 text-center">
@@ -81,7 +81,7 @@
             </v-img>
           </div>
         </div>
-        <div class="d-md-flex px-lg-5 mt-md-3">
+        <div ref="usageDiv3" class="d-md-flex px-lg-5 mt-md-3 usage-disappear">
           <div class="mt-md-12">
             <p class="text-h5 font-weight-bold text-center">記録を振り返ろう</p>
             <div class="usage-description mt-3 text-center">
@@ -113,7 +113,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ComputedRef } from "vue"
+import { computed, ComputedRef, ref, onMounted } from "vue"
 import { useDisplay } from "vuetify"
 import { useRouter } from "vue-router";
 
@@ -132,6 +132,32 @@ const pcScreen: ComputedRef<boolean> = computed(() => {
 const linkToSentences = (): void => {
   router.push({ name: "Sentences" })
 }
+
+/***************************************************
+  Intersection Observerの処理
+ ***************************************************/
+const usageDiv1 = ref<HTMLDivElement>()
+const usageDiv2 = ref<HTMLDivElement>()
+const usageDiv3 = ref<HTMLDivElement>()
+
+const callback = (entries: Array<IntersectionObserverEntry>, obs: IntersectionObserver) => {
+  entries.forEach(entry => {
+  if(!entry.isIntersecting) return
+  
+  entry.target.classList.add('usage-appear')
+  obs.unobserve(entry.target)
+  })
+}
+
+const observer = new IntersectionObserver(callback, {
+  threshold: 0.3
+})
+
+onMounted(() => {
+  observer.observe(usageDiv1.value!)
+  observer.observe(usageDiv2.value!)
+  observer.observe(usageDiv3.value!)
+})
 
 
 </script>
@@ -215,5 +241,16 @@ const linkToSentences = (): void => {
   .usage-container{
     margin: 0 250px;
   }
+}
+</style>
+<style>
+.usage-disappear{
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity .4s, transform .4s;
+}
+.usage-appear{
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>
