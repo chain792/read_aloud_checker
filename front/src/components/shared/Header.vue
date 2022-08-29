@@ -1,32 +1,33 @@
 <template>
   <v-app-bar
-    color="rgba(0,200,255,1)"
+    :color="headerColor"
+    :elevation="headerElevation"
   >
     <router-link :to="{ name: 'TopPage' }">
-      <v-app-bar-title class="text-white font-weight-bold">音読スター</v-app-bar-title>
+      <img src="/logo.png" class="logo" alt="">
     </router-link>
 
     <v-spacer></v-spacer>
 
-    <router-link :to="{ name: 'Sentences' }" class="mr-5 text-white font-weight-bold">
+    <router-link :to="{ name: 'Sentences' }" class="mr-5 header-text text-grey-darken-4">
       英文一覧
     </router-link>
 
-    <router-link :to="{ name: 'NewSentence' }" class="mr-5 text-white font-weight-bold">
+    <router-link :to="{ name: 'NewSentence' }" class="mr-5 header-text text-grey-darken-4">
       英文投稿
     </router-link>
 
-    <router-link :to="{ name: 'BookmarkSentences' }" class="mr-5 text-white font-weight-bold">
+    <router-link :to="{ name: 'BookmarkSentences' }" class="header-text header-text-bookmark text-grey-darken-4">
       ブックマーク
     </router-link>
 
     <v-menu>
       <template v-slot:activator="{ props }">
         <v-btn
-          color="rgba(0,200,255,1)"
+          color="rgba(255,255,255,1)"
           v-bind="props"
         >
-          <img :src="imageUrl('avatar', userStore.authUser!)" alt="">
+          <img :src="imageUrl('avatar', userStore.authUser!)" alt="" class="avatar">
         </v-btn>
       </template>
       <v-list>
@@ -72,18 +73,36 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, computed, ComputedRef } from "vue"
 import axios from "@/plugins/axios"
 import { useUserStore }  from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
 import { useTokenStore } from "@/store/tokenStore"
+import { useHeaderStore } from "@/store/headerStore"
 import { useRouter } from 'vue-router'
 import { imageUrl } from "@/common/imageUrl"
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
 const tokenStore = useTokenStore()
+const headerStore = useHeaderStore()
 const router = useRouter()
+
+const headerColor: ComputedRef<string> = computed(() => {
+  if(headerStore.isOpacity){
+    return 'rgba(255,255,255,0)'
+  }else{
+    return 'rgba(255,255,255,1)'
+  }
+})
+
+const headerElevation: ComputedRef<string> = computed(() => {
+  if(headerStore.isOpacity){
+    return '0'
+  }else{
+    return '1'
+  }
+})
 
 const items = [
   { title: "マイページ", click: linkToMypage },
@@ -155,14 +174,10 @@ async function changeListeningSexToFemale(): Promise<void>{
 </script>
 
 <style scoped>
-.v-app-bar img{
+.avatar{
   border-radius: 50%;
   width: 40px;
   height: 40px;
-}
-
-.v-app-bar a{
-  text-decoration: none;
 }
 
 .v-btn__overlay {
@@ -187,5 +202,29 @@ async function changeListeningSexToFemale(): Promise<void>{
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.logo{
+  position: absolute;
+  top: 1px;
+  left: 10px;
+  width: 170px !important;
+  height: 62px !important;
+}
+
+.header-text{
+  font-weight: 500;
+  font-size: 18px;
+  text-decoration: none;
+  width: 75px;
+}
+
+.header-text:hover{
+  color: #ef8060 !important;
+  font-weight: 600;
+}
+
+.header-text-bookmark{
+  width: 110px;
 }
 </style>
