@@ -47,7 +47,7 @@
           >
             ログイン
           </v-btn>
-          <div class="mt-1">
+          <div class="mt-2">
             <router-link :to="{ name: 'NewPasswordReset' }" class="link-text text-blue-accent-4">パスワードを忘れた場合はこちら</router-link>
           </div>
           <div class="mt-1">

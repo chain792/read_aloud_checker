@@ -59,7 +59,7 @@
             登録
           </v-btn>
 
-          <div class="mt-1">
+          <div class="mt-2">
             <router-link :to="{ name: 'Login' }" class="link-text text-blue-accent-4">アカウントをお持ちの方はこちら</router-link>
           </div>
           <p class="text-center text-border my-4">または</p>
