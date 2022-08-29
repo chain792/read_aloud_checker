@@ -1,6 +1,6 @@
 <template>
-  <div class="page-login pt-10">
-    <v-card width="400" class="mx-auto px-5 py-3">
+  <div class="page-login pt-5 pt-sm-10">
+    <v-card :width="cardWidth" class="mx-auto px-3 px-sm-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">ログイン</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
@@ -41,9 +41,9 @@
 
           <v-btn
             :disabled="!valid"
-            color="success"
+            color="warning"
             class="mt-n1"
-            width="328"
+            width="100%"
             @click="login"
           >
             ログイン
@@ -58,7 +58,7 @@
           <v-btn
             prepend-icon="mdi-twitter" 
             class="text-capitalize twitter-btn"
-            width="328"
+            width="100%"
             @click="twitterLogin"
           >
             <span class="text-body-1 text-white">Twitterでログイン</span>
@@ -66,7 +66,7 @@
           <v-btn
             class="text-capitalize mt-3"
             border
-            width="328"
+            width="100%"
             @click="googleLogin"
           >
             <img src="/google_logo.svg" class="google-logo">
@@ -75,7 +75,7 @@
           
           <v-btn
             class="text-capitalize yahoo-btn mt-3"
-            width="328"
+            width="100%"
             @click="yahooLogin"
           >
             <img src="/yahoo_japan_icon_64.png" class="yahoo-logo">
@@ -89,7 +89,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue"
+import { ref, reactive, computed, ComputedRef } from "vue"
 import axios from "@/plugins/axios"
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 import { useUserStore }  from "@/store/userStore"
@@ -97,11 +97,21 @@ import { useFlashStore } from "@/store/flashStore"
 import { useTokenStore } from "@/store/tokenStore"
 import { useRouter } from 'vue-router'
 import { refresh } from "@/common/refresh"
+import { useDisplay } from "vuetify"
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
 const tokenStore = useTokenStore()
 const router = useRouter()
+const display = useDisplay()
+
+const cardWidth: ComputedRef<string | number> = computed(() => {
+  if (display.xs.value) {
+    return '100%'
+  } else {
+    return 400
+  }
+})
 
 const errorMessages: string[] = reactive([])
 const valid = ref(true)
@@ -216,19 +226,12 @@ const CheckLoginStatus = async (): Promise<void> => {
 .yahoo-text-container{
   position: absolute;
   height: 100%;
-  width: 276px;
-  left: 50px;
+  width: calc(100% - 52px);
+  left: 52px;
   background-color: #ff0033;
   border-radius: 1px;
 }
-.yahoo-text-container{
-  position: absolute;
-  height: 100%;
-  width: 276px;
-  left: 50px;
-  background-color: #ff0033;
-  border-radius: 1px;
-}
+
 .yahoo-text{
   color: #fff;
   margin-top: 8px;
