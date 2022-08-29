@@ -1,5 +1,5 @@
 <template>
-  <div class="page-login pt-5 pt-sm-10">
+  <div class="page-login py-5 pt-sm-10">
     <v-card :width="cardWidth" class="mx-auto px-3 px-sm-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">ログイン</v-card-title>
@@ -42,7 +42,6 @@
           <v-btn
             :disabled="!valid"
             color="warning"
-            class="mt-n1"
             width="100%"
             @click="login"
           >
@@ -144,6 +143,9 @@ const login = async (): Promise<void> => {
   }
 }
 
+/***************************************************
+  ソーシャルログイン
+ ***************************************************/
 let windowLogin: Window | null
 const twitterLogin = async (): Promise<void> => {
   flashStore.$reset()
@@ -203,40 +205,6 @@ const CheckLoginStatus = async (): Promise<void> => {
   background-color: rgba(225, 200, 30, 0.1);
   height: 100%;
 }
-.twitter-btn{
-  background-color: #55acee;
-}
-.twitter-btn:hover{
-  background-color: #55a8ee;
-}
-.google-logo{
-  width: 38px;
-  height: 38px;
-  object-fit: none;
-}
-.yahoo-btn{
-  border: 1px solid #ff0033;
-}
-.yahoo-logo{
-  position: absolute;
-  width: 32px;
-  height: 18px;
-  left: 10px;
-}
-.yahoo-text-container{
-  position: absolute;
-  height: 100%;
-  width: calc(100% - 52px);
-  left: 52px;
-  background-color: #ff0033;
-  border-radius: 1px;
-}
-
-.yahoo-text{
-  color: #fff;
-  margin-top: 8px;
-  margin-left: -15px;
-}
 
 .text-border{
   display: flex;
@@ -257,20 +225,5 @@ const CheckLoginStatus = async (): Promise<void> => {
 
 .text-border::after {
   margin-left: 15px;
-}
-.link-text{
-  text-decoration: none;
-}
-.link-text:hover{
-  text-decoration: underline;
-}
-</style>
-<style>
-.twitter-btn .v-btn__prepend{
-  padding-top: 3px;
-  color: white;
-}
-.mdi-twitter{
-  font-size: 20px;
 }
 </style>
