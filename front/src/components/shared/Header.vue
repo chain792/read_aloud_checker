@@ -9,25 +9,25 @@
 
     <v-spacer></v-spacer>
 
-    <router-link :to="{ name: 'Sentences' }" class="mr-5 font-weight-bold">
+    <router-link :to="{ name: 'Sentences' }" class="mr-5 header-text text-grey-darken-4">
       英文一覧
     </router-link>
 
-    <router-link :to="{ name: 'NewSentence' }" class="mr-5 font-weight-bold">
+    <router-link :to="{ name: 'NewSentence' }" class="mr-5 header-text text-grey-darken-4">
       英文投稿
     </router-link>
 
-    <router-link :to="{ name: 'BookmarkSentences' }" class="mr-5 font-weight-bold">
+    <router-link :to="{ name: 'BookmarkSentences' }" class="header-text header-text-bookmark text-grey-darken-4">
       ブックマーク
     </router-link>
 
     <v-menu>
       <template v-slot:activator="{ props }">
         <v-btn
-          color="rgba(0,200,255,1)"
+          color="rgba(255,255,255,1)"
           v-bind="props"
         >
-          <img :src="imageUrl('avatar', userStore.authUser!)" alt="">
+          <img :src="imageUrl('avatar', userStore.authUser!)" alt="" class="avatar">
         </v-btn>
       </template>
       <v-list>
@@ -174,14 +174,10 @@ async function changeListeningSexToFemale(): Promise<void>{
 </script>
 
 <style scoped>
-.v-app-bar img{
+.avatar{
   border-radius: 50%;
   width: 40px;
   height: 40px;
-}
-
-.v-app-bar a{
-  text-decoration: none;
 }
 
 .v-btn__overlay {
@@ -214,5 +210,21 @@ async function changeListeningSexToFemale(): Promise<void>{
   left: 10px;
   width: 170px !important;
   height: 62px !important;
+}
+
+.header-text{
+  font-weight: 500;
+  font-size: 18px;
+  text-decoration: none;
+  width: 75px;
+}
+
+.header-text:hover{
+  color: #ef8060 !important;
+  font-weight: 600;
+}
+
+.header-text-bookmark{
+  width: 110px;
 }
 </style>

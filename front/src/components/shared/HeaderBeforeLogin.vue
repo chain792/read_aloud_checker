@@ -9,33 +9,23 @@
 
     <v-spacer></v-spacer>
 
-    <router-link :to="{ name: 'Sentences' }" class="mr-5 font-weight-bold">
+    <router-link :to="{ name: 'Sentences' }" class="mr-5 header-text text-grey-darken-4">
       英文一覧
     </router-link>
 
-    <v-btn
-      density="compact"
-      size="x-large"
-      variant="text"
-      class="mr-2 font-weight-bold"
-      rounded="xl"
+    <router-link
+      class="mr-5 header-text text-grey-darken-4"
       :to="{ name: 'Login' }"
     >
       ログイン
-    </v-btn>
+    </router-link>
 
-
-    <v-btn
-      density="comfortable"
-      color="white"
-      size="x-large"
-      variant="text"
-      class="mr-2 font-weight-bold"
-      rounded="xl"
+    <router-link
+      class="mr-3 header-text text-grey-darken-4"
       :to="{ name: 'Signup' }"
     >
       新規登録
-    </v-btn>
+    </router-link>
 
 
     
@@ -66,15 +56,23 @@ const headerElevation: ComputedRef<string> = computed(() => {
 </script>
 
 <style scoped>
-.v-app-bar a{
-  text-decoration: none;
-}
-
 .logo{
   position: absolute;
   top: 1px;
   left: 10px;
   width: 170px !important;
   height: 62px !important;
+}
+
+.header-text{
+  font-weight: 500;
+  font-size: 18px;
+  text-decoration: none;
+  width: 75px;
+}
+
+.header-text:hover{
+  color: #ef8060 !important;
+  font-weight: 600;
 }
 </style>
