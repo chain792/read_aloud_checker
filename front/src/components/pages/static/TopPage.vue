@@ -16,7 +16,7 @@
           height="220"
           elevation="5"
           color="deep-orange"
-          @click="linkToSentences"
+          :to="{ name: 'Sentences' }"
         >
           <p class="top-btn-text">今すぐ音読する</p>
         </v-btn>
@@ -34,9 +34,10 @@
         class="mx-auto mt-5 mb-10" 
         rounded
         height="50"
+        width="240"
         elevation="5"
         color="deep-orange"
-        @click="linkToSentences"
+        :to="{ name: 'Sentences' }"
       >
         <p class="top-btn-text">今すぐ音読する</p>
       </v-btn>
@@ -103,7 +104,8 @@
           class="mx-auto"
           color="deep-orange"
           height="50"
-          @click="linkToSentences"
+          width="200"
+          :to="{ name: 'Sentences' }"
         >
           <p class="text-white usage-btn-text pa-1">音読を始める</p>
         </v-btn>
@@ -115,10 +117,8 @@
 <script setup lang="ts">
 import { computed, ComputedRef, ref, onMounted } from "vue"
 import { useDisplay } from "vuetify"
-import { useRouter } from "vue-router";
 import { useHeaderStore } from "@/store/headerStore"
 
-const router = useRouter()
 const headerStore = useHeaderStore()
 const display = useDisplay()
 
@@ -132,10 +132,6 @@ const pcScreen: ComputedRef<boolean> = computed(() => {
     return true
   }
 })
-
-const linkToSentences = (): void => {
-  router.push({ name: "Sentences" })
-}
 
 /***************************************************
   Intersection Observer API
