@@ -1,5 +1,5 @@
 <template>
-  <div class="page-new-passwardreset py-5 pt-sm-10">
+  <div class="page-new-passwordreset py-5 pt-sm-10">
     <v-card :width="cardWidth" class="mx-auto px-3 px-sm-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">パスワード再設定のご案内</v-card-title>
@@ -83,7 +83,7 @@ const sendEmail = async (): Promise<void> => {
 </script>
 
 <style scoped>
-.page-new-passwardreset{
+.page-new-passwordreset{
   background-color: rgba(225, 200, 30, 0.1);
   height: 100%;
 }
