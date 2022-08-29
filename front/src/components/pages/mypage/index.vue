@@ -1,31 +1,33 @@
 <template>
-  <v-container>
-    <v-card>
-      <v-tabs
-        v-model="tab"
-        centered
-        grow
-        stacked
-      >
-        <v-tab value="tab-1">
-          音読記録
-        </v-tab>
+  <div class="page-mypage">
+    <v-container>
+      <v-card>
+        <v-tabs
+          v-model="tab"
+          centered
+          grow
+          stacked
+        >
+          <v-tab value="tab-1">
+            音読記録
+          </v-tab>
 
-        <v-tab value="tab-2">
-          音読履歴
-        </v-tab>
-      </v-tabs>
+          <v-tab value="tab-2">
+            音読履歴
+          </v-tab>
+        </v-tabs>
 
-      <v-window v-model="tab">
-        <v-window-item value="tab-1">
-          <Record />
-        </v-window-item>
-        <v-window-item value="tab-2">
-          <Histories />
-        </v-window-item>
-      </v-window>
-    </v-card>
-  </v-container>
+        <v-window v-model="tab">
+          <v-window-item value="tab-1">
+            <Record />
+          </v-window-item>
+          <v-window-item value="tab-2">
+            <Histories />
+          </v-window-item>
+        </v-window>
+      </v-card>
+    </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -44,4 +46,8 @@ watch(tab, () => {
 </script>
 
 <style scoped>
+.page-mypage{
+  background-color: rgba(225, 200, 30, 0.1);
+  height: 100%;
+}
 </style>

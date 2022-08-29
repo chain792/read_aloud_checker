@@ -266,7 +266,7 @@ onMounted(() => {
 .usage-disappear{
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity .4s, transform .4s;
+  transition: opacity .3s, transform .3s;
 }
 .usage-appear{
   opacity: 1;

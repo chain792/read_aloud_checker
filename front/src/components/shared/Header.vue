@@ -4,7 +4,7 @@
     :elevation="headerElevation"
   >
     <router-link :to="{ name: 'TopPage' }">
-      <v-app-bar-title class="text-black font-weight-bold">音読スター</v-app-bar-title>
+      <img src="/logo.png" class="logo" alt="">
     </router-link>
 
     <v-spacer></v-spacer>
@@ -100,7 +100,7 @@ const headerElevation: ComputedRef<string> = computed(() => {
   if(headerStore.isOpacity){
     return '0'
   }else{
-    return '5'
+    return '1'
   }
 })
 
@@ -206,5 +206,13 @@ async function changeListeningSexToFemale(): Promise<void>{
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.logo{
+  position: absolute;
+  top: 1px;
+  left: 10px;
+  width: 170px !important;
+  height: 62px !important;
 }
 </style>
