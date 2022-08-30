@@ -252,7 +252,7 @@ onMounted(() => {
     margin: 0 100px;
   }
 }
-@media (min-width: 1904px) {
+@media (min-width: 1920px) {
   .usage-container{
     margin: 0 250px;
   }
