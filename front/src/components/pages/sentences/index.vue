@@ -27,7 +27,7 @@ import { ref, Ref, onMounted } from "vue"
 import NewsSentences from "./components/NewsSentences.vue"
 import UserSentences from "./components/UserSentences.vue"
 
-const initilaTabValue: string = sessionStorage.sentencesTab ? sessionStorage.sentencesTab : "1"
+const initilaTabValue: string = sessionStorage.sentencesTab ? sessionStorage.sentencesTab : "0"
 const tab: Ref<number> = ref(Number(initilaTabValue))
 const tabItem1 = ref<HTMLDivElement>()
 const tabItem2 = ref<HTMLDivElement>()
