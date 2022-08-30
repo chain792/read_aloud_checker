@@ -47,7 +47,7 @@
   <teleport to="body">
     <div v-show="settingsDialog" class="modal" @click="settingsDialog = false" ></div>
     <div v-show="settingsDialog" class="modal-content">
-      <v-card width="500" class="mx-auto px-5 py-3">
+      <v-card :width="modalWidth" class="mx-assto px-5 py-3">
         <v-card-item>
           <div class="d-flex">
             <v-card-title class="text-h6 ml-auto">音声の性別を変更する</v-card-title>
@@ -63,8 +63,8 @@
         </v-card-item>
         <v-card-text class="mt-3">
           <div class="d-flex justify-space-around mt-6">
-            <v-btn color="success" @click="changeListeningSexToMale">男性ボイス</v-btn>
-            <v-btn color="success" @click="changeListeningSexToFemale">女性ボイス</v-btn>
+            <v-btn color="blue-accent-4"  variant="tonal" @click="changeListeningSexToMale">男性ボイス</v-btn>
+            <v-btn color="pink-accent-4" variant="tonal" @click="changeListeningSexToFemale">女性ボイス</v-btn>
           </div>
         </v-card-text>
       </v-card>
@@ -81,12 +81,22 @@ import { useTokenStore } from "@/store/tokenStore"
 import { useHeaderStore } from "@/store/headerStore"
 import { useRouter } from 'vue-router'
 import { imageUrl } from "@/common/imageUrl"
+import { useDisplay } from "vuetify"
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
 const tokenStore = useTokenStore()
 const headerStore = useHeaderStore()
 const router = useRouter()
+const display = useDisplay()
+
+const modalWidth: ComputedRef<string | number> = computed(() => {
+  if (display.xs.value) {
+    return display.width.value
+  } else {
+    return 400
+  }
+})
 
 const headerColor: ComputedRef<string> = computed(() => {
   if(headerStore.isOpacity){
