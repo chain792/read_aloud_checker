@@ -1,26 +1,28 @@
 <template>
-  <div class="mt-5 d-flex align-stretch">
-    <div class="select-title px-3">
-      <p class="mt-2">期間</p>
+  <v-card class="pt-2 py-5">
+    <div class="mt-5 d-flex">
+      <div class="ml-16">
+        <p class="mt-2">期間：</p>
+      </div>
+      <div class="select-container">
+        <v-select
+          v-model="itemValue"
+          :items="items"
+          variant="solo"
+          density="compact"
+        ></v-select>
+      </div>
     </div>
-    <div class="select-container">
-      <v-select
-        v-model="itemValue"
-        :items="items"
-        variant="solo"
-        density="compact"
-      ></v-select>
+    <div class="mt-6">
+      <p class="ml-16">合計音読数： <span class="mr-1 text-h4">{{ totalSucceededNumber }}</span>単語</p>
+      <p class="ml-16">発音精度： {{ precision }}<span v-if="precision !== 'ー'">%</span></p>
     </div>
-  </div>
-  <div class="mt-6">
-    <p class="ml-16">合計音読数： {{ totalSucceededNumber }}単語</p>
-    <p class="ml-16">発音精度： {{ precision }}<span v-if="precision !== 'ー'">%</span></p>
-  </div>
-  <GChart
-    type="ColumnChart"
-    :data="chartData"
-    :options="chartOptions"
-  />
+    <GChart
+      type="ColumnChart"
+      :data="chartData"
+      :options="chartOptions"
+    />
+  </v-card>
 </template>
 
 <script setup lang="ts">
@@ -107,10 +109,6 @@ const chartOptions = {
 </script>
 
 <style scoped>
-.select-title{
-  background-color: rgba(220,220,220,.4);
-  border: 1px solid rgba(150,150,150,.4);
-}
 .select-container{
   width: 160px;
   height: 40px;

@@ -9,21 +9,22 @@
 
     <v-spacer></v-spacer>
 
-    <router-link :to="{ name: 'Sentences' }" class="mr-5 header-text text-grey-darken-4">
+    <router-link v-show="!spScreen" :to="{ name: 'Sentences' }" class="mr-5 header-text text-grey-darken-4">
       英文一覧
     </router-link>
 
-    <router-link :to="{ name: 'NewSentence' }" class="mr-5 header-text text-grey-darken-4">
+    <router-link v-show="!spScreen" :to="{ name: 'NewSentence' }" class="mr-5 header-text text-grey-darken-4">
       英文投稿
     </router-link>
 
-    <router-link :to="{ name: 'BookmarkSentences' }" class="header-text header-text-bookmark text-grey-darken-4">
+    <router-link v-show="!spScreen" :to="{ name: 'BookmarkSentences' }" class="header-text header-text-bookmark text-grey-darken-4">
       ブックマーク
     </router-link>
 
     <v-menu>
       <template v-slot:activator="{ props }">
         <v-btn
+          v-show="!spScreen"
           color="rgba(255,255,255,1)"
           v-bind="props"
         >
@@ -41,13 +42,34 @@
         </v-list-item>
       </v-list>
     </v-menu>
+
+    <v-app-bar-nav-icon v-show="spScreen" class="sp-menu" @click="drawer = !drawer"></v-app-bar-nav-icon>
   </v-app-bar>
+
+  <!-- サイドメニュー -->
+  <teleport to="body">
+    <div v-show="drawer" class="modal" @click="drawer = false" ></div>
+    <transition name="side-menu-animation">
+      <div v-show="drawer" class="side-menu">
+        <v-list>
+          <v-list-item
+            v-for="(item, index) in sideItems"
+            :key="index"
+            :value="index"
+            @click="item.click"
+          >
+            <v-list-item-title class="text-body-1">{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </div>
+    </transition>
+  </teleport>
 
   <!-- 設定画面モーダル -->
   <teleport to="body">
     <div v-show="settingsDialog" class="modal" @click="settingsDialog = false" ></div>
     <div v-show="settingsDialog" class="modal-content">
-      <v-card width="500" class="mx-auto px-5 py-3">
+      <v-card :width="modalWidth" class="mx-assto px-5 py-3">
         <v-card-item>
           <div class="d-flex">
             <v-card-title class="text-h6 ml-auto">音声の性別を変更する</v-card-title>
@@ -63,8 +85,8 @@
         </v-card-item>
         <v-card-text class="mt-3">
           <div class="d-flex justify-space-around mt-6">
-            <v-btn color="success" @click="changeListeningSexToMale">男性ボイス</v-btn>
-            <v-btn color="success" @click="changeListeningSexToFemale">女性ボイス</v-btn>
+            <v-btn color="blue-accent-4"  variant="tonal" @click="changeListeningSexToMale">男性ボイス</v-btn>
+            <v-btn color="pink-accent-4" variant="tonal" @click="changeListeningSexToFemale">女性ボイス</v-btn>
           </div>
         </v-card-text>
       </v-card>
@@ -81,12 +103,22 @@ import { useTokenStore } from "@/store/tokenStore"
 import { useHeaderStore } from "@/store/headerStore"
 import { useRouter } from 'vue-router'
 import { imageUrl } from "@/common/imageUrl"
+import { useDisplay } from "vuetify"
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
 const tokenStore = useTokenStore()
 const headerStore = useHeaderStore()
 const router = useRouter()
+const display = useDisplay()
+
+const modalWidth: ComputedRef<string | number> = computed(() => {
+  if (display.xs.value) {
+    return display.width.value
+  } else {
+    return 400
+  }
+})
 
 const headerColor: ComputedRef<string> = computed(() => {
   if(headerStore.isOpacity){
@@ -104,6 +136,14 @@ const headerElevation: ComputedRef<string> = computed(() => {
   }
 })
 
+const spScreen: ComputedRef<boolean> = computed(() => {
+  if (display.xs.value) {
+    return true
+  } else {
+    return false
+  }
+})
+
 const items = [
   { title: "マイページ", click: linkToMypage },
   { title: "プロフィール", click: linkToProfile },
@@ -111,7 +151,19 @@ const items = [
   { title: "ログアウト", click: logout },
 ]
 
+const sideItems = [
+  { title: "トップページ", click: linkToTopPage },
+  { title: "英文一覧", click: linkToSentences },
+  { title: "英文投稿", click: linkToNewSentence },
+  { title: "ブックマーク", click: linkToBookmarkSentences },
+  { title: "マイページ", click: linkToMypage },
+  { title: "プロフィール", click: linkToProfile },
+  { title: "音声設定", click: openSettingsModal },
+  { title: "ログアウト", click: logout },
+]
+
 const settingsDialog = ref(false)
+const drawer = ref(false)
 
 async function logout(): Promise<void>{
   flashStore.$reset()
@@ -127,15 +179,38 @@ async function logout(): Promise<void>{
   }
 }
 
+function linkToTopPage(): void{
+  drawer.value = false
+  router.push({ name: "TopPage" })
+}
+
 function linkToProfile(): void{
+  drawer.value = false
   router.push({ name: "Profile" })
 }
 
 function linkToMypage(): void{
+  drawer.value = false
   router.push({ name: "Mypage" })
 }
 
+function linkToSentences(): void{
+  drawer.value = false
+  router.push({ name: "Sentences" })
+}
+
+function linkToNewSentence(): void{
+  drawer.value = false
+  router.push({ name: "NewSentence" })
+}
+
+function linkToBookmarkSentences(): void{
+  drawer.value = false
+  router.push({ name: "BookmarkSentences" })
+}
+
 function openSettingsModal(): void{
+  drawer.value = false
   settingsDialog.value = true
 }
 
@@ -182,26 +257,6 @@ async function changeListeningSexToFemale(): Promise<void>{
 
 .v-btn__overlay {
   opacity: 0  !important;
-}
-
-.modal{
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: rgba(0,0,0,.3);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-content{
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .logo{

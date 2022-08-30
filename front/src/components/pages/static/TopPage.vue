@@ -43,14 +43,14 @@
       </v-btn>
     </div>
   </div>
-  <div class="usage pt-5">
+  <div class="usage pt-5 px-5">
     <v-container class="container">
       <div class="text-center">
         <p class="text-h4 font-weight-bold">音読スターでできること</p>
-        <v-divider length="400" thickness="2" class="mx-auto my-2"></v-divider>
+        <v-divider length="400" thickness="2" class="mx-auto mt-2"></v-divider>
       </div>
       <div class="usage-container">
-        <div ref="usageDiv1" class="d-md-flex px-lg-5 usage-disappear">
+        <div ref="usageDiv1" class="d-md-flex px-lg-5 usage-disappear mt-8 mt-md-3">
           <div class="mt-md-12">
             <p class="text-h5 font-weight-bold text-center">音読してみよう</p>
             <div class="usage-description mt-3 text-center">
@@ -252,7 +252,7 @@ onMounted(() => {
     margin: 0 100px;
   }
 }
-@media (min-width: 1904px) {
+@media (min-width: 1920px) {
   .usage-container{
     margin: 0 250px;
   }

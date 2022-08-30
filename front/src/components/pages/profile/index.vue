@@ -1,33 +1,41 @@
 <template>
-  <v-card width="600" class="mx-auto mt-10 px-5 py-3">
-    <v-card-item>
-      <v-card-title class="text-center text-h5">プロフィール</v-card-title>
-    </v-card-item>
-    <v-card-text class="mt-3">
-      <div class="text-center">
-        <img :src="imageUrl('avatar', currentUser)" alt="アバター" class="avatar">
-      </div>
-      <div class="text-center mt-3">
-        <p class="text-h6">名前</p>
-        <p class="mt-1 text-body-1">{{ currentUser.name }}</p>
-      </div>
-      <div class="text-center mt-3">
-        <p class="text-h6">メールアドレス</p>
-        <p class="mt-1 text-body-1">{{ currentUser.email }}</p>
-      </div>
-      <div class="text-center mt-3">
-        <v-btn :border="true" class="mx-auto" @click="profileDialog = true">プロフィール編集</v-btn>
-      </div>
-      <div class="d-flex justify-space-around mt-5">
-        <p  class="blue-text" @click="emailDialog = true">メールアドレスを変更する</p>
-        <p  class="blue-text" @click="passwordDialog = true">パスワードを変更する</p>
-      </div>
-    </v-card-text>
-  </v-card>
+  <div class="page-profile py-5 pt-sm-10">
+    <v-card :width="cardWidth" class="mx-auto px-3 px-sm-5 py-3">
+      <v-card-item>
+        <v-card-title class="text-center text-h5">プロフィール</v-card-title>
+      </v-card-item>
+      <v-card-text class="mt-3">
+        <div class="text-center">
+          <img :src="imageUrl('avatar', currentUser)" alt="アバター" class="avatar">
+        </div>
+        <div class="text-center mt-3">
+          <p class="text-h6">名前</p>
+          <p class="mt-1 text-body-1">{{ currentUser.name }}</p>
+        </div>
+        <div class="text-center mt-3">
+          <p class="text-h6">メールアドレス</p>
+          <p class="mt-1 text-body-1">{{ currentUser.email }}</p>
+        </div>
+        <div class="text-center mt-3">
+          <v-btn 
+            color="warning"
+            class="mx-auto"
+            @click="profileDialog = true"
+          >
+            プロフィール編集
+          </v-btn>
+        </div>
+        <div class="d-sm-flex justify-space-around mt-5">
+          <p  class="change-profile-text text-blue-accent-4 text-center mt-3" @click="emailDialog = true">メールアドレスを変更する</p>
+          <p  class="change-profile-text text-blue-accent-4 text-center mt-3" @click="passwordDialog = true">パスワードを変更する</p>
+        </div>
+      </v-card-text>
+    </v-card>
+  </div>
 
   <!-- プロフィール編集モーダル -->
   <v-dialog v-model="profileDialog">
-    <v-card width="400" class="mx-auto px-5 py-3">
+    <v-card :width="modalWidth" class="mt-n10 px-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">プロフィール編集</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
@@ -60,12 +68,19 @@
               :rules="nameRules"
             ></v-text-field>
           </div>
-          <div class="d-flex justify-space-around">
-            <v-btn color="success" @click="profileDialog = false">キャンセル</v-btn>
+          <div class="d-sm-flex justify-space-around">
+            <v-btn 
+              color="accent" 
+              :width="buttonWidth" 
+              @click="profileDialog = false"
+            >
+              キャンセル
+            </v-btn>
             <v-btn
               :disabled="!validProfile"
-              color="success"
-              class="mr-4"
+              color="warning"
+              :width="buttonWidth"
+              class="ml-sm-3 mt-3 mt-sm-0"
               @click="updateProfile"
             >
               この内容で編集する
@@ -78,7 +93,7 @@
 
   <!-- メールアドレス変更モーダル -->
   <v-dialog v-model="emailDialog">
-    <v-card width="400" class="mx-auto px-5 py-3">
+    <v-card :width="modalWidth" class="mt-n10 px-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">メールアドレスの変更</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
@@ -102,7 +117,7 @@
               :rules="emailRules"
             ></v-text-field>
           </div>
-          <div class="mt-5">
+          <div>
             <v-text-field
               v-model="passwordForChangeEmail"
               type="password"
@@ -115,12 +130,19 @@
               :rules="passwordRules"
             ></v-text-field>
           </div>
-          <div class="d-flex justify-space-around">
-            <v-btn color="success" @click="emailDialog = false">キャンセル</v-btn>
+          <div class="d-sm-flex justify-space-around">
+            <v-btn 
+              color="accent"
+              :width="buttonWidth" 
+              @click="emailDialog = false"
+            >
+              キャンセル
+            </v-btn>
             <v-btn
               :disabled="!validEmail"
-              color="success"
-              class="mr-4"
+              color="warning"
+              :width="buttonWidth" 
+              class="ml-sm-3 mt-3 mt-sm-0"
               @click="updateEmail"
             >
               この内容で編集する
@@ -133,7 +155,7 @@
 
   <!-- パスワード変更モーダル -->
   <v-dialog v-model="passwordDialog">
-    <v-card width="400" class="mx-auto px-5 py-3">
+    <v-card :width="modalWidth" class="mt-n10 px-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">パスワードの変更</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
@@ -161,14 +183,16 @@
           <div class="mt-5">
             <v-text-field
               v-model="newPassword"
-              type="password"
+              :type="isVisiblePassword ? 'text' : 'password'"
               label="新しいパスワード"
-              placeholder="新しいパスワードを入力"
+              placeholder="半角英数字6文字以上"
               color="blue"
               density="comfortable"
               variant="outlined"
               required
               :rules="passwordRules"
+              :append-inner-icon="isVisiblePassword ? 'mdi-eye' : 'mdi-eye-off'"
+              @click:append-inner="isVisiblePassword = !isVisiblePassword"
             ></v-text-field>
           </div>
           <div>
@@ -176,7 +200,7 @@
               v-model="newPasswordConfirmation"
               type="password"
               label="新しいパスワード（確認）"
-              placeholder="新しいパスワード（確認）を入力"
+              placeholder="半角英数字6文字以上"
               color="blue"
               density="comfortable"
               variant="outlined"
@@ -184,12 +208,19 @@
               :rules="passwordRules"
             ></v-text-field>
           </div>
-          <div class="d-flex justify-space-around">
-            <v-btn color="success" @click="passwordDialog = false">キャンセル</v-btn>
+          <div class="d-sm-flex justify-space-around">
+            <v-btn 
+              color="accent"
+              :width="buttonWidth"
+              @click="passwordDialog = false"
+            >
+              キャンセル
+            </v-btn>
             <v-btn
               :disabled="!validPassword"
-              color="success"
-              class="mr-4"
+              color="warning"
+              :width="buttonWidth"
+              class="ml-sm-3 mt-3 mt-sm-0"
               @click="updatePassword"
             >
               この内容で編集する
@@ -202,7 +233,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, Ref } from "vue"
+import { ref, reactive, watch, Ref, computed, ComputedRef } from "vue"
 
 import axios from "@/plugins/axios"
 import Axios from "axios"
@@ -210,12 +241,38 @@ import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 import { useUserStore } from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
 import { imageUrl } from "@/common/imageUrl"
+import { useDisplay } from "vuetify"
 
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
 const currentUser = reactive(userStore.authUser!)
 const errorMessages: string[] = reactive([])
+const display = useDisplay()
+
+const cardWidth: ComputedRef<string | number> = computed(() => {
+  if (display.xs.value) {
+    return '100%'
+  } else {
+    return 600
+  }
+})
+
+const modalWidth: ComputedRef<string | number> = computed(() => {
+  if (display.xs.value) {
+    return display.width.value
+  } else {
+    return 400
+  }
+})
+
+const buttonWidth: ComputedRef<string | number | undefined> = computed(() => {
+  if (display.xs.value) {
+    return '100%'
+  } else {
+    return undefined
+  }
+})
 
 
 /***************************************************
@@ -376,6 +433,7 @@ const validPassword = ref(true)
 const currentPassword = ref('')
 const newPassword = ref('')
 const newPasswordConfirmation = ref('')
+const isVisiblePassword = ref(false)
 
 const updatePassword = async (): Promise<void> => {
   flashStore.$reset()
@@ -412,6 +470,11 @@ watch(passwordDialog, () => {
 </script>
 
 <style scoped>
+.page-profile{
+  background-color: rgba(225, 200, 30, 0.1);
+  height: 100%;
+}
+
 .avatar{
   border-radius: 50%;
   width: 60px;
@@ -436,14 +499,11 @@ watch(passwordDialog, () => {
   pointer-events: none;
 }
 
-.blue-text{
-  color: #0030ff;
+.change-profile-text{
   cursor: pointer;
-  padding: 10px;
 }
 
-
-.blue-text:hover{
+.change-profile-text:hover{
   text-decoration: underline;
 }
 </style>
