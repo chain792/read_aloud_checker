@@ -1,5 +1,5 @@
 <template>
-  <v-card width="500" class="mx-auto px-5 py-3">
+  <v-card :width="cardWidth" class="mx-auto px-5 py-3">
     <v-card-item>
       <div class="d-flex">
         <v-card-title class="text-h6 ml-auto">ユーザー登録してみませんか？</v-card-title>
@@ -18,10 +18,9 @@
         この機能を利用するにはログインが必要です。
       </div> 
       <div class="d-flex justify-space-around mt-6">
-        <v-btn color="success" @click="linkToSignup">新規登録</v-btn>
+        <v-btn color="warning" @click="linkToSignup">新規登録</v-btn>
         <v-btn
-          color="success"
-          class="mr-4"
+          color="warning"
           @click="linkToLogin"
         >
           ログイン
@@ -32,7 +31,9 @@
 </template>
 
 <script setup lang="ts">
+  import { computed, ComputedRef } from "vue"
 import { useRouter } from 'vue-router'
+import { useDisplay } from "vuetify"
 
 interface Emits { 
   (e: "close-modal"): void  // eslint-disable-line no-unused-vars
@@ -40,6 +41,15 @@ interface Emits {
 const emit = defineEmits<Emits>()
 
 const router = useRouter()
+const display = useDisplay()
+
+const cardWidth: ComputedRef<string | number> = computed(() => {
+  if (display.xs.value) {
+    return '100%'
+  } else {
+    return 500
+  }
+})
 
 const linkToSignup = (): void => {
   router.push({ name: "Signup" })

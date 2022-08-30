@@ -1,68 +1,123 @@
 <template>
-  <v-container>
-    <h1 class="text-center text-h5">{{ sentence.title }}</h1>
-    <!-- ブックマークボタン -->
-    <div class="d-flex justify-end">
-      <!-- Array.includesが配列の要素と異なる型の値を受け取るとコンパイルエラーが起こるためany[]型にキャストして対処 
-        https://qiita.com/namtok/items/34292d482f67a6064bbb -->
-      <div v-if="progress" class="mr-5 bookmark-btn">
-        <v-progress-circular
-          size="20"
-          color="grey-darken-5"
-          indeterminate
-          width="3"
-          class="progress"
-        ></v-progress-circular>
-      </div>
-      <v-btn v-else-if="(bookmarkUserIds as any[]).includes(userStore.authUser?.id)" class="bookmark-btn mr-5" elevation="0" icon @click="unbookmark">
-        <v-tooltip activator="parent" location="top">
-          <p class="tooltip">ブックマーク解除</p>
-        </v-tooltip>
-        <v-icon class="bookmark-icon" color="grey-darken-3">mdi-bookmark-check</v-icon>
-      </v-btn>
-      <v-btn v-else class="bookmark-btn mr-5" elevation="0" icon @click="bookmark">
-        <v-tooltip activator="parent" location="top">
-          <p class="tooltip">ブックマーク</p>
-        </v-tooltip>
-        <v-icon class="bookmark-icon" color="grey-darken-3">mdi-bookmark-multiple-outline</v-icon>
-      </v-btn>
-    </div>
-    <p v-if="status === 'playing'" class="red text-center mt-5">音読中</p>
-    <p v-else-if="status === 'finished'" class="red text-center mt-5">結果</p>
-    <!-- 英文 -->
-    <v-card variant="outlined" :elevation="2" class="mx-auto mt-5 px-5 py-3">
-      <v-card-text class="mt-3">
-      <div class="sentence-body text-h6" v-html="sentence.body"></div>   
-      </v-card-text>
-    </v-card>
-    <div v-if="status === 'unplayed'" class="mt-5 d-flex justify-center">
-      <v-btn :border="true" @click="startReadAloud">音読開始</v-btn>
-    </div>
-    <div v-else-if="status === 'playing'" class="mt-5 d-flex justify-center">
-      <v-btn :border="true" @click="stopReadAloud">音読を終了する</v-btn>
-      <v-btn :border="true" @click="skipWord">パス</v-btn>
-    </div>
-    <div v-else class="mt-5">
-      <div class="d-flex justify-center">
-        <audio ref="audio"  controls></audio>
-        <audio :src="speechUrl(sentence, userStore.authUser)"  controls></audio>
-      </div>
-      <div class="d-flex justify-center mt-5">
-        <v-btn :border="true" @click="replayReadAloud">再音読する</v-btn>
-        <v-btn v-if="progress2" class="" :border="true" :width="140">
+  <div class="page-sentence">
+    <v-container class="d-flex flex-column sentence-container">
+      <h1 class="text-center text-h5 sentence-title">{{ sentence.title }}</h1>
+      <!-- ブックマークボタン -->
+      <div class="d-flex justify-end">
+        <!-- Array.includesが配列の要素と異なる型の値を受け取るとコンパイルエラーが起こるためany[]型にキャストして対処 
+          https://qiita.com/namtok/items/34292d482f67a6064bbb -->
+        <div v-if="progress" class="mr-5 bookmark-btn">
           <v-progress-circular
             size="20"
             color="grey-darken-5"
             indeterminate
             width="3"
-            class="progress2"
+            class="progress"
           ></v-progress-circular>
+        </div>
+        <v-btn v-else-if="(bookmarkUserIds as any[]).includes(userStore.authUser?.id)" class="bookmark-btn mr-5" elevation="0" icon @click="unbookmark">
+          <v-tooltip activator="parent" location="top">
+            <p class="tooltip">ブックマーク解除</p>
+          </v-tooltip>
+          <v-icon class="bookmark-icon" color="grey-darken-3">mdi-bookmark-check</v-icon>
         </v-btn>
-        <v-btn v-else-if="!isSavedVoice" :border="true" :width="140" @click="saveVoice">音声を保存する</v-btn>
-        <v-btn v-else :border="true" :disabled="true" :width="140" class="voice-saved-btn">音声を保存しました</v-btn>
+        <v-btn v-else class="bookmark-btn mr-5" elevation="0" icon @click="bookmark">
+          <v-tooltip activator="parent" location="top">
+            <p class="tooltip">ブックマーク</p>
+          </v-tooltip>
+          <v-icon class="bookmark-icon" color="grey-darken-3">mdi-bookmark-multiple-outline</v-icon>
+        </v-btn>
       </div>
-    </div>
-  </v-container>
+      <div style="height: 36px">
+        <v-alert
+          v-if="status === 'playing'"
+          color="info"
+          class="py-2 mx-auto"
+          :closable="false"
+          width="300"
+          variant="tonal"
+        >
+          <p class="text-center text-body-2">音読中</p>
+        </v-alert>
+        <v-alert
+          v-else-if="status === 'finished'"
+          color="error"
+          class="py-2 mx-auto"
+          :closable="false"
+          width="300"
+          variant="tonal"
+        >
+          <p class="text-center text-body-2">音読終了</p>
+        </v-alert>
+      </div>
+      <!-- 英文 -->
+      <v-card variant="outlined" :elevation="2" class="bg-white mx-auto mt-4 px-sm-5 flex-shrink-1 overflow-y-auto">
+        <v-card-text class="">
+        <div class="sentence-body text-h6" v-html="sentence.body"></div>   
+        </v-card-text>
+      </v-card>
+      <div v-if="status === 'unplayed'" class="mt-5 d-flex justify-center">
+        <v-btn 
+          width="300"
+          color="warning" 
+          @click="startReadAloud"
+        >
+          音読開始
+        </v-btn>
+      </div>
+      <div v-else-if="status === 'playing'" class="mt-5 d-flex justify-center">
+        <v-btn 
+          width="200"
+          class="mr-3"
+          color="warning" 
+          @click="stopReadAloud"
+        >
+          音読を終了する
+        </v-btn>
+        <v-btn 
+          :border="true"
+          class="ml-3"
+          width="100"
+          @click="skipWord"
+        >
+          パス
+        </v-btn>
+      </div>
+      <div v-else class="mt-3">
+        <div class="d-sm-flex justify-center">
+          <div class="mr-0 mr-sm-1">
+            <p class="text-body-2 text-center mb-1">音読した音声</p>
+            <div class="text-center"><audio ref="audio" controls></audio></div>
+          </div>
+          <div class="ml-0 ml-sm-1 mt-2 mt-sm-0">
+            <p class="text-body-2 text-center mb-1">お手本の音声</p>
+            <div class="text-center"><audio :src="speechUrl(sentence, userStore.authUser)"  controls></audio></div>
+          </div>
+        </div>
+        <div class="d-flex justify-center mt-5">
+          <v-btn 
+            width="150" 
+            class="mr-3"
+            color="warning" 
+            @click="replayReadAloud"
+          >
+            再音読する
+          </v-btn>
+          <v-btn v-if="progress2" class="ml-3" :border="true" :width="150">
+            <v-progress-circular
+              size="20"
+              color="grey-darken-5"
+              indeterminate
+              width="3"
+              class="progress2"
+            ></v-progress-circular>
+          </v-btn>
+          <v-btn v-else-if="!isSavedVoice" class="ml-3" :border="true" :width="150" @click="saveVoice">音声を保存する</v-btn>
+          <v-btn v-else :border="true" :disabled="true" :width="150" class="voice-saved-btn ml-3">音声を保存しました</v-btn>
+        </div>
+      </div>
+    </v-container>
+  </div>
   <!-- 要ログインモーダル -->
   <v-dialog v-model="loginRequiredDialog">
     <LoginRequiredModal @close-modal="closeLoginRequiredModal" />
@@ -454,9 +509,24 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+
+.page-sentence{
+  background-color: rgba(225, 200, 30, 0.1);
+  height: 100%;
+}
+
+.sentence-container{
+  height: calc(100vh - 64px) !important;
+}
+
+.sentence-title{
+  font-size: 1.3rem !important;
+}
+
 .sentence-body{
   font-weight: 350;
   line-height: 1.5;
+  font-size: 1.1rem !important;
 }
 .bookmark-btn{
   border: 1px solid gray;
@@ -475,6 +545,17 @@ onBeforeUnmount(() => {
 }
 .voice-saved-btn{
   font-size: 0.8rem;
+}
+@media (min-width: 600px) {
+  .sentence-container{
+    height: calc(100vh - 64px - 92px) !important;
+  }
+  .sentence-title{
+    font-size: 1.5rem !important;
+  }
+  .sentence-body{
+    font-size: 1.25rem !important;
+  }
 }
 </style>
 <style>
