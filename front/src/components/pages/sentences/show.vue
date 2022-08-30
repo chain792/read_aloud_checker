@@ -548,7 +548,7 @@ onBeforeUnmount(() => {
 }
 @media (min-width: 600px) {
   .sentence-container{
-    height: calc(100vh - 64px - 92px) !important;
+    height: calc(100vh - 64px - 68px) !important;
   }
   .sentence-title{
     font-size: 1.5rem !important;

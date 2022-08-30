@@ -1,10 +1,10 @@
 <template>
   <div class="page-history">
-    <v-container class="sentence-container">
+    <v-container class="d-flex flex-column sentence-container">
       <h1 class="text-center text-h5 sentence-title">{{ sentence.title }}</h1>
       <v-card variant="outlined" :elevation="2" class="bg-white mx-auto mt-4 px-sm-5 flex-shrink-1 overflow-y-auto">
-        <v-card-text class="mt-3">
-        <div class="sentence-body text-h6" v-html="sentence.body"></div>   
+        <v-card-text class="">
+          <div class="sentence-body text-h6" v-html="sentence.body"></div>   
         </v-card-text>
       </v-card>
         <div class="d-sm-flex justify-center mt-3">
@@ -140,7 +140,7 @@ onBeforeUnmount(() => {
 
 @media (min-width: 600px) {
   .sentence-container{
-    height: calc(100vh - 64px - 92px) !important;
+    height: calc(100vh - 64px - 68px) !important;
   }
   .sentence-title{
     font-size: 1.5rem !important;
