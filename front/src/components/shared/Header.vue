@@ -49,18 +49,20 @@
   <!-- サイドメニュー -->
   <teleport to="body">
     <div v-show="drawer" class="modal" @click="drawer = false" ></div>
-    <div v-show="drawer" class="side-menu">
-      <v-list>
-        <v-list-item
-          v-for="(item, index) in sideItems"
-          :key="index"
-          :value="index"
-          @click="item.click"
-        >
-          <v-list-item-title class="text-body-1">{{ item.title }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </div>
+    <transition name="side-menu-animation">
+      <div v-show="drawer" class="side-menu">
+        <v-list>
+          <v-list-item
+            v-for="(item, index) in sideItems"
+            :key="index"
+            :value="index"
+            @click="item.click"
+          >
+            <v-list-item-title class="text-body-1">{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </div>
+    </transition>
   </teleport>
 
   <!-- 設定画面モーダル -->

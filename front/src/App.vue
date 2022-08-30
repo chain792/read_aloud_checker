@@ -96,6 +96,30 @@ body{
   font-size: 1.1rem !important;
 }
 
+.side-menu-animation-enter-from{
+  transform: translateX(-400px);
+}
+
+.side-menu-animation-enter-active{
+  transition: transform .3s;
+}
+
+.side-menu-animation-enter-to{
+  transform: translateX(0);
+}
+
+.side-menu-animation-leave-from{
+  transform: translateX(0);
+}
+
+.side-menu-animation-leave-active{
+  transition: transform .3s;
+}
+
+.side-menu-animation-leave-to{
+  transform: translateX(-400px);
+}
+
 /***************************************************
   ソーシャルログイン
  ***************************************************/
