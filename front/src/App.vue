@@ -45,6 +45,58 @@ body{
 }
 
 /***************************************************
+  モーダル
+ ***************************************************/
+ .modal{
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0,0,0,.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal-content{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3000;
+}
+
+/***************************************************
+  サイドメニュー
+ ***************************************************/
+ .side-menu{
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 40%;
+  z-index: 4000;
+}
+
+.side-menu .v-list{
+  height: 100%;
+}
+
+.side-menu .v-list-item{
+  padding-inline-start: 20px !important;
+  padding-inline-end: 20px !important;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.side-menu .v-list-item-title{
+  font-size: 1.1rem !important;
+}
+
+/***************************************************
   ソーシャルログイン
  ***************************************************/
  /* twitter */
