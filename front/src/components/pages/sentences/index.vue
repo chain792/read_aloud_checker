@@ -52,6 +52,7 @@ onMounted(() => {
 <style scoped>
 .page-sentences {
   background-color: rgba(225, 200, 30, 0.1);
+  height: 100%;
 }
 
 .tab-menu {
