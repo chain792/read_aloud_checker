@@ -49,10 +49,15 @@
         >
           <div class="text-center">
             <div class="editable-avatar">
-              <img ref="preview" :src="imageUrl('avatar', user)" alt="アバター" class="avatar pointer" @click="clickFileInput">
-              <v-icon class="icon" color="grey-lighten-4">
-                mdi-camera-enhance-outline
-              </v-icon>
+              <div class="d-inline-block">
+                <v-tooltip activator="parent" location="top">
+                  <p class="tooltip">画像を追加</p>
+                </v-tooltip>
+                <img ref="preview" :src="imageUrl('avatar', user)" alt="アバター" class="avatar pointer" @click="clickFileInput">
+                <v-icon class="icon" color="grey-lighten-4">
+                  mdi-camera-enhance-outline
+                </v-icon>
+              </div>
             </div>
             <input ref="fileInput" type="file" accept="image/*" style="display: none;" @change="previewAvatar">
           </div>
@@ -607,5 +612,11 @@ watch(passwordDialog, () => {
   width: 160px; 
   height: 160px;
   border: 1px solid red;
+}
+
+.tooltip{
+  font-size: 12px;
+  margin: -3px -10px;
+  color: #fff;
 }
 </style>
