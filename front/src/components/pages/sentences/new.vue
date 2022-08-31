@@ -47,7 +47,22 @@
             ></v-radio>
           </v-radio-group>
 
+          <v-btn 
+            v-if="progress"
+            width="100%"
+            color="warning" 
+            :disabled="true"
+          >
+            <v-progress-circular
+              size="20"
+              color="grey-darken-5"
+              indeterminate
+              width="3"
+              class="progress2"
+            ></v-progress-circular>
+          </v-btn>
           <v-btn
+            v-else
             :disabled="!valid"
             color="warning"
             class=""
@@ -64,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, computed, ComputedRef } from "vue"
+import { ref, reactive, computed, ComputedRef } from "vue"
 import axios from "@/plugins/axios"
 import Axios from "axios"
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
@@ -84,39 +99,30 @@ const cardWidth: ComputedRef<string | number> = computed(() => {
   }
 })
 
-
 const valid = ref(true)
-
 const sentence = reactive({
   title: "",
   body: "",
   status: 'public_state'
 })
-
-watch(sentence,()=>{
-  console.log(sentence.status)
-})
-
 const titleRules = [
   (v: string) => !!v || 'タイトルを入力してください',
   (v: string) => (v && v.length <= 100) || '100文字以内で入力してください' 
 ]
-
 const bodyRules = [
   (v: string) => !!v || '本文を入力してください',
   (v: string) => (v && v.length <= 10000) || '10000文字以内で入力してください' 
 ]
-
-
 const errorMessages: string[] = reactive([])
+const progress = ref(false)
 
 const createSentences = async (): Promise<void> => {
   try{
     errorMessages.splice(0)
-    const res = await axios.post("user/sentences", { sentence: sentence })
-    console.log(res)
+    progress.value = true
+    await axios.post("user/sentences", { sentence: sentence })
     flashStore.succeedCreateSentences()
-    // router.push({ name: "LoginIndex" })
+    router.push({ name: "MySentences" })
   } catch(e) {
     if(Axios.isAxiosError(e) && e.response && e.response.data && Array.isArray(e.response.data)){
       e.response.data.forEach(v => {
@@ -125,10 +131,10 @@ const createSentences = async (): Promise<void> => {
     }else{
       console.log(e)
     }
+    progress.value = false
     flashStore.failCreateSentences()
   }
 }
-
 
 </script>
 

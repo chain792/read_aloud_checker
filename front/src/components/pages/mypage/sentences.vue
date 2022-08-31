@@ -3,7 +3,7 @@
     <v-container>
       <v-btn
         color="warning"
-        class="mx-auto"
+        class="mx-auto mt-3 mb-8"
         prepend-icon="mdi-plus-thick"
         width="300px"
         :to="{ name: 'NewSentence' }"
