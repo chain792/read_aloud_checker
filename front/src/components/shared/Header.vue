@@ -159,6 +159,9 @@ const sideItems = [
   { title: "マイページ", click: linkToMypage },
   { title: "プロフィール", click: linkToProfile },
   { title: "音声設定", click: openSettingsModal },
+  { title: "利用規約", click: linkToTerms },
+  { title: "プライバシーポリシー", click: linkToPrivacy },
+  { title: "お問い合わせ", click: linkToContact },
   { title: "ログアウト", click: logout },
 ]
 
@@ -207,6 +210,21 @@ function linkToNewSentence(): void{
 function linkToBookmarkSentences(): void{
   drawer.value = false
   router.push({ name: "BookmarkSentences" })
+}
+
+function linkToTerms(): void{
+  drawer.value = false
+  router.push({ name: "Terms" })
+}
+
+function linkToPrivacy(): void{
+  drawer.value = false
+  router.push({ name: "Privacy" })
+}
+
+function linkToContact(): void{
+  drawer.value = false
+  window.open("https://docs.google.com/forms/d/e/1FAIpQLSfFvUX5OG5vdFZYL2qqrn5PTVzzi8FGost6k1xucXdta1qI2Q/viewform?usp=sf_link")
 }
 
 function openSettingsModal(): void{

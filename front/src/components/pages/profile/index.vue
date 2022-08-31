@@ -9,14 +9,16 @@
           <img :src="imageUrl('avatar', currentUser)" alt="アバター" class="avatar">
         </div>
         <div class="text-center mt-3">
-          <p class="text-h6">名前</p>
-          <p class="mt-1 text-body-1">{{ currentUser.name }}</p>
+          <p class="text-subtitle-1 fs-small text-grey-darken-3">名前</p>
+          <v-divider length="42" thickness="2" color="silver mt-n1" class="mx-auto"></v-divider>
+          <p class="mt-2 text-body-1 fs-large">{{ currentUser.name }}</p>
         </div>
-        <div class="text-center mt-3">
-          <p class="text-h6">メールアドレス</p>
-          <p class="mt-1 text-body-1">{{ currentUser.email }}</p>
+        <div class="text-center mt-4">
+          <p class="text-subtitle-1 fs-small text-grey-darken-3">メールアドレス</p>
+          <v-divider length="110" thickness="2" color="silver mt-n1" class="mx-auto"></v-divider>
+          <p class="mt-2 text-body-1">{{ currentUser.email }}</p>
         </div>
-        <div class="text-center mt-3">
+        <div class="text-center mt-5">
           <v-btn 
             color="warning"
             class="mx-auto"
@@ -49,10 +51,15 @@
         >
           <div class="text-center">
             <div class="editable-avatar">
-              <img ref="preview" :src="imageUrl('avatar', user)" alt="アバター" class="avatar pointer" @click="changeAvatar">
-              <v-icon class="icon" color="grey-lighten-4">
-                mdi-camera-enhance-outline
-              </v-icon>
+              <div class="d-inline-block">
+                <v-tooltip activator="parent" location="top">
+                  <p class="tooltip">画像を追加</p>
+                </v-tooltip>
+                <img ref="preview" :src="imageUrl('avatar', user)" alt="アバター" class="avatar pointer" @click="clickFileInput">
+                <v-icon class="icon" color="grey-lighten-4">
+                  mdi-camera-enhance-outline
+                </v-icon>
+              </div>
             </div>
             <input ref="fileInput" type="file" accept="image/*" style="display: none;" @change="previewAvatar">
           </div>
@@ -87,6 +94,51 @@
             </v-btn>
           </div>
         </v-form>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
+
+  <!-- トリミングダイアログ -->
+  <v-dialog v-model="trimmingDialog">
+    <v-card :width="trimedmodalWidth" class="mt-n10 px-5 py-3">
+      <v-card-item>
+        <v-card-title class="text-center text-h5">画像の切り抜き</v-card-title>
+      </v-card-item>
+      <v-card-text class="mt-3">
+        <div class="img-container">
+          <v-row no-gutters>
+            <v-col cols="12" sm="8">
+              <vue-cropper 
+                ref="cropper" 
+                :src="cropperSrc"
+                :aspect-ratio="1"
+                preview=".crop-preview"
+              />
+            </v-col>
+            <v-col cols="12" sm="4" class="mt-3 mt-sm-0">
+              <p class="text-center  text-subtitle-1">プレビュー</p>
+              <div class="mx-auto ml-sm-3 crop-preview"></div>
+            </v-col>
+          </v-row>
+        </div>
+        <div class="d-flex justify-center mt-5">
+          <v-btn
+            color="accent" 
+            width="120" 
+            class="mr-5"
+            @click="trimmingDialog = false"
+          >
+            キャンセル
+          </v-btn>
+          <v-btn
+            color="warning"
+            width="100" 
+            class="ml-5"
+            @click="trimming"
+          >
+            適用
+          </v-btn>
+        </div>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -242,6 +294,8 @@ import { useUserStore } from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
 import { imageUrl } from "@/common/imageUrl"
 import { useDisplay } from "vuetify"
+import VueCropper from 'vue-cropperjs';
+import 'cropperjs/dist/cropper.css';
 
 
 const userStore = useUserStore()
@@ -266,6 +320,14 @@ const modalWidth: ComputedRef<string | number> = computed(() => {
   }
 })
 
+const trimedmodalWidth: ComputedRef<string | number> = computed(() => {
+  if (display.xs.value) {
+    return display.width.value
+  } else {
+    return 600
+  }
+})
+
 const buttonWidth: ComputedRef<string | number | undefined> = computed(() => {
   if (display.xs.value) {
     return '100%'
@@ -287,7 +349,9 @@ user.id = currentUser.id
 user.name = currentUser.name
 user.avatar = currentUser.avatar
 
-let uploadFile: File | null = null
+let trimmedBlob: Blob | null = null
+let uploadFileName: string = ""
+
 
 const profileForm: Ref<any> = ref(null)
 const profileDialog = ref(false)
@@ -298,6 +362,10 @@ const nameRules = [
 ]
 const fileInput = ref<HTMLInputElement>()
 const preview = ref<HTMLImageElement>()
+const cropper = ref<any>()
+const cropperSrc: Ref<string> = ref("")
+const trimmingDialog = ref(false)
+
 
 //プロフィールモーダルを出した時はvalidProfileがnullのため、validete()を実行しvalidProfileをtrueにさせる
 watch(profileForm, () => {
@@ -306,7 +374,7 @@ watch(profileForm, () => {
   }
 })
 
-const changeAvatar = (): void => {
+const clickFileInput = (): void => {
   fileInput.value!.click()
 }
 
@@ -314,16 +382,42 @@ const previewAvatar = (): void => {
   const file = fileInput.value!.files![0]
   const reader = new FileReader()
   reader.onloadend = (): void => {
+    cropperSrc.value = reader.result as string
+    trimmingDialog.value = true
+  }
+  if(file){
+    reader.readAsDataURL(file)
+    uploadFileName = file.name
+  }
+}
+
+const trimming = (): void => {
+  const canvas = cropper.value.getCroppedCanvas({
+    width: 60,
+		height: 60,
+  }) as HTMLCanvasElement;
+  canvas.toBlob((blob) => {
+    if(!blob) return
+
+    setTrimmedAvatar(blob)
+    trimmingDialog.value = false
+  })
+}
+
+const setTrimmedAvatar = (blob: Blob): void => {
+  const file = blob
+  const reader = new FileReader()
+  reader.onloadend = (): void => {
     preview.value!.src = reader.result as string
   }
   if(file){
     reader.readAsDataURL(file)
-    user.avatar = file.name
-    uploadFile = file
+    user.avatar = uploadFileName
+    trimmedBlob = file
   }
 }
 
-const uploadAvatarToS3 = async (file: File | null): Promise<void> => {
+const uploadAvatarToS3 = async (file: Blob | null): Promise<void> => {
   if(!file) return
 
   try{
@@ -350,7 +444,7 @@ const uploadAvatarToS3 = async (file: File | null): Promise<void> => {
 const updateProfile = async (): Promise<void> => {
   flashStore.$reset()
   try{
-    await uploadAvatarToS3(uploadFile)
+    await uploadAvatarToS3(trimmedBlob)
     errorMessages.splice(0)
     const res = await axios.patch("profile", { user: user })
     userStore.setUser(res.data.user)
@@ -374,7 +468,15 @@ watch(profileDialog, () => {
   if(!profileDialog.value){
     user.name = currentUser.name
     user.avatar = currentUser.avatar
-    uploadFile = null
+    trimmedBlob = null
+  }
+})
+
+watch(trimmingDialog, () => {
+  if(!trimmingDialog.value){
+    if(fileInput.value){
+      fileInput.value.value = ""
+    }
   }
 })
 
@@ -505,5 +607,24 @@ watch(passwordDialog, () => {
 
 .change-profile-text:hover{
   text-decoration: underline;
+}
+
+.crop-preview {
+  overflow: hidden;
+  width: 160px; 
+  height: 160px;
+  border: 1px solid red;
+}
+
+.tooltip{
+  font-size: 12px;
+  margin: -3px -10px;
+  color: #fff;
+}
+.fs-large{
+  font-size: 1.25rem !important;
+}
+.fs-small{
+  font-size: 0.9rem !important;
 }
 </style>
