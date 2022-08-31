@@ -72,7 +72,7 @@
       <v-card :width="modalWidth" class="mx-assto px-5 py-3">
         <v-card-item>
           <div class="d-flex">
-            <v-card-title class="text-h6 ml-auto">音声の性別を変更する</v-card-title>
+            <v-card-title class="text-h6 ml-auto">お手本の音声の性別を変更する</v-card-title>
             <v-btn
               icon
               elevation="0"
@@ -116,7 +116,7 @@ const modalWidth: ComputedRef<string | number> = computed(() => {
   if (display.xs.value) {
     return display.width.value
   } else {
-    return 400
+    return 500
   }
 })
 
