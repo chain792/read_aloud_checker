@@ -4,7 +4,13 @@
       <h1 class="text-center text-h5 sentence-title">{{ sentence.title }}</h1>
       <div class="d-flex justify-end">
         <!-- 編集ボタン -->
-        <v-btn v-if="isMySentence" class="icon-btn mr-5" elevation="0" icon @click="unbookmark">
+        <v-btn 
+          v-if="isMySentence" 
+          class="icon-btn mr-5" 
+          elevation="0" 
+          icon 
+          :to="{ name: 'EditSentence', params: { id: sentence.id } }"
+        >
           <v-tooltip activator="parent" location="top">
             <p class="tooltip">英文を編集する</p>
           </v-tooltip>

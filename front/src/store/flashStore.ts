@@ -53,6 +53,16 @@ export const useFlashStore = defineStore("flash", {
       this.message = "英文の作成に失敗しました"
       this.color = "red-accent-3"
     },
+    succeedUpdateSentences(): void {
+      this.status = true
+      this.message = "英文を編集しました"
+      this.color = "green-accent-4"
+    },
+    failUpdateSentences(): void {
+      this.status = true
+      this.message = "英文の編集に失敗しました"
+      this.color = "red-accent-3"
+    },
     playReadAloud(): void {
       this.status = true
       this.message = "音読を開始しました"
@@ -108,7 +118,7 @@ export const useFlashStore = defineStore("flash", {
       this.message = "パスワードの変更に失敗しました"
       this.color = "red-accent-3"
     },
-    failVerifyToken(): void {
+    invalidUrl(): void {
       this.status = true
       this.message = "無効なURLです"
       this.color = "red-accent-3"
