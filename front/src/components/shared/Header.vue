@@ -147,6 +147,7 @@ const spScreen: ComputedRef<boolean> = computed(() => {
 const items = [
   { title: "マイページ", click: linkToMypage },
   { title: "プロフィール", click: linkToProfile },
+  { title: "作成した英文", click: linkToMySentences },
   { title: "音声設定", click: openSettingsModal },
   { title: "ログアウト", click: logout },
 ]
@@ -200,6 +201,11 @@ function linkToMypage(): void{
 function linkToSentences(): void{
   drawer.value = false
   router.push({ name: "Sentences" })
+}
+
+function linkToMySentences(): void{
+  drawer.value = false
+  router.push({ name: "MySentences" })
 }
 
 function linkToNewSentence(): void{

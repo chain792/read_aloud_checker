@@ -9,7 +9,7 @@ Rails.application.routes.draw do
       resources :user_sentences, only: %i[index]
       resources :news_sentences, only: %i[index]
       namespace :user do
-        resources :sentences, only: %i[create]
+        resources :sentences, only: %i[index create]
         resources :trainings, only: %i[index create show]
         resources :voices, only: %i[create] do
           collection do

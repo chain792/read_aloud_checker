@@ -11,6 +11,7 @@ const Sentence = () => import("@/components/pages/sentences/show.vue")
 const BookmarkSentences = () => import("@/components/pages/sentences/bookmark.vue")
 const Profile = () => import("@/components/pages/profile/index.vue")
 const Mypage = () => import("@/components/pages/mypage/index.vue")
+const MySentences = () => import("@/components/pages/mypage/sentences.vue")
 const History = () => import("@/components/pages/history/show.vue")
 const Privacy = () => import("@/components/pages/static/Privacy.vue")
 const Terms = () => import("@/components/pages/static/Terms.vue")
@@ -66,6 +67,12 @@ const routes: Array<RouteRecordRaw> = [
     path: "/mypage",
     name: "Mypage",
     component: Mypage,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/mypage/sentences",
+    name: "MySentences",
+    component: MySentences,
     meta: { requiresAuth: true }
   },
   {
