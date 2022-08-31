@@ -9,14 +9,16 @@
           <img :src="imageUrl('avatar', currentUser)" alt="アバター" class="avatar">
         </div>
         <div class="text-center mt-3">
-          <p class="text-h6">名前</p>
-          <p class="mt-1 text-body-1">{{ currentUser.name }}</p>
+          <p class="text-subtitle-1 fs-small text-grey-darken-3">名前</p>
+          <v-divider length="42" thickness="2" color="silver mt-n1" class="mx-auto"></v-divider>
+          <p class="mt-2 text-body-1 fs-large">{{ currentUser.name }}</p>
         </div>
-        <div class="text-center mt-3">
-          <p class="text-h6">メールアドレス</p>
-          <p class="mt-1 text-body-1">{{ currentUser.email }}</p>
+        <div class="text-center mt-4">
+          <p class="text-subtitle-1 fs-small text-grey-darken-3">メールアドレス</p>
+          <v-divider length="110" thickness="2" color="silver mt-n1" class="mx-auto"></v-divider>
+          <p class="mt-2 text-body-1">{{ currentUser.email }}</p>
         </div>
-        <div class="text-center mt-3">
+        <div class="text-center mt-5">
           <v-btn 
             color="warning"
             class="mx-auto"
@@ -618,5 +620,11 @@ watch(passwordDialog, () => {
   font-size: 12px;
   margin: -3px -10px;
   color: #fff;
+}
+.fs-large{
+  font-size: 1.25rem !important;
+}
+.fs-small{
+  font-size: 0.9rem !important;
 }
 </style>
