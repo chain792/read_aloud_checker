@@ -349,8 +349,9 @@ user.id = currentUser.id
 user.name = currentUser.name
 user.avatar = currentUser.avatar
 
-let trimmedBlob: Blob | null = null
+let trimmedFile: File | null = null
 let uploadFileName: string = ""
+let uploadFileType: string = ""
 
 
 const profileForm: Ref<any> = ref(null)
@@ -387,7 +388,9 @@ const previewAvatar = (): void => {
   }
   if(file){
     reader.readAsDataURL(file)
-    uploadFileName = file.name
+    // 同じファイルを複数回トリミングしてS3にアップロードした場合、キャッシュにより画像の変更がすぐに反映されないためファイル名を変更することにする
+    uploadFileName = `${Math.random().toString(32).substring(2)}_${file.name}`
+    uploadFileType = file.type
   }
 }
 
@@ -405,19 +408,20 @@ const trimming = (): void => {
 }
 
 const setTrimmedAvatar = (blob: Blob): void => {
-  const file = blob
   const reader = new FileReader()
   reader.onloadend = (): void => {
     preview.value!.src = reader.result as string
   }
-  if(file){
-    reader.readAsDataURL(file)
+  if(blob){
+    reader.readAsDataURL(blob)
     user.avatar = uploadFileName
-    trimmedBlob = file
+    trimmedFile = new File([blob], uploadFileName, {
+      type: uploadFileType
+    })
   }
 }
 
-const uploadAvatarToS3 = async (file: Blob | null): Promise<void> => {
+const uploadAvatarToS3 = async (file: File | null): Promise<void> => {
   if(!file) return
 
   try{
@@ -444,7 +448,7 @@ const uploadAvatarToS3 = async (file: Blob | null): Promise<void> => {
 const updateProfile = async (): Promise<void> => {
   flashStore.$reset()
   try{
-    await uploadAvatarToS3(trimmedBlob)
+    await uploadAvatarToS3(trimmedFile)
     errorMessages.splice(0)
     const res = await axios.patch("profile", { user: user })
     userStore.setUser(res.data.user)
@@ -468,7 +472,7 @@ watch(profileDialog, () => {
   if(!profileDialog.value){
     user.name = currentUser.name
     user.avatar = currentUser.avatar
-    trimmedBlob = null
+    trimmedFile = null
   }
 })
 
