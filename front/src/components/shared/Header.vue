@@ -191,7 +191,7 @@ function linkToProfile(): void{
 
 function linkToMypage(): void{
   drawer.value = false
-  router.push({ name: "Mypage" })
+  router.push({ name: "MyRecord" })
 }
 
 function linkToSentences(): void{
@@ -202,11 +202,6 @@ function linkToSentences(): void{
 function linkToMySentences(): void{
   drawer.value = false
   router.push({ name: "MySentences" })
-}
-
-function linkToNewSentence(): void{
-  drawer.value = false
-  router.push({ name: "NewSentence" })
 }
 
 function linkToBookmarkSentences(): void{
