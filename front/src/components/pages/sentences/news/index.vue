@@ -7,14 +7,22 @@
           <v-card-text>{{ sentence.title }}</v-card-text>
         </router-link>
       </v-card>
+      <v-pagination
+        v-if="paginationLength > 1"
+        v-model="page"
+        class="mt-4 mb-2"
+        :length="paginationLength"
+        @update:model-value="paginate(page as number)"
+      ></v-pagination>
     </v-container>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue"
+import { ref, reactive } from "vue"
 import axios from "@/plugins/axios"
 import TabMenu from "../components/TabMenu.vue"
+import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router"
 
 
 interface Sentence {
@@ -22,12 +30,20 @@ interface Sentence {
   title: string
 }
 
+const router = useRouter()
+const route = useRoute()
+
+const queryValueOfPage = route.query.page? Number(route.query.page) : undefined
+const page = ref(queryValueOfPage)
+const paginationLength = ref(1)
+
 const sentences: Array<Sentence> = reactive([])
 
-const fetchSentences = async (): Promise<void> => {
+const fetchSentences = async (page?: string | number): Promise<void> => {
   try{
-    const res = await axios.get("news_sentences")
-    console.log(res)
+    const query =  page? `?page=${page}` : ''
+    const res = await axios.get("news_sentences" + query)
+    paginationLength.value= res.data.pagination.pages
     res.data.sentences.map((sentence: Sentence) => {
       sentences.push({
         id: sentence.id,
@@ -38,7 +54,17 @@ const fetchSentences = async (): Promise<void> => {
     console.log(e)
   }
 }
-fetchSentences()
+fetchSentences(queryValueOfPage)
+
+
+const paginate = (page: number) => {
+  router.push({ name: "NewsSentences", query: { page } })
+}
+
+onBeforeRouteUpdate(async (to) => {
+  sentences.splice(0)
+  await fetchSentences(to.query.page as string)
+})
 
 </script>
 
