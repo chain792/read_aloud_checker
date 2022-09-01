@@ -1,6 +1,6 @@
 <template>
   <div class="page-news-sentences">
-    <v-container>
+    <v-container class="pt-0">
       <tab-menu :tab="0"></tab-menu>
       <v-card v-for="sentence in sentences" :key="sentence.id" class="my-3 mx-10">
         <router-link :to="{ name: 'Sentence', params: { id: sentence.id } }" class="text-decoration-none">

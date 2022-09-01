@@ -1,6 +1,6 @@
 <template>
   <div class="page-myrecord">
-    <v-container>
+    <v-container class="pt-0">
       <tab-menu :tab="0"></tab-menu>
       <v-card class="pt-2 py-5">
         <div class="mt-5 d-flex">

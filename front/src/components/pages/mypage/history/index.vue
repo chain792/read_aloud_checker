@@ -1,6 +1,6 @@
 <template>
   <div class="page-myhistory">
-    <v-container>
+    <v-container class="pt-0">
       <tab-menu :tab="1"></tab-menu>
       <v-card v-for="history in histories" :key="history.id" class="my-3 mx-10">
         <router-link :to="{ name: 'History', params: { id: history.id } }" class="text-decoration-none">
