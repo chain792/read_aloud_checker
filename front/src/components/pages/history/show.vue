@@ -86,8 +86,11 @@ const decorateSentence = (body: string, resultWords: Array<ResultWord>): string 
 const fetchTraining = async (): Promise<void> => {
   try{
     const res = await axios.get(`user/trainings/${props.id}`)
-    sentence.value = res.data.training.sentence
-    sentence.value.body = decorateSentence(sentence.value.body, res.data.training.resultWords)
+    sentence.value.id = res.data.training.sentenceId
+    sentence.value.title = res.data.training.title
+    sentence.value.maleSpeech = res.data.training.maleSpeech
+    sentence.value.femaleSpeech = res.data.training.femaleSpeech
+    sentence.value.body = decorateSentence(res.data.training.body, res.data.training.resultWords)
     await setAudio(res.data.training.voice)
   } catch(e) {
     console.log(e)
