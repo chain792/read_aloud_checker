@@ -27,6 +27,12 @@ class Api::V1::User::SentencesController < ApplicationController
     end
   end
 
+  def destroy
+    sentence = current_user.sentences.find(params[:id])
+    sentence.destroy!
+    head :no_content
+  end
+
   private
 
   def sentence_params

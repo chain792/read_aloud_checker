@@ -17,7 +17,13 @@
           <v-icon color="grey-darken-3">mdi-square-edit-outline</v-icon>
         </v-btn>
         <!-- 削除ボタン -->
-        <v-btn v-if="isMySentence" class="icon-btn mr-5" elevation="0" icon @click="unbookmark">
+        <v-btn 
+          v-if="isMySentence"
+          class="icon-btn mr-5"
+          elevation="0"
+          icon
+          @click="deleteConfirmModal = true"
+        >
           <v-tooltip activator="parent" location="top">
             <p class="tooltip">英文を削除する</p>
           </v-tooltip>
@@ -136,6 +142,32 @@
       </div>
     </v-container>
   </div>
+  <!-- 削除確認モーダル -->
+  <v-dialog v-model="deleteConfirmModal">
+    <v-card :width="modalWidth" class="mx-auto px-5 py-3">
+    <v-card-item>
+      <div class="d-flex">
+        <v-card-title class="text-h6 mx-auto">英文を削除する</v-card-title>
+      </div>
+    </v-card-item>
+    <v-card-text class="mt-3">
+      <div class="text-center">
+        英文を削除します。よろしいですか？
+      </div> 
+      <div class="d-flex justify-space-around mt-6">
+        <v-btn 
+          color="accent"
+          @click="deleteConfirmModal = false">キャンセル</v-btn>
+        <v-btn
+          color="error"
+          @click="deleteSentence"
+        >
+          削除
+        </v-btn>
+      </div>
+    </v-card-text>
+  </v-card>
+  </v-dialog>
   <!-- 要ログインモーダル -->
   <v-dialog v-model="loginRequiredDialog">
     <LoginRequiredModal @close-modal="closeLoginRequiredModal" />
@@ -151,9 +183,13 @@ import { useFlashStore } from "@/store/flashStore"
 import LoginRequiredModal from "@/components/shared/LoginRequiredModal.vue"
 import { speechUrl } from "@/common/speechUrl"
 import { toWords } from "number-to-words"
+import { useRouter } from 'vue-router'
+import { useDisplay } from "vuetify"
 
 const flashStore = useFlashStore()
 const userStore = useUserStore()
+const router = useRouter()
+const display = useDisplay()
 
 interface Props {
   id: string
@@ -161,6 +197,14 @@ interface Props {
 interface Bookmark {
   userId: number
 }
+
+const modalWidth: ComputedRef<string | number> = computed(() => {
+  if (display.xs.value) {
+    return display.width.value
+  } else {
+    return 500
+  }
+})
 
 const props = defineProps<Props>()
 const sentence = ref({
@@ -176,6 +220,8 @@ const bookmarkUserIds: Array<number> = reactive([])
 const progress = ref(false)
 const status: Ref<"unplayed" | "playing" | "finished"> = ref("unplayed")
 let sentenceBodyBeforeReadAloud: string
+const loginRequiredDialog = ref(false)
+const deleteConfirmModal = ref(false)
 
 const isMySentence: ComputedRef<boolean> = computed(() => {
   if(!userStore.authUser) return false
@@ -229,7 +275,17 @@ const unbookmark = async (): Promise<void> => {
   }
 }
 
-const loginRequiredDialog = ref(false)
+const deleteSentence = async (): Promise<void> => {
+  try{
+    await axios.delete(`user/sentences/${props.id}`)
+    flashStore.succeedDeleteSentence()
+    router.push({ name: 'MySentences' })
+  } catch(e) {
+    console.log(e)
+    flashStore.failDeleteSentence()
+  }
+}
+
 
 const closeLoginRequiredModal = (): void => {
   loginRequiredDialog.value = false
