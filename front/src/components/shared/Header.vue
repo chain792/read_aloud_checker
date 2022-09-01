@@ -13,10 +13,6 @@
       英文一覧
     </router-link>
 
-    <router-link v-show="!spScreen" :to="{ name: 'NewSentence' }" class="mr-5 header-text text-grey-darken-4">
-      英文投稿
-    </router-link>
-
     <router-link v-show="!spScreen" :to="{ name: 'BookmarkSentences' }" class="header-text header-text-bookmark text-grey-darken-4">
       ブックマーク
     </router-link>
@@ -155,10 +151,10 @@ const items = [
 const sideItems = [
   { title: "トップページ", click: linkToTopPage },
   { title: "英文一覧", click: linkToSentences },
-  { title: "英文投稿", click: linkToNewSentence },
   { title: "ブックマーク", click: linkToBookmarkSentences },
   { title: "マイページ", click: linkToMypage },
   { title: "プロフィール", click: linkToProfile },
+  { title: "作成した英文", click: linkToMySentences },
   { title: "音声設定", click: openSettingsModal },
   { title: "利用規約", click: linkToTerms },
   { title: "プライバシーポリシー", click: linkToPrivacy },
