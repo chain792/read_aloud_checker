@@ -98,7 +98,7 @@ const verifyToken = async (): Promise<void> => {
   try{
     await axios.get(`password_resets/${props.id}/edit`)
   } catch(e) {
-    flashStore.failVerifyToken()
+    flashStore.invalidUrl()
     router.push({ name: "Login" })
   }
 }

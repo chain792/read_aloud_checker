@@ -13,10 +13,6 @@
       英文一覧
     </router-link>
 
-    <router-link v-show="!spScreen" :to="{ name: 'NewSentence' }" class="mr-5 header-text text-grey-darken-4">
-      英文投稿
-    </router-link>
-
     <router-link v-show="!spScreen" :to="{ name: 'BookmarkSentences' }" class="header-text header-text-bookmark text-grey-darken-4">
       ブックマーク
     </router-link>
@@ -72,7 +68,7 @@
       <v-card :width="modalWidth" class="mx-assto px-5 py-3">
         <v-card-item>
           <div class="d-flex">
-            <v-card-title class="text-h6 ml-auto">音声の性別を変更する</v-card-title>
+            <v-card-title class="text-h6 ml-auto">お手本の音声の性別を変更する</v-card-title>
             <v-btn
               icon
               elevation="0"
@@ -116,7 +112,7 @@ const modalWidth: ComputedRef<string | number> = computed(() => {
   if (display.xs.value) {
     return display.width.value
   } else {
-    return 400
+    return 500
   }
 })
 
@@ -147,6 +143,7 @@ const spScreen: ComputedRef<boolean> = computed(() => {
 const items = [
   { title: "マイページ", click: linkToMypage },
   { title: "プロフィール", click: linkToProfile },
+  { title: "作成した英文", click: linkToMySentences },
   { title: "音声設定", click: openSettingsModal },
   { title: "ログアウト", click: logout },
 ]
@@ -154,10 +151,10 @@ const items = [
 const sideItems = [
   { title: "トップページ", click: linkToTopPage },
   { title: "英文一覧", click: linkToSentences },
-  { title: "英文投稿", click: linkToNewSentence },
   { title: "ブックマーク", click: linkToBookmarkSentences },
   { title: "マイページ", click: linkToMypage },
   { title: "プロフィール", click: linkToProfile },
+  { title: "作成した英文", click: linkToMySentences },
   { title: "音声設定", click: openSettingsModal },
   { title: "利用規約", click: linkToTerms },
   { title: "プライバシーポリシー", click: linkToPrivacy },
@@ -200,6 +197,11 @@ function linkToMypage(): void{
 function linkToSentences(): void{
   drawer.value = false
   router.push({ name: "Sentences" })
+}
+
+function linkToMySentences(): void{
+  drawer.value = false
+  router.push({ name: "MySentences" })
 }
 
 function linkToNewSentence(): void{

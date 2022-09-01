@@ -37,7 +37,7 @@ const spScreen: ComputedRef<boolean> = computed(() => {
   ページ全体
  ***************************************************/
 body{
-  font-family: "Helvetica Neue", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .link-text{
@@ -53,6 +53,10 @@ body{
  ***************************************************/
 .v-input__details{
   margin-bottom: 12px !important;
+}
+
+.v-btn--size-default{
+  font-size: 1rem !important;
 }
 
 /***************************************************

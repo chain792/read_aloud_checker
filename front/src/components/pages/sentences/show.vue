@@ -2,11 +2,35 @@
   <div class="page-sentence">
     <v-container class="d-flex flex-column sentence-container">
       <h1 class="text-center text-h5 sentence-title">{{ sentence.title }}</h1>
-      <!-- ブックマークボタン -->
       <div class="d-flex justify-end">
-        <!-- Array.includesが配列の要素と異なる型の値を受け取るとコンパイルエラーが起こるためany[]型にキャストして対処 
-          https://qiita.com/namtok/items/34292d482f67a6064bbb -->
-        <div v-if="progress" class="mr-5 bookmark-btn">
+        <!-- 編集ボタン -->
+        <v-btn 
+          v-if="isMySentence" 
+          class="icon-btn mr-5" 
+          elevation="0" 
+          icon 
+          :to="{ name: 'EditSentence', params: { id: sentence.id } }"
+        >
+          <v-tooltip activator="parent" location="top">
+            <p class="tooltip">英文を編集する</p>
+          </v-tooltip>
+          <v-icon color="grey-darken-3">mdi-square-edit-outline</v-icon>
+        </v-btn>
+        <!-- 削除ボタン -->
+        <v-btn 
+          v-if="isMySentence"
+          class="icon-btn mr-5"
+          elevation="0"
+          icon
+          @click="deleteConfirmModal = true"
+        >
+          <v-tooltip activator="parent" location="top">
+            <p class="tooltip">英文を削除する</p>
+          </v-tooltip>
+          <v-icon color="grey-darken-3">mdi-trash-can-outline</v-icon>
+        </v-btn>
+        <!-- ブックマークボタン -->
+        <div v-if="progress" class="mr-5 icon-btn">
           <v-progress-circular
             size="20"
             color="grey-darken-5"
@@ -15,17 +39,17 @@
             class="progress"
           ></v-progress-circular>
         </div>
-        <v-btn v-else-if="(bookmarkUserIds as any[]).includes(userStore.authUser?.id)" class="bookmark-btn mr-5" elevation="0" icon @click="unbookmark">
+        <v-btn v-else-if="(bookmarkUserIds as any[]).includes(userStore.authUser?.id)" class="icon-btn mr-5" elevation="0" icon @click="unbookmark">
           <v-tooltip activator="parent" location="top">
             <p class="tooltip">ブックマーク解除</p>
           </v-tooltip>
-          <v-icon class="bookmark-icon" color="grey-darken-3">mdi-bookmark-check</v-icon>
+          <v-icon color="grey-darken-3">mdi-bookmark-check</v-icon>
         </v-btn>
-        <v-btn v-else class="bookmark-btn mr-5" elevation="0" icon @click="bookmark">
+        <v-btn v-else class="icon-btn mr-5" elevation="0" icon @click="bookmark">
           <v-tooltip activator="parent" location="top">
             <p class="tooltip">ブックマーク</p>
           </v-tooltip>
-          <v-icon class="bookmark-icon" color="grey-darken-3">mdi-bookmark-multiple-outline</v-icon>
+          <v-icon color="grey-darken-3">mdi-bookmark-multiple-outline</v-icon>
         </v-btn>
       </div>
       <div style="height: 36px">
@@ -118,6 +142,32 @@
       </div>
     </v-container>
   </div>
+  <!-- 削除確認モーダル -->
+  <v-dialog v-model="deleteConfirmModal">
+    <v-card :width="modalWidth" class="mx-auto px-5 py-3">
+    <v-card-item>
+      <div class="d-flex">
+        <v-card-title class="text-h6 mx-auto">英文を削除する</v-card-title>
+      </div>
+    </v-card-item>
+    <v-card-text class="mt-3">
+      <div class="text-center">
+        英文を削除します。よろしいですか？
+      </div> 
+      <div class="d-flex justify-space-around mt-6">
+        <v-btn 
+          color="accent"
+          @click="deleteConfirmModal = false">キャンセル</v-btn>
+        <v-btn
+          color="error"
+          @click="deleteSentence"
+        >
+          削除
+        </v-btn>
+      </div>
+    </v-card-text>
+  </v-card>
+  </v-dialog>
   <!-- 要ログインモーダル -->
   <v-dialog v-model="loginRequiredDialog">
     <LoginRequiredModal @close-modal="closeLoginRequiredModal" />
@@ -125,7 +175,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, reactive, onBeforeUnmount } from "vue"
+import { ref, Ref, reactive, onBeforeUnmount, computed, ComputedRef } from "vue"
 import axios from "@/plugins/axios"
 import Axios from "axios"
 import { useUserStore } from "@/store/userStore"
@@ -133,9 +183,13 @@ import { useFlashStore } from "@/store/flashStore"
 import LoginRequiredModal from "@/components/shared/LoginRequiredModal.vue"
 import { speechUrl } from "@/common/speechUrl"
 import { toWords } from "number-to-words"
+import { useRouter } from 'vue-router'
+import { useDisplay } from "vuetify"
 
 const flashStore = useFlashStore()
 const userStore = useUserStore()
+const router = useRouter()
+const display = useDisplay()
 
 interface Props {
   id: string
@@ -144,22 +198,41 @@ interface Bookmark {
   userId: number
 }
 
+const modalWidth: ComputedRef<string | number> = computed(() => {
+  if (display.xs.value) {
+    return display.width.value
+  } else {
+    return 500
+  }
+})
+
 const props = defineProps<Props>()
 const sentence = ref({
   id: "",
   title: "",
   body: "",
   maleSpeech: "",
-  femaleSpeech: ""
+  femaleSpeech: "",
+  createrType: "",
+  createrId: "",
 })
 const bookmarkUserIds: Array<number> = reactive([])
 const progress = ref(false)
 const status: Ref<"unplayed" | "playing" | "finished"> = ref("unplayed")
 let sentenceBodyBeforeReadAloud: string
+const loginRequiredDialog = ref(false)
+const deleteConfirmModal = ref(false)
+
+const isMySentence: ComputedRef<boolean> = computed(() => {
+  if(!userStore.authUser) return false
+
+  return sentence.value.createrType === "User" && Number(sentence.value.createrId) === userStore.authUser.id
+})
 
 const fetchSentence = async (): Promise<void> => {
   try{
     const res = await axios.get(`sentences/${props.id}`)
+    console.log(res)
     sentence.value = res.data.sentence
     res.data.sentence.bookmarks.forEach((bookmark: Bookmark) => bookmarkUserIds.push(bookmark.userId))
     sentenceBodyBeforeReadAloud = sentence.value.body
@@ -202,7 +275,17 @@ const unbookmark = async (): Promise<void> => {
   }
 }
 
-const loginRequiredDialog = ref(false)
+const deleteSentence = async (): Promise<void> => {
+  try{
+    await axios.delete(`user/sentences/${props.id}`)
+    flashStore.succeedDeleteSentence()
+    router.push({ name: 'MySentences' })
+  } catch(e) {
+    console.log(e)
+    flashStore.failDeleteSentence()
+  }
+}
+
 
 const closeLoginRequiredModal = (): void => {
   loginRequiredDialog.value = false
@@ -528,13 +611,11 @@ onBeforeUnmount(() => {
   line-height: 1.5;
   font-size: 1.1rem !important;
 }
-.bookmark-btn{
+.icon-btn{
   border: 1px solid gray;
   border-radius: 50%;
 }
-.bookmark-icon{
 
-}
 .tooltip{
   font-size: 12px;
   margin: -3px -10px;
@@ -555,6 +636,13 @@ onBeforeUnmount(() => {
   }
   .sentence-body{
     font-size: 1.25rem !important;
+  }
+}
+
+@media (min-width: 1920px) {
+  .sentence-container{
+    padding-left: 125px;
+    padding-right: 125px;
   }
 }
 </style>

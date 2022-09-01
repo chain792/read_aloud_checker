@@ -149,4 +149,11 @@ onBeforeUnmount(() => {
     font-size: 1.25rem !important;
   }
 }
+
+@media (min-width: 1920px) {
+  .sentence-container{
+    padding-left: 125px;
+    padding-right: 125px;
+  }
+}
 </style>
