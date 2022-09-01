@@ -1,4 +1,5 @@
 class Api::V1::SentencesController < ApplicationController
+  include Api::Kaminari
   skip_before_action :authenticate!, only: %i[show]
 
   def show
@@ -7,7 +8,8 @@ class Api::V1::SentencesController < ApplicationController
   end
 
   def bookmark
-    sentences = current_user.bookmark_sentences.order('bookmarks.updated_at desc')
-    render json: SentenceResource.new(sentences).serialize
+    sentences = current_user.bookmark_sentences.order('bookmarks.updated_at desc').page(params[:page])
+    pagenation = resources_with_pagination(sentences)
+    render json: pagenation.merge(JSON.parse SentenceResource.new(sentences).serialize)
   end
 end
