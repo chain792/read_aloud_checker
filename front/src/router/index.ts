@@ -5,7 +5,8 @@ import { refresh, silentRefresh } from "@/common/refresh"
 
 const Signup = () => import("@/components/pages/signup/index.vue")
 const Login = () => import("@/components/pages/login/index.vue")
-const Sentences = () => import("@/components/pages/sentences/index.vue")
+const UserSentences = () => import("@/components/pages/sentences/user/index.vue")
+const NewsSentences = () => import("@/components/pages/sentences/news/index.vue")
 const NewSentence = () => import("@/components/pages/sentences/new.vue")
 const Sentence = () => import("@/components/pages/sentences/show.vue")
 const EditSentence = () => import("@/components/pages/sentences/edit.vue")
@@ -38,9 +39,14 @@ const routes: Array<RouteRecordRaw> = [
     component: Login,
   },
   {
-    path: "/sentences",
-    name: "Sentences",
-    component: Sentences,
+    path: "/sentences/users",
+    name: "UserSentences",
+    component: UserSentences,
+  },
+  {
+    path: "/sentences/news",
+    name: "NewsSentences",
+    component: NewsSentences,
   },
   {
     path: "/sentences/new",

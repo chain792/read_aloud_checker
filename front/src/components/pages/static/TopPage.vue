@@ -16,7 +16,7 @@
           height="220"
           elevation="5"
           color="deep-orange"
-          :to="{ name: 'Sentences' }"
+          :to="{ name: 'NewsSentences' }"
         >
           <p class="top-btn-text">今すぐ音読する</p>
         </v-btn>
@@ -37,7 +37,7 @@
         width="240"
         elevation="5"
         color="deep-orange"
-        :to="{ name: 'Sentences' }"
+        :to="{ name: 'NewsSentences' }"
       >
         <p class="top-btn-text">今すぐ音読する</p>
       </v-btn>
@@ -105,7 +105,7 @@
           color="deep-orange"
           height="50"
           width="200"
-          :to="{ name: 'Sentences' }"
+          :to="{ name: 'NewsSentences' }"
         >
           <p class="text-white usage-btn-text pa-1">音読を始める</p>
         </v-btn>

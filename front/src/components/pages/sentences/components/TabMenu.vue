@@ -1,10 +1,10 @@
 <template>
   <div class="tab-menu mb-6">
-    <div ref="tabItem1" class="tab-menu-item pa-2" @click="linkToMyRecord">
-      <v-icon>mdi-chart-bar</v-icon><span>音読記録</span>
+    <div ref="tabItem1" class="tab-menu-item pa-2" @click="linkToNewsSentences">
+      <v-icon>mdi-newspaper</v-icon><span>おすすめの英文</span>
     </div>
-    <div ref="tabItem2" class="tab-menu-item pa-2" @click="linkToMyHistory">
-      <v-icon>mdi-book-open</v-icon><span>音読履歴</span>
+    <div ref="tabItem2" class="tab-menu-item pa-2" @click="linkToUserSentences">
+      <v-icon>mdi-account-multiple</v-icon><span>みんなが投稿した英文</span>
     </div>
   </div>
 </template>
@@ -27,18 +27,19 @@ onMounted(() => {
   tabItems[props.tab].value!.classList.add("active")
 })
 
-const linkToMyRecord = (): void => {
-  router.push({ name: 'MyRecord' })
+const linkToNewsSentences = (): void => {
+  router.push({ name: 'NewsSentences' })
 }
 
-const linkToMyHistory = (): void => {
-  router.push({ name: 'MyHistory' })
+const linkToUserSentences = (): void => {
+  router.push({ name: 'UserSentences' })
 }
+
 
 </script>
 
 <style scoped>
-.page-mypage{
+.page-sentences {
   background-color: rgba(225, 200, 30, 0.1);
   height: 100%;
 }

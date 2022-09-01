@@ -9,7 +9,7 @@
 
     <v-spacer></v-spacer>
 
-    <router-link v-show="!spScreen" :to="{ name: 'Sentences' }" class="mr-5 header-text text-grey-darken-4">
+    <router-link v-show="!spScreen" :to="{ name: 'NewsSentences' }" class="mr-5 header-text text-grey-darken-4">
       英文一覧
     </router-link>
 
@@ -102,7 +102,7 @@ function linkToTopPage(): void{
 
 function linkToSentences(): void{
   drawer.value = false
-  router.push({ name: "Sentences" })
+  router.push({ name: "NewsSentences" })
 }
 
 function linkToLogin(): void{
