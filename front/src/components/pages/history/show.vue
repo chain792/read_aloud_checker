@@ -152,8 +152,8 @@ onBeforeUnmount(() => {
 
 @media (min-width: 1920px) {
   .sentence-container{
-    padding-left: 125px;
-    padding-right: 125px;
+    padding-left: 200px;
+    padding-right: 200px;
   }
 }
 </style>

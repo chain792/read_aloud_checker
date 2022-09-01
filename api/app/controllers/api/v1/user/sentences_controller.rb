@@ -1,7 +1,10 @@
 class Api::V1::User::SentencesController < ApplicationController
+  include Api::Kaminari
+
   def index
-    sentences = current_user.sentences.order(created_at: :desc)
-    render json: SentenceResource.new(sentences).serialize
+    sentences = current_user.sentences.order(created_at: :desc).page(params[:page])
+    pagenation = resources_with_pagination(sentences)
+    render json: pagenation.merge(JSON.parse SentenceResource.new(sentences).serialize)
   end
 
   def create

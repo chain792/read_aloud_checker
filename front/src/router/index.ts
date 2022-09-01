@@ -5,14 +5,16 @@ import { refresh, silentRefresh } from "@/common/refresh"
 
 const Signup = () => import("@/components/pages/signup/index.vue")
 const Login = () => import("@/components/pages/login/index.vue")
-const Sentences = () => import("@/components/pages/sentences/index.vue")
+const UserSentences = () => import("@/components/pages/sentences/user/index.vue")
+const NewsSentences = () => import("@/components/pages/sentences/news/index.vue")
 const NewSentence = () => import("@/components/pages/sentences/new.vue")
 const Sentence = () => import("@/components/pages/sentences/show.vue")
 const EditSentence = () => import("@/components/pages/sentences/edit.vue")
 const BookmarkSentences = () => import("@/components/pages/sentences/bookmark.vue")
 const Profile = () => import("@/components/pages/profile/index.vue")
-const Mypage = () => import("@/components/pages/mypage/index.vue")
-const MySentences = () => import("@/components/pages/mypage/sentences.vue")
+const MyHistory = () => import("@/components/pages/mypage/history/index.vue")
+const MyRecord = () => import("@/components/pages/mypage/record/index.vue")
+const MySentences = () => import("@/components/pages/mypage/sentences/index.vue")
 const History = () => import("@/components/pages/history/show.vue")
 const Privacy = () => import("@/components/pages/static/Privacy.vue")
 const Terms = () => import("@/components/pages/static/Terms.vue")
@@ -37,9 +39,14 @@ const routes: Array<RouteRecordRaw> = [
     component: Login,
   },
   {
-    path: "/sentences",
-    name: "Sentences",
-    component: Sentences,
+    path: "/sentences/users",
+    name: "UserSentences",
+    component: UserSentences,
+  },
+  {
+    path: "/sentences/news",
+    name: "NewsSentences",
+    component: NewsSentences,
   },
   {
     path: "/sentences/new",
@@ -72,9 +79,15 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true }
   },
   {
-    path: "/mypage",
-    name: "Mypage",
-    component: Mypage,
+    path: "/mypage/history",
+    name: "MyHistory",
+    component: MyHistory,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/mypage/record",
+    name: "MyRecord",
+    component: MyRecord,
     meta: { requiresAuth: true }
   },
   {

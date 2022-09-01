@@ -1,28 +1,33 @@
 <template>
-  <v-card class="pt-2 py-5">
-    <div class="mt-5 d-flex">
-      <div class="ml-16">
-        <p class="mt-2">期間：</p>
-      </div>
-      <div class="select-container">
-        <v-select
-          v-model="itemValue"
-          :items="items"
-          variant="solo"
-          density="compact"
-        ></v-select>
-      </div>
-    </div>
-    <div class="mt-6">
-      <p class="ml-16">合計音読数： <span class="mr-1 text-h4">{{ totalSucceededNumber }}</span>単語</p>
-      <p class="ml-16">発音精度： {{ precision }}<span v-if="precision !== 'ー'">%</span></p>
-    </div>
-    <GChart
-      type="ColumnChart"
-      :data="chartData"
-      :options="chartOptions"
-    />
-  </v-card>
+  <div class="page-myrecord">
+    <v-container class="pt-0">
+      <tab-menu :tab="0"></tab-menu>
+      <v-card class="pt-2 py-5">
+        <div class="mt-5 d-flex">
+          <div class="ml-16">
+            <p class="mt-2">期間：</p>
+          </div>
+          <div class="select-container">
+            <v-select
+              v-model="itemValue"
+              :items="items"
+              variant="solo"
+              density="compact"
+            ></v-select>
+          </div>
+        </div>
+        <div class="mt-6">
+          <p class="ml-16">合計音読数： <span class="mr-1 text-h4">{{ totalSucceededNumber }}</span>単語</p>
+          <p class="ml-16">発音精度： {{ precision }}<span v-if="precision !== 'ー'">%</span></p>
+        </div>
+        <GChart
+          type="ColumnChart"
+          :data="chartData"
+          :options="chartOptions"
+        />
+      </v-card>
+    </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -30,6 +35,7 @@ import { ref, reactive, watch, Ref } from "vue"
 import { GChart } from 'vue-google-charts'
 import axios from "@/plugins/axios"
 import { useUserStore } from "@/store/userStore"
+import TabMenu from "../components/TabMenu.vue"
 
 
 interface MonthlyRecord {
@@ -109,9 +115,20 @@ const chartOptions = {
 </script>
 
 <style scoped>
+.page-myrecord{
+  background-color: rgba(225, 200, 30, 0.1);
+  height: 100%;
+}
 .select-container{
   width: 160px;
   height: 40px;
+}
+
+@media (min-width: 1920px) {
+  .page-myrecord{
+    padding-left: 250px;
+    padding-right: 250px;
+  }
 }
 </style>
 <style>

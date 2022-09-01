@@ -33,7 +33,6 @@ gem 'rails-i18n', '~> 6.0' # For 6.x
 gem 'sorcery'
 gem 'alba'
 gem 'jwt'
-gem 'faraday'
 gem 'aws-sdk-s3', '~> 1'
 gem 'oauth'
 gem 'carrierwave'
@@ -41,6 +40,8 @@ gem 'fog-aws'
 gem 'oauth2'
 gem 'aws-sdk-rails', '~> 3'
 gem 'aws-sdk-polly'
+gem 'kaminari-activerecord'
+
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
