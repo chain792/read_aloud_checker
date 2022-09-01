@@ -77,7 +77,7 @@
       <!-- 英文 -->
       <v-card variant="outlined" :elevation="2" class="bg-white mx-auto mt-4 px-sm-5 flex-shrink-1 overflow-y-auto">
         <v-card-text class="">
-        <div class="sentence-body text-h6" v-html="sentence.body"></div>   
+        <div class="sentence-body text-h6" v-html="sentenceBodyforReadAloud"></div>   
         </v-card-text>
       </v-card>
       <div v-if="status === 'unplayed'" class="mt-5 d-flex justify-center">
@@ -219,7 +219,7 @@ const sentence = ref({
 const bookmarkUserIds: Array<number> = reactive([])
 const progress = ref(false)
 const status: Ref<"unplayed" | "playing" | "finished"> = ref("unplayed")
-let sentenceBodyBeforeReadAloud: string
+const sentenceBodyforReadAloud = ref("")
 const loginRequiredDialog = ref(false)
 const deleteConfirmModal = ref(false)
 
@@ -235,8 +235,7 @@ const fetchSentence = async (): Promise<void> => {
     console.log(res)
     sentence.value = res.data.sentence
     res.data.sentence.bookmarks.forEach((bookmark: Bookmark) => bookmarkUserIds.push(bookmark.userId))
-    sentenceBodyBeforeReadAloud = sentence.value.body
-    sentence.value.body = setUpReadAloud(sentenceBodyBeforeReadAloud)
+    sentenceBodyforReadAloud.value = setUpReadAloud(sentence.value.body)
   } catch(e) {
     console.log(e)
   }
@@ -369,7 +368,7 @@ const playReadAloud = async (): Promise<void> => {
             isSucceeded = true
             failedTimes = 0
             sentenceWords[results.length] = `<span class="gray">${sentenceWords[results.length]}</span>`
-            sentence.value.body = sentenceWords.join('')
+            sentenceBodyforReadAloud.value = sentenceWords.join('')
             results.push("succeeded")
             skipUpToWord()
           }
@@ -380,7 +379,7 @@ const playReadAloud = async (): Promise<void> => {
         if(results.length < sentenceWords.length && failedTimes > 5){
           failedTimes = 0
           sentenceWords[results.length] = `<span class="red">${sentenceWords[results.length]}</span>`
-          sentence.value.body = sentenceWords.join('')
+          sentenceBodyforReadAloud.value = sentenceWords.join('')
           results.push("failed")
         }
         skipUpToWord()
@@ -474,14 +473,14 @@ const skipUpToWord = (): void => {
     if(!numberWordPosition) throw 'error'
     results[numberWordPosition] = "ruby_waved"
     sentenceWords[numberWordPosition] = sentenceWords[numberWordPosition].replace(/((?<=<ruby>).+(?=<rt>))/,`<span class="gray">$1</span>`)
-    sentence.value.body = sentenceWords.join('')
+    sentenceBodyforReadAloud.value = sentenceWords.join('')
     numberWordPosition = null
     results.push("ignored")
     skipUpToWord()
   //記号をスキップ
   }else if(/[ -&]|[(-/]|[:-@]|[[-`]|[{-~]|[｢｣]/.test(sentenceWords[results.length])){
     sentenceWords[results.length] = `<span class="gray">${sentenceWords[results.length]}</span>`
-    sentence.value.body = sentenceWords.join('')
+    sentenceBodyforReadAloud.value = sentenceWords.join('')
     results.push("symbol")
     skipUpToWord()
   }
@@ -491,7 +490,7 @@ const skipUpToWord = (): void => {
 const skipWord = (): void => {
   failedTimes = 0
   sentenceWords[results.length] = `<span class="red">${sentenceWords[results.length]}</span>`
-  sentence.value.body = sentenceWords.join('')
+  sentenceBodyforReadAloud.value = sentenceWords.join('')
   results.push("failed")
   skipUpToWord()
   if(results.length === sentenceWords.length){
@@ -506,7 +505,7 @@ const stopReadAloud = (): void => {
 
 //再音読
 const replayReadAloud = (): void => {
-  sentence.value.body = setUpReadAloud(sentenceBodyBeforeReadAloud)
+  sentenceBodyforReadAloud.value = setUpReadAloud(sentence.value.body)
   startReadAloud()
 }
 
@@ -524,6 +523,10 @@ const registerReadAloudResult = async (): Promise<void> => {
     const res = await axios.post("user/trainings", {
       training: {
         sentence_id: props.id,
+        title: sentence.value.title,
+        body: sentence.value.body,
+        male_speech: sentence.value.maleSpeech,
+        female_speech: sentence.value.femaleSpeech,
         result_words_attributes: resultWords
       }
     })
@@ -644,19 +647,5 @@ onBeforeUnmount(() => {
     padding-left: 200px;
     padding-right: 200px;
   }
-}
-</style>
-<style>
-rt{
-  font-size: 1.15rem;
-  padding: 0 10px;
-}
-.gray {
-  color: gray;
-  opacity: .7;
-}
-.red {
-  color: red;
-  opacity: .7;
 }
 </style>

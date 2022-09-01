@@ -78,7 +78,7 @@ const fetchTrainings = async (page?: string | number): Promise<void> => {
     res.data.trainings.map((training: Training) => {
       histories.push({
         id: training.id,
-        title: training.sentence.title,
+        title: training.title,
         createdAt: training.createdAt,
         wordCount: training.resultWords.filter(resultWord => resultWord.result === "succeeded").length
       })
