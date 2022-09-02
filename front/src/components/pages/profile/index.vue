@@ -83,10 +83,25 @@
             >
               キャンセル
             </v-btn>
+            <v-btn 
+              v-if="progress"
+              :disabled="true"
+              color="warning"
+              :width="buttonWidthV2(190)"
+              class="ml-sm-3 mt-3 mt-sm-0"
+            >
+              <v-progress-circular
+                size="20"
+                color="grey-darken-5"
+                indeterminate
+                width="3"
+              ></v-progress-circular>
+            </v-btn>
             <v-btn
+              v-else
               :disabled="!validProfile"
               color="warning"
-              :width="buttonWidth"
+              :width="buttonWidthV2(190)"
               class="ml-sm-3 mt-3 mt-sm-0"
               @click="updateProfile"
             >
@@ -193,7 +208,7 @@
             <v-btn
               :disabled="!validEmail"
               color="warning"
-              :width="buttonWidth" 
+              :width="buttonWidth"
               class="ml-sm-3 mt-3 mt-sm-0"
               @click="updateEmail"
             >
@@ -336,6 +351,14 @@ const buttonWidth: ComputedRef<string | number | undefined> = computed(() => {
   }
 })
 
+const buttonWidthV2 = (width: number): string | number => {
+  if (display.xs.value) {
+    return '100%'
+  } else {
+    return width
+  }
+}
+
 const currentUserEmail: ComputedRef<string> = computed(() => {
   if(currentUser.emailStatus === "unset"){
     return "設定されていません"
@@ -374,6 +397,7 @@ const preview = ref<HTMLImageElement>()
 const cropper = ref<any>()
 const cropperSrc: Ref<string> = ref("")
 const trimmingDialog = ref(false)
+const progress = ref(false)
 
 
 //プロフィールモーダルを出した時はvalidProfileがnullのため、validete()を実行しvalidProfileをtrueにさせる
@@ -402,7 +426,8 @@ const previewAvatar = (): void => {
   }
 }
 
-const trimming = (): void => {
+const trimming = ($event: any): void => {
+  $event.target.parentElement.disabled = true
   const canvas = cropper.value.getCroppedCanvas({
     width: 60,
 		height: 60,
@@ -411,6 +436,7 @@ const trimming = (): void => {
     if(!blob) return
 
     setTrimmedAvatar(blob)
+    $event.target.parentElement.disabled = false
     trimmingDialog.value = false
   })
 }
@@ -454,6 +480,7 @@ const uploadAvatarToS3 = async (file: File | null): Promise<void> => {
 }
 
 const updateProfile = async (): Promise<void> => {
+  progress.value = true
   flashStore.$reset()
   try{
     await uploadAvatarToS3(trimmedFile)
@@ -474,6 +501,7 @@ const updateProfile = async (): Promise<void> => {
     }
     flashStore.failUpdateProfile()
   }
+  progress.value = false
 }
 
 watch(profileDialog, () => {
@@ -508,9 +536,11 @@ const passwordRules = [
   (v: string) => (v && v.length >= 6) || '6文字以上で入力してください',
 ]
 
-const updateEmail = async (): Promise<void> => {
+const updateEmail = async ($event: any): Promise<void> => {
+  $event.target.parentElement.disabled = true
   flashStore.$reset()
   try{
+    
     errorMessages.splice(0)
     const res = await axios.patch("profile/email", {
       email: emailFormValue.value,
@@ -530,6 +560,7 @@ const updateEmail = async (): Promise<void> => {
     }
     flashStore.failUpdateEmail()
   }
+  $event.target.parentElement.disabled = false
 }
 
 watch(emailDialog, () => {
@@ -549,7 +580,8 @@ const newPassword = ref('')
 const newPasswordConfirmation = ref('')
 const isVisiblePassword = ref(false)
 
-const updatePassword = async (): Promise<void> => {
+const updatePassword = async ($event: any): Promise<void> => {
+  $event.target.parentElement.disabled = true
   flashStore.$reset()
   try{
     errorMessages.splice(0)
@@ -571,6 +603,7 @@ const updatePassword = async (): Promise<void> => {
     }
     flashStore.failUpdatePassword()
   }
+  $event.target.parentElement.disabled = false
 }
 
 watch(passwordDialog, () => {
@@ -639,4 +672,5 @@ watch(passwordDialog, () => {
 .fs-small{
   font-size: 0.9rem !important;
 }
+
 </style>

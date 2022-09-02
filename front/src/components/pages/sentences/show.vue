@@ -376,7 +376,7 @@ const playReadAloud = async (): Promise<void> => {
         if(!isSucceeded){
           failedTimes++
         }
-        if(results.length < sentenceWords.length && failedTimes > 5){
+        if(results.length < sentenceWords.length && failedTimes > 10){
           failedTimes = 0
           sentenceWords[results.length] = `<span class="red">${sentenceWords[results.length]}</span>`
           sentenceBodyforReadAloud.value = sentenceWords.join('')
@@ -506,6 +506,7 @@ const stopReadAloud = (): void => {
 //再音読
 const replayReadAloud = (): void => {
   sentenceBodyforReadAloud.value = setUpReadAloud(sentence.value.body)
+  isSavedVoice.value = false
   startReadAloud()
 }
 
@@ -556,13 +557,6 @@ const uploadVoiceToS3 = async (file: Blob): Promise<string | undefined> => {
   }
 }
 
-const animationProgress2 = () => {
-  progress2.value = true
-  setTimeout(()=>{
-    progress2.value = false
-  }, 450)
-}
-
 //音声を保存
 const saveVoice = async (): Promise<void> => {
   if(!userStore.authUser){
@@ -571,16 +565,17 @@ const saveVoice = async (): Promise<void> => {
   }
 
   try{
+    progress2.value = true
     const name = await uploadVoiceToS3(voiceBlob)
     await axios.post("user/voices", {
       training_id: trainingId,
       voice: name
     })
-    animationProgress2()
     isSavedVoice.value = true
   }catch(e){
     console.log(e)
   }
+  progress2.value = false
 }
 
 onBeforeUnmount(() => {
@@ -628,7 +623,7 @@ onBeforeUnmount(() => {
   margin: 9px;
 }
 .voice-saved-btn{
-  font-size: 0.8rem;
+  font-size: 0.8rem !important;
 }
 @media (min-width: 600px) {
   .sentence-container{
