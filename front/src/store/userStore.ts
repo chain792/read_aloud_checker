@@ -3,6 +3,7 @@ import { defineStore } from "pinia"
 interface User {
   id: number
   email: string
+  emailStatus: "unverified" | "verified" | "unset"
   name: string
   avatar: string
   listeningSex: "male" | "female" | undefined

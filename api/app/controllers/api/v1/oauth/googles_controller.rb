@@ -21,7 +21,7 @@ class Api::V1::Oauth::GooglesController < ApplicationController
       user_info = JSON.parse(response.body)
 
       if user_info["email"]
-        user = User.find_or_create_from_oauth(
+        user = Authentication.find_or_create_user_from_oauth(
           'google',
           user_info["sub"],
           user_info["name"],
@@ -29,7 +29,7 @@ class Api::V1::Oauth::GooglesController < ApplicationController
           user_info["picture"]
         )
 
-        if user.valid?
+        if user && user.valid?
           refresh_token = user.refresh_me!
           set_refresh_token_to_cookie(refresh_token)
         else
