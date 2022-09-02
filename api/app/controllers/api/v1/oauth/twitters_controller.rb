@@ -46,8 +46,8 @@ class Api::V1::Oauth::TwittersController < ApplicationController
     when Net::HTTPSuccess
       user_info = JSON.parse(response.body)
 
-      if user_info["email"]
-        user = User.find_or_create_from_oauth(
+      if user_info["id"]
+        user = Authentication.find_or_create_user_from_oauth(
           'twitter',
           user_info["id"],
           user_info["name"],
@@ -55,7 +55,7 @@ class Api::V1::Oauth::TwittersController < ApplicationController
           user_info["profile_image_url_https"].sub('normal', 'bigger')
         )
 
-        if user.valid?
+        if user && user.valid?
           refresh_token = user.refresh_me!
           set_refresh_token_to_cookie(refresh_token)
         else

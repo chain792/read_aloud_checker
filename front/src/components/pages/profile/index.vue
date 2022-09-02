@@ -16,7 +16,7 @@
         <div class="text-center mt-4">
           <p class="text-subtitle-1 fs-small text-grey-darken-3">メールアドレス</p>
           <v-divider length="110" thickness="2" color="silver mt-n1" class="mx-auto"></v-divider>
-          <p class="mt-2 text-body-1">{{ currentUser.email }}</p>
+          <p class="mt-2 text-body-1">{{ currentUserEmail }}</p>
         </div>
         <div class="text-center mt-5">
           <v-btn 
@@ -333,6 +333,14 @@ const buttonWidth: ComputedRef<string | number | undefined> = computed(() => {
     return '100%'
   } else {
     return undefined
+  }
+})
+
+const currentUserEmail: ComputedRef<string> = computed(() => {
+  if(currentUser.emailStatus === "unset"){
+    return "設定されていません"
+  } else {
+    return currentUser.email
   }
 })
 

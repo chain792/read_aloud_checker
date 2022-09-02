@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_01_212425) do
+ActiveRecord::Schema.define(version: 2022_09_02_072414) do
+
+  create_table "authentications", charset: "utf8mb4", force: :cascade do |t|
+    t.string "uid"
+    t.string "provider"
+    t.string "image"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["provider", "uid"], name: "index_authentications_on_provider_and_uid", unique: true
+    t.index ["user_id"], name: "index_authentications_on_user_id"
+  end
 
   create_table "bookmarks", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -79,24 +90,22 @@ ActiveRecord::Schema.define(version: 2022_09_01_212425) do
     t.string "name", null: false
     t.string "avatar"
     t.integer "role", default: 0, null: false
-    t.string "provider"
-    t.string "uid"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "refresh_token"
     t.datetime "refresh_token_expires_at"
-    t.string "oauth_avatar"
     t.string "reset_password_token"
     t.datetime "reset_password_token_expires_at"
     t.datetime "reset_password_email_sent_at"
     t.integer "access_count_to_reset_password_page", default: 0
     t.integer "listening_sex", default: 0, null: false
+    t.integer "email_status", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["refresh_token"], name: "index_users_on_refresh_token", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token"
   end
 
+  add_foreign_key "authentications", "users"
   add_foreign_key "bookmarks", "sentences"
   add_foreign_key "bookmarks", "users"
   add_foreign_key "news", "news_categories"
