@@ -506,6 +506,7 @@ const stopReadAloud = (): void => {
 //再音読
 const replayReadAloud = (): void => {
   sentenceBodyforReadAloud.value = setUpReadAloud(sentence.value.body)
+  isSavedVoice.value = false
   startReadAloud()
 }
 
