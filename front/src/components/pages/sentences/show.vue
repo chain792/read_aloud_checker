@@ -376,7 +376,7 @@ const playReadAloud = async (): Promise<void> => {
         if(!isSucceeded){
           failedTimes++
         }
-        if(results.length < sentenceWords.length && failedTimes > 5){
+        if(results.length < sentenceWords.length && failedTimes > 10){
           failedTimes = 0
           sentenceWords[results.length] = `<span class="red">${sentenceWords[results.length]}</span>`
           sentenceBodyforReadAloud.value = sentenceWords.join('')
