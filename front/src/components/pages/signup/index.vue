@@ -50,10 +50,24 @@
             @click:append-inner="isVisiblePassword = !isVisiblePassword"
           ></v-text-field>
 
+          <v-btn 
+            v-if="progress"
+            :disabled="true"
+            color="warning"
+            width="100%"
+          >
+            <v-progress-circular
+              size="20"
+              color="grey-darken-5"
+              indeterminate
+              width="3"
+            ></v-progress-circular>
+          </v-btn>
           <v-btn
+            v-else
             :disabled="!valid"
             color="warning"
-            width="400"
+            width="100%"
             @click="register"
           >
             登録
@@ -122,7 +136,7 @@ const cardWidth: ComputedRef<string | number> = computed(() => {
   }
 })
 
-
+const progress = ref(false)
 const valid = ref(true)
 
 const user = reactive({
@@ -151,6 +165,7 @@ const isVisiblePassword = ref(false)
 const errorMessages: string[] = reactive([])
 
 const register = async (): Promise<void> => {
+  progress.value = true
   flashStore.$reset()
   try{
     errorMessages.splice(0)
@@ -168,6 +183,7 @@ const register = async (): Promise<void> => {
       console.log(e)
     }
     flashStore.failSignup()
+    progress.value = false
   }
 }
 
