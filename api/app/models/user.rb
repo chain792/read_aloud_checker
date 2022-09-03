@@ -19,19 +19,6 @@ class User < ApplicationRecord
   enum role: { general: 0, admin: 1, guest: 2 }
   enum listening_sex: { female: 0, male: 1 }
 
-  def self.find_or_create_from_oauth(provider, uid, name, email, image)
-    random_value = SecureRandom.alphanumeric(10)
-
-    User.find_or_create_by(provider: provider, uid: uid) do |user|
-      user.name = name
-      user.email = email
-      user.remote_oauth_avatar_url = image
-      user.avatar = user.oauth_avatar.filename
-      user.password = random_value
-      user.password_confirmation = random_value
-    end
-  end
-
   def bookmark(sentence)
     bookmark_sentences << sentence
   end
