@@ -26,6 +26,7 @@
       >
         お問い合わせ
       </a>
+      <a :href="`https://twitter.com/intent/tweet?&text=音読スターは発音した音声がリアルタイムで反映される音読学習アプリ。%0A初心者からTOEICストアを上げたい人まで日々の英語学習をサポートします%0A&hashtags=音読スター%0Ahttps://ondoku-star.com/`" class="text-xl share-link" target="_blank" ><v-icon class="share">mdi-twitter</v-icon></a>
       <v-col
         class="text-center text-white mt-3"
         cols="12"
@@ -41,4 +42,13 @@
 </script>
 
 <style scoped>
+.share{
+  color: white !important;
+  margin-top: -3px;
+  margin-left: 5px;
+
+}
+.share-link{
+  text-decoration: none;
+}
 </style>
