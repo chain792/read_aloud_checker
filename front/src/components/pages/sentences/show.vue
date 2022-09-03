@@ -177,9 +177,21 @@
       <div class="d-flex justify-space-around mt-6">
         <v-btn 
           color="accent"
-          @click="deleteConfirmModal = false">キャンセル</v-btn>
+          @click="deleteConfirmModal = false">キャンセル
+        </v-btn>
+        <v-btn v-if="progress3" :disabled="true" color="error" width="100">
+          <v-progress-circular
+            size="20"
+            color="grey-darken-5"
+            indeterminate
+            width="3"
+            class="progress2"
+          ></v-progress-circular>
+        </v-btn>
         <v-btn
+          v-else
           color="error"
+          width="100"
           @click="deleteSentence"
         >
           削除
@@ -245,6 +257,8 @@ const sentence = ref({
 const writer: Ref<User | undefined>  = ref()
 const bookmarkUserIds: Array<number> = reactive([])
 const progress = ref(false)
+const progress2 = ref(false)
+const progress3 = ref(false)
 const status: Ref<"unplayed" | "playing" | "finished"> = ref("unplayed")
 const sentenceBodyforReadAloud = ref("")
 const loginRequiredDialog = ref(false)
@@ -302,6 +316,7 @@ const unbookmark = async (): Promise<void> => {
 }
 
 const deleteSentence = async (): Promise<void> => {
+  progress3.value = true
   try{
     await axios.delete(`user/sentences/${props.id}`)
     flashStore.succeedDeleteSentence()
@@ -310,6 +325,7 @@ const deleteSentence = async (): Promise<void> => {
     console.log(e)
     flashStore.failDeleteSentence()
   }
+  progress3.value = false
 }
 
 
@@ -330,7 +346,6 @@ let localStream: MediaStream;
 const audio = ref<HTMLAudioElement>()
 let trainingId: string
 let voiceBlob: Blob
-const progress2 = ref(false)
 const isSavedVoice = ref(false)
 let blob_url: string
 
