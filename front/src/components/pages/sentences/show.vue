@@ -3,6 +3,26 @@
     <v-container class="d-flex flex-column sentence-container">
       <h1 class="text-center text-h5 sentence-title">{{ sentence.title }}</h1>
       <div class="d-flex justify-end">
+
+        <div v-if="writer">
+          <v-btn 
+            v-if="display.xs.value" 
+            class="icon-btn mr-5" 
+            elevation="0" 
+            icon 
+            :to="{ name: 'User', params: { id: writer.id } }"
+          >
+            <v-tooltip activator="parent" location="top">
+              <p class="tooltip">プロフィールを見る</p>
+            </v-tooltip>
+            <img :src="imageUrl('avatar', writer)" class="avatar">
+          </v-btn>
+          <p v-else class="writer-name mr-5">
+            作成者：
+            <router-link :to="{ name: 'User', params: { id: writer.id } }" class="link-text text-blue-accent-4">{{ writer.name }}</router-link>
+          </p>
+        </div>
+        
         <!-- 編集ボタン -->
         <v-btn 
           v-if="isMySentence" 
@@ -185,6 +205,7 @@ import { speechUrl } from "@/common/speechUrl"
 import { toWords } from "number-to-words"
 import { useRouter } from 'vue-router'
 import { useDisplay } from "vuetify"
+import { imageUrl } from "@/common/imageUrl"
 
 const flashStore = useFlashStore()
 const userStore = useUserStore()
@@ -196,6 +217,11 @@ interface Props {
 }
 interface Bookmark {
   userId: number
+}
+interface User {
+  id: number
+  name: string
+  avatar: string
 }
 
 const modalWidth: ComputedRef<string | number> = computed(() => {
@@ -216,6 +242,7 @@ const sentence = ref({
   createrType: "",
   createrId: "",
 })
+const writer: Ref<User | undefined>  = ref()
 const bookmarkUserIds: Array<number> = reactive([])
 const progress = ref(false)
 const status: Ref<"unplayed" | "playing" | "finished"> = ref("unplayed")
@@ -232,10 +259,10 @@ const isMySentence: ComputedRef<boolean> = computed(() => {
 const fetchSentence = async (): Promise<void> => {
   try{
     const res = await axios.get(`sentences/${props.id}`)
-    console.log(res)
     sentence.value = res.data.sentence
     res.data.sentence.bookmarks.forEach((bookmark: Bookmark) => bookmarkUserIds.push(bookmark.userId))
     sentenceBodyforReadAloud.value = setUpReadAloud(sentence.value.body)
+    writer.value = res.data.sentence.user
   } catch(e) {
     console.log(e)
   }
@@ -612,6 +639,18 @@ onBeforeUnmount(() => {
 .icon-btn{
   border: 1px solid gray;
   border-radius: 50%;
+}
+
+.avatar{
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.writer-name{
+  font-size: 0.9rem;
+  color: #333;
+  margin: 10px 15px 0px -15px;
 }
 
 .tooltip{

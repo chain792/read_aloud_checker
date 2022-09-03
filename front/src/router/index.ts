@@ -11,6 +11,7 @@ const NewSentence = () => import("@/components/pages/sentences/new.vue")
 const Sentence = () => import("@/components/pages/sentences/show.vue")
 const EditSentence = () => import("@/components/pages/sentences/edit.vue")
 const BookmarkSentences = () => import("@/components/pages/sentences/bookmark.vue")
+const User = () => import("@/components/pages/users/show.vue")
 const Profile = () => import("@/components/pages/profile/index.vue")
 const MyHistory = () => import("@/components/pages/mypage/history/index.vue")
 const MyRecord = () => import("@/components/pages/mypage/record/index.vue")
@@ -71,6 +72,12 @@ const routes: Array<RouteRecordRaw> = [
     name: "BookmarkSentences",
     component: BookmarkSentences,
     meta: { requiresAuth: true }
+  },
+  {
+    path: "/users/:id",
+    name: "User",
+    component: User,
+    props: true
   },
   {
     path: "/profile",

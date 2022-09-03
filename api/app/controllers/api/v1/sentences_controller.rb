@@ -4,7 +4,7 @@ class Api::V1::SentencesController < ApplicationController
 
   def show
     sentence = Sentence.find(params[:id])
-    render json: SentenceWithBookmarksResource.new(sentence).serialize
+    render json: DetailSentenceResource.new(sentence).serialize
   end
 
   def bookmark
