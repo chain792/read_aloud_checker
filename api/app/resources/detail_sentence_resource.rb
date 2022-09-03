@@ -1,4 +1,4 @@
-class SentenceWithBookmarksResource
+class DetailSentenceResource
   include Alba::Resource
 
   root_key :sentence, :sentences
@@ -11,4 +11,6 @@ class SentenceWithBookmarksResource
     attributes :user_id
     transform_keys :lower_camel
   end
+
+  one :creater, key: 'user', resource:  RestrictedUserResource, if: proc { |sentence| sentence.creater_type == 'User' }
 end

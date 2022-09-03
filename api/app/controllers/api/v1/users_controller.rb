@@ -1,8 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  skip_before_action :authenticate!, only: %i[index create]
-  def index
-    render json: 'aaa'
-  end
+  skip_before_action :authenticate!, only: %i[create show]
 
   def create
     user = User.new(user_params)
@@ -16,6 +13,11 @@ class Api::V1::UsersController < ApplicationController
     else
       render json: user.errors.full_messages, status: :bad_request
     end
+  end
+
+  def show
+    user = User.find(params[:id])
+    render json: RestrictedUserResource.new(user).serialize
   end
 
   private
