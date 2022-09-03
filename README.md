@@ -43,7 +43,6 @@
 ### フロントエンド
 - Vite 2.9.9  
 - Vue.js 3.2.25  
-- Vite 2.9.9  
 - vuetify 3(β)  
 - vue-router  
 - Pinia  
