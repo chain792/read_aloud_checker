@@ -2,7 +2,7 @@
   <div class="page-profile py-5 pt-sm-10">
     <v-card :width="cardWidth" class="mx-auto px-3 px-sm-5 py-3">
       <v-card-item>
-        <v-card-title class="text-center text-h5">プロフィール</v-card-title>
+        <v-card-title class="text-h6 text-center text-grey-darken-3 font-weight-bold tracking-widest">プロフィール</v-card-title>
       </v-card-item>
       <v-card-text class="mt-3">
         <div class="text-center">
@@ -11,12 +11,12 @@
         <div class="text-center mt-3">
           <p class="text-subtitle-1 fs-small text-grey-darken-3">名前</p>
           <v-divider length="42" thickness="2" color="silver mt-n1" class="mx-auto"></v-divider>
-          <p class="mt-2 text-body-1 fs-large">{{ currentUser.name }}</p>
+          <p class="mt-2 text-body-1 fs-large tracking-wide">{{ currentUser.name }}</p>
         </div>
         <div class="text-center mt-4">
           <p class="text-subtitle-1 fs-small text-grey-darken-3">メールアドレス</p>
           <v-divider length="110" thickness="2" color="silver mt-n1" class="mx-auto"></v-divider>
-          <p class="mt-2 text-body-1">{{ currentUserEmail }}</p>
+          <p class="mt-2 text-body-1 tracking-wide">{{ currentUserEmail }}</p>
         </div>
         <div class="text-center mt-5">
           <v-btn 
@@ -659,6 +659,14 @@ watch(passwordDialog, () => {
   width: 160px; 
   height: 160px;
   border: 1px solid red;
+}
+
+.tracking-wide{
+  letter-spacing: 0.05em !important;
+}
+
+.tracking-widest{
+  letter-spacing: 0.2em !important;
 }
 
 .tooltip{
