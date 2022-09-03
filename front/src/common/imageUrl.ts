@@ -9,7 +9,7 @@ export function imageUrl(type: ImageType, object: S3Object): string {
   switch (type) {
     case 'avatar':
       if(!object.avatar){
-        return '/cat.jpeg'
+        return '/default.png'
       }
       imagePath = `user/avatar/${object.id}/${object.avatar}`
   }
