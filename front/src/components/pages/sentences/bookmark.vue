@@ -2,11 +2,18 @@
   <div class="page-bookmark">
     <v-container>
       <div class="bookmark-container">
-        <v-card v-for="sentence in sentences" :key="sentence.id" class="my-3 mx-10">
-          <router-link :to="{ name: 'Sentence', params: { id: sentence.id } }" class="text-decoration-none">
-            <v-card-text>{{ sentence.title }}</v-card-text>
-          </router-link>
-        </v-card>
+        <p class="text-h6 text-center mt-3 text-grey-darken-3 font-weight-bold tracking-widest">ブックマークした英文</p>
+        <v-divider  length="250" thickness="2" class="mx-auto mt-2"></v-divider>
+        <div v-if="sentences.length" class="mt-6">
+          <v-card v-for="sentence in sentences" :key="sentence.id" class="my-3 mx-10">
+            <router-link :to="{ name: 'Sentence', params: { id: sentence.id } }" class="text-decoration-none">
+              <v-card-text>{{ sentence.title }}</v-card-text>
+            </router-link>
+          </v-card>
+        </div>
+        <div v-else-if="isAxiosFinished" class="mt-10">
+          <p class="text-center text-grey-darken-3 text-body-2 tracking-wide">ブックマークしている英文はありません</p>
+        </div>
         <v-pagination
           v-if="paginationLength > 1"
           v-model="page"
@@ -38,6 +45,7 @@ const page = ref(queryValueOfPage)
 const paginationLength = ref(1)
 
 const sentences: Array<Sentence> = reactive([])
+const isAxiosFinished = ref(false)
 
 const fetchSentences = async (page?: string | number): Promise<void> => {
   try{
@@ -53,6 +61,7 @@ const fetchSentences = async (page?: string | number): Promise<void> => {
   } catch(e) {
     console.log(e)
   }
+  isAxiosFinished.value = true
 }
 fetchSentences(queryValueOfPage)
 
@@ -72,6 +81,14 @@ onBeforeRouteUpdate(async (to) => {
 .page-bookmark {
   background-color: rgba(225, 200, 30, 0.1);
   height: 100%;
+}
+
+.tracking-wide{
+  letter-spacing: 0.05em !important;
+}
+
+.tracking-widest{
+  letter-spacing: 0.2em !important;
 }
 
 @media (min-width: 1920px) {
