@@ -18,6 +18,14 @@
               </v-icon>
               <p class="ml-1 voice-text">{{ history.wordCount }}</p>
               <p class="ml-3 date-text">{{ displayDate(history.createdAt) }}</p>
+              <v-icon
+                v-if="history.voice"
+                size="small"
+                color="orange-darken-2"
+                class="icon ml-3"
+              >
+                mdi-microphone
+              </v-icon>
             </div>
           </v-card-text>
         </router-link>
@@ -48,12 +56,14 @@ interface Training {
   id: string
   title: string
   sentence: Sentence
+  voice: string
   createdAt: string
   resultWords: Array<ResultWord>
 }
 interface History {
   id: string
   title: string
+  voice: string
   createdAt: string
   wordCount: number
 }
@@ -80,6 +90,7 @@ const fetchTrainings = async (page?: string | number): Promise<void> => {
         id: training.id,
         title: training.title,
         createdAt: training.createdAt,
+        voice: training.voice,
         wordCount: training.resultWords.filter(resultWord => resultWord.result === "succeeded").length
       })
     })
