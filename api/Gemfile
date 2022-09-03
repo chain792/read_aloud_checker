@@ -25,21 +25,37 @@ gem 'bootsnap', '>= 1.4.4', require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
 
+# net
 gem 'net-smtp'
 gem 'net-imap'
 gem 'net-pop'
 
+# i18n
 gem 'rails-i18n', '~> 6.0' # For 6.x
+
+# 認証
 gem 'sorcery'
-gem 'alba'
+
+# JWT
 gem 'jwt'
-gem 'aws-sdk-s3', '~> 1'
+
+# Oauth
 gem 'oauth'
-gem 'carrierwave'
-gem 'fog-aws'
 gem 'oauth2'
+
+# シリアライザー
+gem 'alba'
+
+# AWS
+gem 'aws-sdk-s3', '~> 1'
 gem 'aws-sdk-rails', '~> 3'
 gem 'aws-sdk-polly'
+
+# 画像投稿
+gem 'carrierwave'
+gem 'fog-aws'
+
+# ページネーション
 gem 'kaminari-activerecord'
 
 
