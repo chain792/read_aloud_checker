@@ -14,9 +14,18 @@
       </div>
     </v-card-item>
     <v-card-text class="mt-3">
-      <div class="text-center">
+      <div class="text-center text-body-1 font-weight-bold">
         この機能を利用するにはログインが必要です。
-      </div> 
+      </div>
+      <div>
+        <p class="text-center text-body-2 mt-5">ログインすると以下の機能が使えるようになります</p>
+        <ul class="ml-16">
+          <li>音読する英文を作成</li>
+          <li>お手本の音声の性別の変更</li>
+          <li>音読した音声を保存</li>
+          <li>音読記録を振り返る</li>
+        </ul>
+      </div>
       <div class="d-flex justify-space-around mt-6">
         <v-btn color="warning" @click="linkToSignup">新規登録</v-btn>
         <v-btn
@@ -47,7 +56,7 @@ const cardWidth: ComputedRef<string | number> = computed(() => {
   if (display.xs.value) {
     return '100%'
   } else {
-    return 500
+    return 600
   }
 })
 
@@ -66,5 +75,14 @@ const close = (): void => {
 </script>
 
 <style scoped>
+ul{
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  padding-inline-start: 40px;
+}
+li{
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+}
 
 </style>
