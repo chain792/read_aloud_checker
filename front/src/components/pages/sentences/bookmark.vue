@@ -2,7 +2,7 @@
   <div class="page-bookmark">
     <v-container>
       <div class="bookmark-container">
-        <p class="text-h6 text-center mt-3 text-grey-darken-3 font-weight-bold tracking-widest">ブックマークした英文</p>
+        <p class="text-h6 text-center mt-1 text-grey-darken-3 font-weight-bold tracking-widest">ブックマークした英文</p>
         <v-divider  length="250" thickness="2" class="mx-auto mt-2"></v-divider>
         <div v-if="sentences.length" class="mt-6">
           <v-card v-for="sentence in sentences" :key="sentence.id" class="my-3 mx-10">
