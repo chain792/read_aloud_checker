@@ -404,7 +404,7 @@ const playReadAloud = async (): Promise<void> => {
           }
           return word
         }).flat()
-        
+
         for(let j = 0; j < transcriptWords.length; j++){
           if(results.length < sentenceWords.length && wordMatchesDecision(sentenceWords[results.length], transcriptWords, j)){
             isSucceeded = true
