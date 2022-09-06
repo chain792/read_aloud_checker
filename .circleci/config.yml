@@ -4,7 +4,7 @@ orbs:
   ruby: circleci/ruby@1.4.0
 
 jobs:
-  build:
+  build_api:
     docker:
       - image: cimg/ruby:3.1.2
         environment:
@@ -15,9 +15,9 @@ jobs:
           path: ~/read_aloud_checker
       - ruby/install-deps
 
-  test:
+  test_api:
     docker:
-      - image: cimg/ruby:3.1-browsers
+      - image: cimg/ruby:3.1.2
       - image: circleci/mysql:5.7
         environment:
           MYSQL_ROOT_PASSWORD: mysqlpassword
@@ -39,6 +39,33 @@ jobs:
           name: test
           command: bundle exec rspec
 
+  test_front:
+    docker:
+      - image: cimg/node:16.16.0
+    working_directory: ~/read_aloud_checker/front
+    steps:
+      - checkout:
+          path: ~/read_aloud_checker
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "~/read_aloud_checker/front/package.json" }}
+          working_directory: ~/read_aloud_checker/front
+      - run:
+          name: install-packages
+          command: npm install
+          working_directory: ~/read_aloud_checker/front
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "~/read_aloud_checker/front/package.json" }}
+          working_directory: ~/read_aloud_checker/front
+      - run:
+          name: test
+          command: npm run test
+          working_directory: ~/read_aloud_checker/front
+
+
+
   # deploy:
   #   docker:
   #     - image: circleci/ruby:2.5.1-node-browsers
@@ -57,10 +84,11 @@ workflows:
   version: 2
   build_test_and_deploy:
     jobs:
-      - build
-      - test:
+      - build_api
+      - test_api:
           requires:
-            - build
+            - build_api
+      - test_front
       # - deploy:
       #     requires:
       #       - test
