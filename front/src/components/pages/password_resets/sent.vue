@@ -19,11 +19,12 @@
     </v-card>
 
     <v-btn @click="test">test</v-btn>
+    <p>{{aaa}}</p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ComputedRef } from "vue"
+import { computed, ComputedRef, ref } from "vue"
 import { useDisplay } from "vuetify"
 import axios from "@/plugins/axios"
 
@@ -37,10 +38,12 @@ const cardWidth: ComputedRef<string | number> = computed(() => {
   }
 })
 
+const aaa=ref('')
 const test = async (): Promise<void> => {
   try{
     const res = await axios.get("users")
-    console.log(res)
+    aaa.value = res.data
+    console.log(res.data)
   } catch(e) {
     console.log(e)
   }
