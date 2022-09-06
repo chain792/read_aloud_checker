@@ -38,7 +38,7 @@ jobs:
       - image: cimg/ruby:3.1.2
       - image: circleci/mysql:5.7
         environment:
-          MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+          MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
           MYSQL_DATABASE: app_test
     environment:
       BUNDLE_JOBS: "3"
