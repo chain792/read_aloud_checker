@@ -2,6 +2,24 @@ version: 2.1
 
 orbs:
   ruby: circleci/ruby@1.4.0
+  aws-s3: circleci/aws-s3@3.0.0
+
+commands:
+  npm_install:
+    steps:
+    - restore_cache:
+        keys:
+          - v1-dependencies-{{ checksum "~/read_aloud_checker/front/package.json" }}
+        working_directory: ~/read_aloud_checker/front
+    - run:
+        name: install-packages
+        command: npm install
+        working_directory: ~/read_aloud_checker/front
+    - save_cache:
+        paths:
+          - node_modules
+        key: v1-dependencies-{{ checksum "~/read_aloud_checker/front/package.json" }}
+        working_directory: ~/read_aloud_checker/front
 
 jobs:
   build_api:
@@ -39,6 +57,21 @@ jobs:
           name: test
           command: bundle exec rspec
 
+  deploy_api:
+    docker:
+      - image: cimg/ruby:3.1.2
+        environment:
+          BUNDLER_VERSION: 2.3.7
+    steps:
+      - checkout:
+          path: ~/read_aloud_checker
+      - ruby/install-deps
+      - add_ssh_keys:
+          fingerprints: "2c:45:bf:7a:4f:87:e7:b5:81:cd:2e:4f:ae:53:cb:79"
+      - deploy:
+          name: Capistrano deploy
+          command: bundle exec cap production deploy
+
   test_front:
     docker:
       - image: cimg/node:16.16.0
@@ -46,39 +79,27 @@ jobs:
     steps:
       - checkout:
           path: ~/read_aloud_checker
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "~/read_aloud_checker/front/package.json" }}
-          working_directory: ~/read_aloud_checker/front
-      - run:
-          name: install-packages
-          command: npm install
-          working_directory: ~/read_aloud_checker/front
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "~/read_aloud_checker/front/package.json" }}
-          working_directory: ~/read_aloud_checker/front
+      - npm_install
       - run:
           name: test
           command: npm run test
           working_directory: ~/read_aloud_checker/front
 
-
-
-  # deploy:
-  #   docker:
-  #     - image: circleci/ruby:2.5.1-node-browsers
-  #       environment:
-  #         BUNDLER_VERSION: 2.1.4
-  #   steps:
-  #     - checkout
-  #     - ruby/install-deps
-  #     - add_ssh_keys:
-  #         fingerprints: "XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX"
-  #     - deploy:
-  #         name: Capistrano deploy
-  #         command: bundle exec cap production deploy
+  deploy_front:
+    docker:
+      - image: cimg/node:16.16.0
+      - image: cimg/python:3.6
+    working_directory: ~/read_aloud_checker/front
+    steps:
+      - checkout:
+          path: ~/read_aloud_checker
+      - npm_install
+      - run:
+          name: build
+          command: npm run build
+      - aws-s3/sync:
+          from: dist
+          to: "s3://${AWS_TARGET_BUCKET}"
 
 workflows:
   version: 2
@@ -88,10 +109,16 @@ workflows:
       - test_api:
           requires:
             - build_api
+      - deploy_api:
+          requires:
+            - test_api
+          filters:
+            branches:
+              only: master
       - test_front
-      # - deploy:
-      #     requires:
-      #       - test
-      #     filters:
-      #       branches:
-      #         only: master
+      - deploy_front:
+          requires:
+            - test_front
+          filters:
+            branches:
+              only: master

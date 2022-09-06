@@ -46,6 +46,7 @@
 - vuetify 3(β)  
 - vue-router  
 - Pinia  
+- Vitest  
 ### バックエンド
 - Ruby 3.1.2  
 - Ruby on Rails(API モード) 6.1.6  
@@ -53,6 +54,7 @@
   - sorcery  
   - jwt  
   - alba  
+  - rspec-rails  
 
 ## スケジュール
 企画〜技術調査：7/4〆切  

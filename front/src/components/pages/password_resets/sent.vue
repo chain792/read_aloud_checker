@@ -17,12 +17,15 @@
         </ul>
       </v-card-text>
     </v-card>
+
+    <v-btn @click="test">test</v-btn>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ComputedRef } from "vue"
 import { useDisplay } from "vuetify"
+import axios from "@/plugins/axios"
 
 const display = useDisplay()
 
@@ -33,6 +36,15 @@ const cardWidth: ComputedRef<string | number> = computed(() => {
     return 600
   }
 })
+
+const test = async (): Promise<void> => {
+  try{
+    const res = await axios.get("users")
+    console.log(res)
+  } catch(e) {
+    console.log(e)
+  }
+}
 </script>
 
 <style scoped>
