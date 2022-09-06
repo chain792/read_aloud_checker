@@ -99,8 +99,7 @@ jobs:
           command: npm run build
       - aws-s3/sync:
           from: dist
-          to: 's3://$AWS_TARGET_BUCKET'
-          overwrite: true
+          to: "s3://${AWS_TARGET_BUCKET}"
 
 workflows:
   version: 2
