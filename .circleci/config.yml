@@ -114,11 +114,11 @@ workflows:
             - test_api
           filters:
             branches:
-              only: master
+              only: main
       - test_front
       - deploy_front:
           requires:
             - test_front
           filters:
             branches:
-              only: master
+              only: main
