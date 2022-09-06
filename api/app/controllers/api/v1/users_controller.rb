@@ -1,5 +1,9 @@
 class Api::V1::UsersController < ApplicationController
-  skip_before_action :authenticate!, only: %i[create show]
+  skip_before_action :authenticate!, only: %i[index create show]
+
+  def index
+    render json: 'test'
+  end
 
   def create
     user = User.new(user_params)
