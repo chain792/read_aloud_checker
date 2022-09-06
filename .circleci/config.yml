@@ -22,7 +22,7 @@ jobs:
         environment:
           MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
           MYSQL_DATABASE: app_test
-          MYSQL_ROOT_HOST: root
+          MYSQL_USER: root
     environment:
       BUNDLE_JOBS: "3"
       BUNDLE_RETRY: "3"
