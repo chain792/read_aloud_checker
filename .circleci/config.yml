@@ -2,6 +2,24 @@ version: 2.1
 
 orbs:
   ruby: circleci/ruby@1.4.0
+  aws-s3: circleci/aws-s3@3.0.0
+
+commands:
+  npm_install:
+    steps:
+    - restore_cache:
+        keys:
+          - v1-dependencies-{{ checksum "~/read_aloud_checker/front/package.json" }}
+        working_directory: ~/read_aloud_checker/front
+    - run:
+        name: install-packages
+        command: npm install
+        working_directory: ~/read_aloud_checker/front
+    - save_cache:
+        paths:
+          - node_modules
+        key: v1-dependencies-{{ checksum "~/read_aloud_checker/front/package.json" }}
+        working_directory: ~/read_aloud_checker/front
 
 jobs:
   build_api:
@@ -61,23 +79,28 @@ jobs:
     steps:
       - checkout:
           path: ~/read_aloud_checker
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "~/read_aloud_checker/front/package.json" }}
-          working_directory: ~/read_aloud_checker/front
-      - run:
-          name: install-packages
-          command: npm install
-          working_directory: ~/read_aloud_checker/front
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "~/read_aloud_checker/front/package.json" }}
-          working_directory: ~/read_aloud_checker/front
+      - npm_install
       - run:
           name: test
           command: npm run test
           working_directory: ~/read_aloud_checker/front
+
+  deploy_front:
+    docker:
+      - image: cimg/node:16.16.0
+      - image: cimg/python:3.6
+    working_directory: ~/repo
+    steps:
+      - checkout:
+          path: ~/read_aloud_checker
+      - npm_install
+      - run:
+          name: build
+          command: npm run build
+      - aws-s3/sync:
+          from: dist
+          to: 's3://$AWS_TARGET_BUCKET'
+          overwrite: true
 
 workflows:
   version: 2
@@ -89,8 +112,14 @@ workflows:
             - build_api
       - deploy_api:
           requires:
-            - test
+            - test_api
           filters:
             branches:
               only: master
       - test_front
+      - deploy_front:
+          requires:
+            - test_front
+          filters:
+            branches:
+              only: master
