@@ -106,20 +106,20 @@ workflows:
   version: 2
   build_test_and_deploy:
     jobs:
-      # - build_api
-      # - test_api:
-      #     requires:
-      #       - build_api
+      - build_api
+      - test_api:
+          requires:
+            - build_api
       - deploy_api:
-          # requires:
-          #   - test_api
+          requires:
+            - test_api
           filters:
             branches:
               only: main
-      # - test_front
-      # - deploy_front:
-      #     requires:
-      #       - test_front
-      #     filters:
-      #       branches:
-      #         only: main
+      - test_front
+      - deploy_front:
+          requires:
+            - test_front
+          filters:
+            branches:
+              only: main
