@@ -31,7 +31,7 @@ jobs:
     working_directory: ~/read_aloud_checker/api
     steps:
       - checkout:
-        path: ~/read_aloud_checker
+          path: ~/read_aloud_checker
       - ruby/install-deps
       - run:
           name: Database setup
