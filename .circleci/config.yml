@@ -62,6 +62,7 @@ jobs:
       - image: cimg/ruby:3.1.2
         environment:
           BUNDLER_VERSION: 2.3.7
+    working_directory: ~/read_aloud_checker/api
     steps:
       - checkout:
           path: ~/read_aloud_checker
