@@ -11,7 +11,7 @@ jobs:
           BUNDLER_VERSION: 2.3.7
     working_directory: ~/read_aloud_checker/api
     steps:
-      - checkout
+      - checkout:
           path: ~/read_aloud_checker
       - ruby/install-deps
 
