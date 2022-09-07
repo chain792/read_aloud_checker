@@ -73,7 +73,6 @@ jobs:
       - deploy:
           name: Capistrano deploy
           command: bundle exec cap production deploy
-          working_directory: ~/read_aloud_checker
 
   test_front:
     docker:
