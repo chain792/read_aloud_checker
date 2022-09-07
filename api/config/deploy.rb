@@ -44,7 +44,7 @@ set :keep_releases, 5
 # Uncomment the following to require manually verifying the host key before first deploy.
 set :ssh_options, {
   auth_methods: ['publickey'], 
-  keys: [ ENV.fetch("SSH_KEY_PATH") { '~/.ssh/id_rsa_2c45bf7a4f87e7b581cd2e4fae53cb79' } ] 
+  keys: ['/root/.ssh/ondoku-star-ssh-key.pem'] 
 }
 
 # rbenvの設定
