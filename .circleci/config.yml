@@ -103,10 +103,10 @@ jobs:
           from: dist
           to: "s3://${AWS_TARGET_BUCKET}"
 
-# workflows:
-#   version: 2
-#   build_test_and_deploy:
-#     jobs:
+workflows:
+  version: 2
+  build_test_and_deploy:
+    jobs:
 #       - build_api
 #       - test_api:
 #           requires:
