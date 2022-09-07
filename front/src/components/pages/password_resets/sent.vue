@@ -18,7 +18,7 @@
       </v-card-text>
     </v-card>
 
-    <v-btn @click="test">test</v-btn>
+    <v-btn @click="test">rrrrr</v-btn>
     <p>{{aaa}}</p>
   </div>
 </template>
@@ -43,7 +43,7 @@ const test = async (): Promise<void> => {
   try{
     const res = await axios.get("users")
     aaa.value = res.data
-    console.log(res.data)
+    console.log(res)
   } catch(e) {
     console.log(e)
   }
