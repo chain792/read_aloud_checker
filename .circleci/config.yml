@@ -69,6 +69,8 @@ jobs:
       - ruby/install-deps
       - add_ssh_keys:
           fingerprints: "2c:45:bf:7a:4f:87:e7:b5:81:cd:2e:4f:ae:53:cb:79"
+    working_directory: ~/read_aloud_checker
+    steps:
       - deploy:
           name: Capistrano deploy
           command: bundle exec cap production deploy
@@ -110,12 +112,12 @@ jobs:
 #       - test_api:
 #           requires:
 #             - build_api
-#       - deploy_api:
-#           requires:
-#             - test_api
-#           filters:
-#             branches:
-#               only: main
+      - deploy_api:
+          # requires:
+          #   - test_api
+          filters:
+            branches:
+              only: main
 #       - test_front
 #       - deploy_front:
 #           requires:
