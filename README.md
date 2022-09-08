@@ -56,12 +56,8 @@
   - alba  
   - rspec-rails  
 
-## スケジュール
-企画〜技術調査：7/4〆切  
-README〜ER図作成：7/10〆切  
-メイン機能実装：7/11 - 8/10  
-β版をRUNTEQ内リリース（MVP）：8/10〆切  
-本番リリース：8月末 
+# インフラ構成図
+![infra drawio](https://user-images.githubusercontent.com/97337735/189094724-124da7ce-d714-4349-b5d5-6338f0b490d8.png)
 
 
 # 画面遷移図
