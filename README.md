@@ -57,8 +57,7 @@
   - rspec-rails  
 
 # インフラ構成図
-![infra drawio](https://user-images.githubusercontent.com/97337735/189094724-124da7ce-d714-4349-b5d5-6338f0b490d8.png)
-
+![infra drawio](https://user-images.githubusercontent.com/97337735/191248071-f07cfff5-5234-4c50-a5c8-bfeccb002f2a.png)
 
 # 画面遷移図
 https://www.figma.com/file/rj3SrRK6eHT9Y9IgWyifnX/%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3?node-id=0%3A1
