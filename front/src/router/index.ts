@@ -22,6 +22,7 @@ const Terms = () => import("@/components/pages/static/Terms.vue")
 const NewPasswordReset = () => import("@/components/pages/password_resets/new.vue")
 const PasswordResetSent = () => import("@/components/pages/password_resets/sent.vue")
 const EditPasswordReset = () => import("@/components/pages/password_resets/edit.vue")
+const AdminTopPage = () => import("@/components/pages/admin/static/TopPage.vue")
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -135,6 +136,11 @@ const routes: Array<RouteRecordRaw> = [
     name: "EditPasswordReset",
     component: EditPasswordReset,
     props: true,
+  },
+  {
+    path: "/admin",
+    name: "AdminTopPage",
+    component: AdminTopPage,
   },
 ]
 
