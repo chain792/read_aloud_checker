@@ -1,32 +1,22 @@
 <template>
   <v-app>
-    <Header v-if="userStore.authUser" />
-    <HeaderBeforeLoginVue v-else />
-    <FlashMessage />
-    <v-main>
-      <router-view />
-    </v-main>
-    <Footer v-show="!spScreen" />
+    <component :is="currentComponent" ></component>
   </v-app>
 </template>
 
 <script setup lang="ts">
-import { computed, ComputedRef } from "vue"
-import Header from './components/shared/Header.vue'
-import HeaderBeforeLoginVue from './components/shared/HeaderBeforeLogin.vue'
-import Footer from './components/shared/Footer.vue'
-import FlashMessage from './components/shared/FlashMessage.vue'
-import { useUserStore } from './store/userStore'
-import { useDisplay } from "vuetify"
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import Default from '@/components/layouts/Default.vue'
+import Admin from '@/components/layouts/Admin.vue'
 
-const display = useDisplay()
-const userStore = useUserStore()
+const route = useRoute()
 
-const spScreen: ComputedRef<boolean> = computed(() => {
-  if (display.xs.value) {
-    return true
-  } else {
-    return false
+const currentComponent = computed(() => {
+  if(/^\/admin(\/|$)/.test(route.path)){
+    return Admin
+  }else{
+    return Default
   }
 })
 
