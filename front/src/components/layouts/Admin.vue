@@ -6,6 +6,6 @@
 </template>
 
 <script setup lang="ts">
-import SideBar from '../shared/admin/SideBar.vue';
+import SideBar from '@/components/shared/admin/SideBar.vue';
 
 </script>

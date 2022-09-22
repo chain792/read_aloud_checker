@@ -1,25 +1,10 @@
 <template>
   <v-app>
-    <component :is="currentComponent" ></component>
+    <router-view />
   </v-app>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import Default from '@/components/layouts/Default.vue'
-import Admin from '@/components/layouts/Admin.vue'
-
-const route = useRoute()
-
-const currentComponent = computed(() => {
-  if(/^\/admin(\/|$)/.test(route.path)){
-    return Admin
-  }else{
-    return Default
-  }
-})
-
 </script>
 
 <style>

@@ -20,7 +20,6 @@
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
-
 </template>
 
 <script setup lang="ts">
