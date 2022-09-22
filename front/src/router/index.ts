@@ -153,11 +153,11 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/admin",
-    name: "AdminTopPage",
     component: AdminLayout,
     children: [
       {
         path: "",
+        name: "AdminTopPage",
         component: AdminTopPage,
       }
     ]

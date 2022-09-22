@@ -1,6 +1,7 @@
 <template>
-  <div class="page-login py-5 pt-sm-10">
-    <v-card :width="cardWidth" class="mx-auto px-3 px-sm-5 py-3">
+  <div class="page-admin-login">
+    <FlashMessage />
+    <v-card :width="cardWidth" class="mx-auto card-position px-3 px-sm-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">ログイン</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
@@ -75,8 +76,8 @@ import { useUserStore }  from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
 import { useTokenStore } from "@/store/tokenStore"
 import { useRouter } from 'vue-router'
-import { refresh } from "@/common/refresh"
 import { useDisplay } from "vuetify"
+import FlashMessage from '@/components/shared/FlashMessage.vue'
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
@@ -115,98 +116,32 @@ const login = async (): Promise<void> => {
   flashStore.$reset()
   try{
     errorMessages.splice(0)
-    const res = await axios.post("login", loginInfo)
+    const res = await axios.post("admin/login", loginInfo)
     userStore.setUser(res.data.user)
     tokenStore.setToken(res.data.token, res.data.expiredTime)
     flashStore.succeedLogin()
-    router.push({ name: "Profile" })
+    router.push({ name: "AdminTopPage" })
   } catch(e) {
     flashStore.failLogin()
   }
   progress.value = false
 }
 
-/***************************************************
-  ソーシャルログイン
- ***************************************************/
-let windowLogin: Window | null
-const twitterLogin = async (): Promise<void> => {
-  flashStore.$reset()
-  try{
-    const res = await axios.get("oauth/twitter/new")
-    windowLogin = window.open(res.data)
-    setTimeout(CheckLoginStatus, 1000)
-  } catch(e) {
-    console.log(e)
-    flashStore.failLogin()
-  }
-}
-
-const googleLogin = async (): Promise<void> => {
-  flashStore.$reset()
-  try{
-    const res = await axios.get("oauth/google/new")
-    windowLogin = window.open(res.data)
-    setTimeout(CheckLoginStatus, 1000)
-  } catch(e) {
-    console.log(e)
-    flashStore.failLogin()
-  }
-}
-
-const yahooLogin = async (): Promise<void> => {
-  flashStore.$reset()
-  try{
-    const res = await axios.get("oauth/yahoo/new")
-    windowLogin = window.open(res.data)
-    setTimeout(CheckLoginStatus, 1000)
-  } catch(e) {
-    console.log(e)
-    flashStore.failLogin()
-  }
-}
-
-const CheckLoginStatus = async (): Promise<void> => {
-  if (windowLogin!.closed) {
-    const isLoginSucceed = await refresh()
-    if(isLoginSucceed){
-      flashStore.succeedLogin()
-      router.push({ name: "Profile" })
-    }else{
-      flashStore.failLogin()
-    }
-  }
-  else{
-    setTimeout(CheckLoginStatus, 1000)
-  }
-}
-
 </script>
 
 <style scoped>
-.page-login{
+.page-admin-login{
   background-color: rgba(10, 10, 10, 0.2);
   height: 100%;
 }
 
-.text-border{
-  display: flex;
-  align-items: center;
-}
-
-.text-border::before,
-.text-border::after {
-  content: "";
-  flex-grow: 1;
-  height: 1px;
-  background-color: #ccc;
-}
-
-.text-border::before {
-  margin-right: 15px;
-}
-
-.text-border::after {
-  margin-left: 15px;
+.card-position{
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  height: 310px;
 }
 </style>
