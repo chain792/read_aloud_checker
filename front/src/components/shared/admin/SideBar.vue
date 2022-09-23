@@ -9,11 +9,11 @@
     <v-divider color="white"></v-divider>
     <v-list class="bg-blue-grey-darken-4">
       <v-list-item
-        v-for="[icon, text] in links"
-        :key="icon"
-        link
+        v-for="[icon, text, link] in links"
+        :key="link"
+        :to="{ name: link }"
       >
-        <v-icon>{{ icon }}</v-icon>
+        <v-icon class="mr-1">{{ icon }}</v-icon>
         <v-list-item-content>
           <v-list-item-title>{{ text }}</v-list-item-title>
         </v-list-item-content>
@@ -25,10 +25,7 @@
 <script setup lang="ts">
 
 const links = [
-      ['mdi-inbox-arrow-down', 'Inbox'],
-      ['mdi-send', 'Send'],
-      ['mdi-delete', 'Trash'],
-      ['mdi-alert-octagon', 'Spam'],
+  ['mdi-account', 'ユーザー一覧', 'AdminUsers'],
 ]
 
 </script>
