@@ -1,5 +1,4 @@
 class Api::V1::SentencesController < ApplicationController
-  include Api::Kaminari
   skip_before_action :authenticate!, only: %i[show]
 
   def show

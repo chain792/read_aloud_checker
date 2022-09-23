@@ -1,5 +1,4 @@
 class Api::V1::UserSentencesController < ApplicationController
-  include Api::Kaminari
   skip_before_action :authenticate!
 
   def index

@@ -1,6 +1,4 @@
 class Api::V1::User::SentencesController < ApplicationController
-  include Api::Kaminari
-
   def index
     sentences = current_user.sentences.order(created_at: :desc).page(params[:page])
     pagenation = resources_with_pagination(sentences)
