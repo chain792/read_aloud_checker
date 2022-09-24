@@ -32,7 +32,30 @@
           <td>{{ item.email }}</td>
           <td>{{ item.role }}</td>
           <td>{{ item.createdAt }}</td>
-          <td></td>
+          <td class="d-flex align-center">
+            <!-- 詳細ボタン -->
+            <v-btn  
+              class="mr-3"
+              color="info"
+            >
+              詳細
+            </v-btn>
+            <!-- 編集ボタン -->
+            <v-btn  
+              class="mr-3" 
+              color="success"
+            >
+              編集
+            </v-btn>
+            <!-- 削除ボタン -->
+            <v-btn 
+              class=""
+              color="error"
+              @click="deleteUser(item.id)"
+            >
+              削除
+            </v-btn>
+          </td>
         </tr>
       </tbody>
     </v-table>
@@ -50,6 +73,7 @@
 import { ref } from "vue"
 import axios from "@/plugins/axios"
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router"
+import { useFlashStore } from "@/store/flashStore";
 
 interface User {
   id: number
@@ -61,12 +85,14 @@ interface User {
 
 const router = useRouter()
 const route = useRoute()
+const flashStore = useFlashStore()
 
 const users = ref<Array<User>>([])
 
 const queryValueOfPage = route.query.page? Number(route.query.page) : undefined
 const page = ref(queryValueOfPage)
 const paginationLength = ref(1)
+
 
 const fetchUsers = async (page?: string | number): Promise<void> => {
   try{
@@ -89,6 +115,18 @@ onBeforeRouteUpdate(async (to) => {
   await fetchUsers(to.query.page as string)
 })
 
+const deleteUser = async (id: number): Promise<void> => {
+  if(confirm('削除してよろしいですか？')){
+    try{
+      await axios.delete(`admin/users/${id}`)
+      users.value = users.value.filter((user: User) => user.id != id)
+      flashStore.succeedDeleteUser()
+    } catch(e) {
+      console.log(e)
+      flashStore.failDeleteUser()
+    }
+  }
+}
 </script>
 
 <style scoped>

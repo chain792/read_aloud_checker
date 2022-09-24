@@ -23,6 +23,16 @@ export const useFlashStore = defineStore("flash", {
       this.message = "ユーザー登録に失敗しました"
       this.color = "red-accent-3"
     },
+    succeedDeleteUser(): void {
+      this.status = true
+      this.message = "ユーザーを削除しました"
+      this.color = "red-accent-3"
+    },
+    failDeleteUser(): void {
+      this.status = true
+      this.message = "ユーザーの削除に失敗しました"
+      this.color = "red-accent-3"
+    },
     succeedLogin(): void {
       this.status = true
       this.message = "ログインしました"

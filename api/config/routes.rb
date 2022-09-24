@@ -44,7 +44,7 @@ Rails.application.routes.draw do
       end
       get 'health_check', to: 'health_checks#index'
       namespace :admin do
-        resources :users, only: %i[index]
+        resources :users, only: %i[index destroy]
         post 'login', to: 'sessions#create'
       end
     end
