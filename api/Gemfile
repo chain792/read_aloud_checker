@@ -58,6 +58,7 @@ gem 'fog-aws'
 # ページネーション
 gem 'kaminari-activerecord'
 
+# 検索
 gem 'ransack'
 
 group :development, :test do
