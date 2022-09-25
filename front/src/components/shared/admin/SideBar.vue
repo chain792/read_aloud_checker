@@ -14,9 +14,7 @@
         :to="{ name: link }"
       >
         <v-icon class="mr-1">{{ icon }}</v-icon>
-        <v-list-item-content>
-          <v-list-item-title>{{ text }}</v-list-item-title>
-        </v-list-item-content>
+        <v-list-item-title>{{ text }}</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
