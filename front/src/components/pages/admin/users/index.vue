@@ -70,6 +70,7 @@
             <v-btn  
               class="mr-3"
               color="info"
+              @click="openUserDialog(item)"
             >
               詳細
             </v-btn>
@@ -77,6 +78,7 @@
             <v-btn  
               class="mr-3" 
               color="success"
+              @click="openEditUserDialog(item)"
             >
               編集
             </v-btn>
@@ -100,15 +102,104 @@
       @update:model-value="paginate(page as number)"
     ></v-pagination>
   </v-container>
+  <!-- ユーザー詳細モーダル -->
+  <v-dialog v-model="userDialog">
+    <div class="page-profile py-5 pt-sm-10">
+      <v-card width="600" class="mx-auto px-3 px-sm-5 py-3">
+        <v-card-item>
+          <v-card-title class="text-h6 text-center text-grey-darken-3 font-weight-bold tracking-widest">ユーザー詳細</v-card-title>
+        </v-card-item>
+        <v-card-text class="mt-3">
+          <div class="text-center">
+            <img :src="imageUrl('avatar', itemUser!)" alt="アバター" class="avatar">
+          </div>
+          <div class="text-center mt-3">
+            <p class="text-subtitle-1 fs-small text-grey-darken-3">名前</p>
+            <v-divider length="42" thickness="2" color="silver mt-n1" class="mx-auto"></v-divider>
+            <p class="mt-2 text-body-1 fs-large tracking-wide">{{ itemUser?.name }}</p>
+          </div>
+          <div class="text-center mt-4">
+            <p class="text-subtitle-1 fs-small text-grey-darken-3">メールアドレス</p>
+            <v-divider length="110" thickness="2" color="silver mt-n1" class="mx-auto"></v-divider>
+            <p class="mt-2 text-body-1 tracking-wide">{{ itemUser?.email }}</p>
+          </div>
+        </v-card-text>
+      </v-card>
+    </div>
+  </v-dialog>
+
+
+  <!-- ユーザー編集モーダル -->
+  <v-dialog v-model="editUserDialog">
+    <v-card width="600" class="mt-n10 px-5 py-3">
+      <v-card-item>
+        <v-card-title class="text-center text-h5">プロフィール編集</v-card-title>
+        <v-card-subtitle v-if="errorMessages.length" class="mt-3">
+          <ErrorMessages :error-messages="errorMessages" />
+        </v-card-subtitle>
+      </v-card-item>
+      <v-card-text class="mt-3">
+        <v-form
+          v-model="validProfile"
+        >
+          <div class="mt-5">
+            <v-text-field
+              v-model="editedUser!.name"
+              label="名前"
+              placeholder="名前を入力"
+              color="blue"
+              density="comfortable"
+              variant="outlined"
+              required
+              :rules="nameRules"
+            ></v-text-field>
+          </div>
+          <div class="d-sm-flex justify-space-around">
+            <v-btn 
+              color="accent" 
+              @click="editUserDialog = false"
+            >
+              キャンセル
+            </v-btn>
+            <v-btn 
+              v-if="progress"
+              :disabled="true"
+              color="warning"
+              class="ml-sm-3 mt-3 mt-sm-0"
+            >
+              <v-progress-circular
+                size="20"
+                color="grey-darken-5"
+                indeterminate
+                width="3"
+              ></v-progress-circular>
+            </v-btn>
+            <v-btn
+              v-else
+              :disabled="!validProfile"
+              color="warning"
+              class="ml-sm-3 mt-3 mt-sm-0"
+              @click="updateProfile(editedUser)"
+            >
+              この内容で編集する
+            </v-btn>
+          </div>
+        </v-form>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, reactive } from "vue"
 import axios from "@/plugins/axios"
+import Axios from "axios"
 import qs from "qs"
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router"
 import { useFlashStore } from "@/store/flashStore";
 import { role_i18n } from "@/common/enum"
+import { imageUrl } from "@/common/imageUrl"
+import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 
 interface User {
   id: number
@@ -117,10 +208,15 @@ interface User {
   role: string
   createdAt: string
 }
+interface EditedUser {
+  id: number
+  name: string
+}
 
 const router = useRouter()
 const route = useRoute()
 const flashStore = useFlashStore()
+const errorMessages: string[] = reactive([])
 
 const users = ref<Array<User>>([])
 
@@ -136,6 +232,13 @@ const items = [
   { title: "管理者", value: 1 },
 ]
 const itemValue = ref("")
+const itemUser = ref<User | null>(null)
+const userDialog = ref(false)
+const editUserDialog = ref(false)
+const editedUser = reactive<EditedUser>({
+  id: 0,
+  name: ""
+})
 
 
 const fetchUsers = async (page?: string | number, q1?: string, q2?: string): Promise<void> => {
@@ -186,6 +289,54 @@ onBeforeRouteUpdate(async (to) => {
   await fetchUsers(to.query.page as string, to.query.q1 as string, to.query.q2 as string)
 })
 
+const openUserDialog = (user: User): void => {
+  itemUser.value = user
+  userDialog.value = true
+}
+
+const openEditUserDialog = (user: User): void => {
+  editedUser.id = user.id
+  editedUser.name = user.name
+  editUserDialog.value = true
+}
+
+
+const validProfile = ref(true)
+const nameRules = [
+  (v: string) => !!v || '名前を入力してください',
+  (v: string) => (v && v.length <= 50) || '50文字以内で入力してください' 
+]
+const progress = ref(false)
+
+
+const updateProfile = async (user: EditedUser): Promise<void> => {
+  progress.value = true
+  flashStore.$reset()
+  try{
+    errorMessages.splice(0)
+    const res = await axios.patch(`admin/users/${user.id}`, { user })
+    users.value = users.value.map((user: User) => {
+      if(user.id === res.data.user.id){
+        return res.data.user
+      }else{
+        return user
+      }
+    })
+    flashStore.succeedEditUser()
+    editUserDialog.value = false
+  } catch(e) {
+    if(Axios.isAxiosError(e) && e.response && e.response.data && Array.isArray(e.response.data)){
+      e.response.data.forEach(v => {
+        errorMessages.push(v)
+      })
+    }else{
+      console.log(e)
+    }
+    flashStore.failEditUser()
+  }
+  progress.value = false
+}
+
 const deleteUser = async (id: number): Promise<void> => {
   if(confirm('削除してよろしいですか？')){
     try{
@@ -209,4 +360,9 @@ const deleteUser = async (id: number): Promise<void> => {
   width: 160px;
 }
 
+.avatar{
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+}
 </style>

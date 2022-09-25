@@ -6,6 +6,15 @@ class Api::V1::Admin::UsersController < AdminController
     render json: pagenation.merge(JSON.parse UserResource.new(users).serialize)
   end
 
+  def update
+    user = User.find(params[:id])
+    if user.update(user_params)
+      render json: UserResource.new(user).serialize
+    else
+      render json: user.errors.full_messages, status: :bad_request
+    end
+  end
+
   def destroy
     user = User.find(params[:id])
     user.destroy!
@@ -15,6 +24,6 @@ class Api::V1::Admin::UsersController < AdminController
   private
 
   def user_params
-    params.require(:user).permit(:name, :email, :password)
+    params.require(:user).permit(:name)
   end
 end
