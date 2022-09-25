@@ -6,6 +6,7 @@ interface User {
   emailStatus: "unverified" | "verified" | "unset"
   name: string
   avatar: string
+  role: "general" | "admin"
   listeningSex: "male" | "female" | undefined
   createdAt: string
   updatedAt: string

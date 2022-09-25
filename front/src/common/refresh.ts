@@ -2,7 +2,7 @@ import axios from "axios"
 import { useUserStore } from "@/store/userStore"
 import { useTokenStore } from "@/store/tokenStore"
 
-export async function refresh(): Promise<boolean> {
+export async function refresh(): Promise<"general" | "admin" | false> {
   const tokenStore = useTokenStore()
   const userStore = useUserStore()
   try {
@@ -16,7 +16,7 @@ export async function refresh(): Promise<boolean> {
     console.log(res)
     userStore.setUser(res.data.user)
     tokenStore.setToken(res.data.token, res.data.expiredTime)
-    return true
+    return res.data.user.role
   } catch(e) {
     console.log(e)
     userStore.$reset()

@@ -160,11 +160,13 @@ const routes: Array<RouteRecordRaw> = [
         path: "",
         name: "AdminTopPage",
         component: AdminTopPage,
+        meta: { requiresAdmin: true }
       },
       {
         path: "users",
         name: "AdminUsers",
         component: AdminUsers,
+        meta: { requiresAdmin: true }
       },
     ]
   },
@@ -188,9 +190,15 @@ router.beforeEach(async (to: RouteLocationNormalized) => {
     if (to.matched.some(record => record.meta.requiresAuth) && !isSuccessRefresh ) {
       return { name: "Login" }
     }
+    if (to.matched.some(record => record.meta.requiresAdmin) && (!isSuccessRefresh || isSuccessRefresh !== 'admin')) {
+      return { name: "AdminLogin" }
+    }
   }else{
     if (to.matched.some(record => record.meta.requiresAuth) && !authUser) {
       return { name: "Login" }
+    }
+    if (to.matched.some(record => record.meta.requiresAdmin) && (!authUser || authUser.role !== 'admin')) {
+      return { name: "AdminLogin" }
     }
   }
 })
