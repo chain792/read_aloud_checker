@@ -1,5 +1,29 @@
 <template>
   <v-container>
+    <p class="text-h4 ml-5">ユーザー一覧</p>
+    <v-form
+      ref="form"
+      lazy-validation
+    >
+    <div style="width: 400px" class="d-flex mt-3 ml-3">
+      <v-text-field
+        v-model="searchWord"
+        label="検索"
+        placeholder="検索ワードを入力"
+        color="blue"
+        density="comfortable"
+        variant="outlined"
+      ></v-text-field>
+      <v-btn
+        color="blue" 
+        class="ml-3"
+        @click="searchUsers(searchWord)"
+      >
+        <p class="text-white">検索</p>
+      </v-btn>
+    </div>
+    </v-form>
+    <v-divider></v-divider>
     <v-table class="admin-dashboard-table">
       <thead>
         <tr>
@@ -72,6 +96,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import axios from "@/plugins/axios"
+import qs from "qs"
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router"
 import { useFlashStore } from "@/store/flashStore";
 
@@ -89,30 +114,56 @@ const flashStore = useFlashStore()
 
 const users = ref<Array<User>>([])
 
-const queryValueOfPage = route.query.page? Number(route.query.page) : undefined
-const page = ref(queryValueOfPage)
+const initialQueryOfPage = route.query.page? Number(route.query.page) : undefined
+const initialQueryOfQ = route.query.q? route.query.q as string : undefined
+const page = ref(initialQueryOfPage)
 const paginationLength = ref(1)
+const searchWord = ref("")
 
 
-const fetchUsers = async (page?: string | number): Promise<void> => {
+const fetchUsers = async (page?: string | number, word?: string): Promise<void> => {
   try{
-    const query =  page ? `?page=${page}` : ''
-    const res = await axios.get("admin/users" + query)
+    const res = await axios.get("admin/users",{
+      params: {
+        page,
+        q: {
+          name_cont: word
+        }
+      },
+      paramsSerializer: params => {
+        return qs.stringify(params)
+      }
+    })
     paginationLength.value= res.data.pagination.pages
     users.value = res.data.users
   } catch(e) {
     console.log(e)
   }
 }
-fetchUsers(queryValueOfPage)
+fetchUsers(initialQueryOfPage, initialQueryOfQ)
 
 const paginate = (page: number) => {
-  router.push({ name: "AdminUsers", query: { page } })
+  router.push({ 
+    name: "AdminUsers", 
+    query: { 
+      page,
+      q: route.query.q
+    } 
+  })
+}
+
+const searchUsers = (word: string) => {
+  router.push({ 
+    name: "AdminUsers", 
+    query: {
+      q: word
+    }
+  })
 }
 
 onBeforeRouteUpdate(async (to) => {
   users.value = []
-  await fetchUsers(to.query.page as string)
+  await fetchUsers(to.query.page as string, to.query.q as string)
 })
 
 const deleteUser = async (id: number): Promise<void> => {

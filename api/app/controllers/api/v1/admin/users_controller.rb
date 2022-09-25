@@ -1,6 +1,7 @@
 class Api::V1::Admin::UsersController < AdminController
   def index
-    users = User.order(created_at: :desc).page(params[:page])
+    q = User.ransack(params[:q])
+    users = q.result(distinct: true).order(created_at: :desc).page(params[:page])
     pagenation = resources_with_pagination(users)
     render json: pagenation.merge(JSON.parse UserResource.new(users).serialize)
   end
