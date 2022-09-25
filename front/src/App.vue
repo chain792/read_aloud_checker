@@ -115,11 +115,11 @@ body{
  ***************************************************/
  /* twitter */
 .twitter-btn{
-  background-color: #55acee;
+  background-color: #55acee !important;
 }
 
 .twitter-btn:hover{
-  background-color: #55a8ee;
+  background-color: #55a8ee !important;
 }
 
 .twitter-btn .v-btn__prepend{
