@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw, RouteLocationNormalized } from "vue-router"
 import TopPage from "@/components/pages/static/TopPage.vue"
+import DefaultLayout from "@/components/layouts/Default.vue"
+import AdminLayout from "@/components/layouts/Admin.vue"
 import { useUserStore } from "@/store/userStore"
 import { refresh, silentRefresh } from "@/common/refresh"
 
@@ -22,119 +24,158 @@ const Terms = () => import("@/components/pages/static/Terms.vue")
 const NewPasswordReset = () => import("@/components/pages/password_resets/new.vue")
 const PasswordResetSent = () => import("@/components/pages/password_resets/sent.vue")
 const EditPasswordReset = () => import("@/components/pages/password_resets/edit.vue")
+const AdminTopPage = () => import("@/components/pages/admin/static/TopPage.vue")
+const AdminLogin = () => import("@/components/pages/admin/login/index.vue")
+const AdminUsers = () => import("@/components/pages/admin/users/index.vue")
+const AdminSentences = () => import("@/components/pages/admin/sentences/index.vue")
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "TopPage",
-    component: TopPage,
+    component: DefaultLayout,
+    children: [
+      {
+        path: "",
+        name: "TopPage",
+        component: TopPage
+      },
+      {
+        path: "signup",
+        name: "Signup",
+        component: Signup
+      },
+      {
+        path: "login",
+        name: "Login",
+        component: Login,
+      },
+      {
+        path: "sentences/users",
+        name: "UserSentences",
+        component: UserSentences,
+      },
+      {
+        path: "sentences/news",
+        name: "NewsSentences",
+        component: NewsSentences,
+      },
+      {
+        path: "sentences/new",
+        name: "NewSentence",
+        component: NewSentence,
+      },
+      {
+        path: "sentences/:id",
+        name: "Sentence",
+        component: Sentence,
+        props: true
+      },
+      {
+        path: "sentences/:id/edit",
+        name: "EditSentence",
+        component: EditSentence,
+        props: true,
+        meta: { requiresAuth: true }
+      },
+      {
+        path: "sentences/bookmark",
+        name: "BookmarkSentences",
+        component: BookmarkSentences,
+        meta: { requiresAuth: true }
+      },
+      {
+        path: "users/:id",
+        name: "User",
+        component: User,
+        props: true
+      },
+      {
+        path: "profile",
+        name: "Profile",
+        component: Profile,
+        meta: { requiresAuth: true }
+      },
+      {
+        path: "mypage/history",
+        name: "MyHistory",
+        component: MyHistory,
+        meta: { requiresAuth: true }
+      },
+      {
+        path: "mypage/record",
+        name: "MyRecord",
+        component: MyRecord,
+        meta: { requiresAuth: true }
+      },
+      {
+        path: "mypage/sentences",
+        name: "MySentences",
+        component: MySentences,
+        meta: { requiresAuth: true }
+      },
+      {
+        path: "history/:id",
+        name: "History",
+        component: History,
+        props: true,
+        meta: { requiresAuth: true }
+      },
+      {
+        path: "privacy",
+        name: "Privacy",
+        component: Privacy,
+      },
+      {
+        path: "terms",
+        name: "Terms",
+        component: Terms,
+      },
+      {
+        path: "password_resets/new",
+        name: "NewPasswordReset",
+        component: NewPasswordReset,
+      },
+      {
+        path: "password_resets/sent",
+        name: "PasswordResetSent",
+        component: PasswordResetSent,
+      },
+      {
+        path: "password_resets/:id/edit",
+        name: "EditPasswordReset",
+        component: EditPasswordReset,
+        props: true,
+      },
+    ]
   },
   {
-    path: "/signup",
-    name: "Signup",
-    component: Signup,
+    path: "/admin/login",
+    name: "AdminLogin",
+    component: AdminLogin,
   },
   {
-    path: "/login",
-    name: "Login",
-    component: Login,
-  },
-  {
-    path: "/sentences/users",
-    name: "UserSentences",
-    component: UserSentences,
-  },
-  {
-    path: "/sentences/news",
-    name: "NewsSentences",
-    component: NewsSentences,
-  },
-  {
-    path: "/sentences/new",
-    name: "NewSentence",
-    component: NewSentence,
-  },
-  {
-    path: "/sentences/:id",
-    name: "Sentence",
-    component: Sentence,
-    props: true
-  },
-  {
-    path: "/sentences/:id/edit",
-    name: "EditSentence",
-    component: EditSentence,
-    props: true,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: "/sentences/bookmark",
-    name: "BookmarkSentences",
-    component: BookmarkSentences,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: "/users/:id",
-    name: "User",
-    component: User,
-    props: true
-  },
-  {
-    path: "/profile",
-    name: "Profile",
-    component: Profile,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: "/mypage/history",
-    name: "MyHistory",
-    component: MyHistory,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: "/mypage/record",
-    name: "MyRecord",
-    component: MyRecord,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: "/mypage/sentences",
-    name: "MySentences",
-    component: MySentences,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: "/history/:id",
-    name: "History",
-    component: History,
-    props: true,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: "/privacy",
-    name: "Privacy",
-    component: Privacy,
-  },
-  {
-    path: "/terms",
-    name: "Terms",
-    component: Terms,
-  },
-  {
-    path: "/password_resets/new",
-    name: "NewPasswordReset",
-    component: NewPasswordReset,
-  },
-  {
-    path: "/password_resets/sent",
-    name: "PasswordResetSent",
-    component: PasswordResetSent,
-  },
-  {
-    path: "/password_resets/:id/edit",
-    name: "EditPasswordReset",
-    component: EditPasswordReset,
-    props: true,
+    path: "/admin",
+    component: AdminLayout,
+    children: [
+      {
+        path: "",
+        name: "AdminTopPage",
+        component: AdminTopPage,
+        meta: { requiresAdmin: true }
+      },
+      {
+        path: "users",
+        name: "AdminUsers",
+        component: AdminUsers,
+        meta: { requiresAdmin: true }
+      },
+      {
+        path: "sentences",
+        name: "AdminSentences",
+        component: AdminSentences,
+        meta: { requiresAdmin: true }
+      },
+    ]
   },
 ]
 
@@ -156,9 +197,15 @@ router.beforeEach(async (to: RouteLocationNormalized) => {
     if (to.matched.some(record => record.meta.requiresAuth) && !isSuccessRefresh ) {
       return { name: "Login" }
     }
+    if (to.matched.some(record => record.meta.requiresAdmin) && (!isSuccessRefresh || isSuccessRefresh !== 'admin')) {
+      return { name: "AdminLogin" }
+    }
   }else{
     if (to.matched.some(record => record.meta.requiresAuth) && !authUser) {
       return { name: "Login" }
+    }
+    if (to.matched.some(record => record.meta.requiresAdmin) && (!authUser || authUser.role !== 'admin')) {
+      return { name: "AdminLogin" }
     }
   }
 })

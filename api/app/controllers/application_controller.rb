@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::API
   include ActionController::Cookies
   include Api::UserAuthenticator
+  include Api::Kaminari
   before_action :xhr_request?
   before_action :authenticate!
 
