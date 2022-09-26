@@ -13,7 +13,7 @@
         :key="link"
         :to="{ name: link }"
       >
-        <v-icon class="mr-1">{{ icon }}</v-icon>
+        <v-icon class="mr-2">{{ icon }}</v-icon>
         <v-list-item-title>{{ text }}</v-list-item-title>
       </v-list-item>
     </v-list>
@@ -24,6 +24,7 @@
 
 const links = [
   ['mdi-account', 'ユーザー一覧', 'AdminUsers'],
+  ['mdi-newspaper', '英文一覧', 'AdminSentences'],
 ]
 
 </script>

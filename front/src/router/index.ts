@@ -27,6 +27,7 @@ const EditPasswordReset = () => import("@/components/pages/password_resets/edit.
 const AdminTopPage = () => import("@/components/pages/admin/static/TopPage.vue")
 const AdminLogin = () => import("@/components/pages/admin/login/index.vue")
 const AdminUsers = () => import("@/components/pages/admin/users/index.vue")
+const AdminSentences = () => import("@/components/pages/admin/sentences/index.vue")
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -166,6 +167,12 @@ const routes: Array<RouteRecordRaw> = [
         path: "users",
         name: "AdminUsers",
         component: AdminUsers,
+        meta: { requiresAdmin: true }
+      },
+      {
+        path: "sentences",
+        name: "AdminSentences",
+        component: AdminSentences,
         meta: { requiresAdmin: true }
       },
     ]
