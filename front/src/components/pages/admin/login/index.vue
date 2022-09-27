@@ -40,28 +40,15 @@
             @click:append-inner="isVisiblePassword = !isVisiblePassword"
           ></v-text-field>
 
-          <v-btn 
-            v-if="progress"
-            :disabled="true"
-            color="warning"
+          <ProgressButton
             width="100%"
-          >
-            <v-progress-circular
-              size="20"
-              color="grey-darken-5"
-              indeterminate
-              width="3"
-            ></v-progress-circular>
-          </v-btn>
-          <v-btn
-            v-else
+            color="warning"
+            :progress="progress"
             :disabled="!valid"
-            color="warning"
-            width="100%"
             @click="login"
           >
             ログイン
-          </v-btn>
+          </ProgressButton>
         </v-form>
       </v-card-text>
     </v-card>
@@ -78,6 +65,7 @@ import { useTokenStore } from "@/store/tokenStore"
 import { useRouter } from 'vue-router'
 import { useDisplay } from "vuetify"
 import FlashMessage from '@/components/shared/FlashMessage.vue'
+import ProgressButton from "@/components/shared/ProgressButton.vue"
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()

@@ -83,30 +83,16 @@
             >
               キャンセル
             </v-btn>
-            <v-btn 
-              v-if="progress"
-              :disabled="true"
+            <ProgressButton
               color="warning"
-              :width="buttonWidthV2(190)"
-              class="ml-sm-3 mt-3 mt-sm-0"
-            >
-              <v-progress-circular
-                size="20"
-                color="grey-darken-5"
-                indeterminate
-                width="3"
-              ></v-progress-circular>
-            </v-btn>
-            <v-btn
-              v-else
+              :progress="progress"
               :disabled="!validProfile"
-              color="warning"
               :width="buttonWidthV2(190)"
               class="ml-sm-3 mt-3 mt-sm-0"
               @click="updateProfile"
             >
               この内容で編集する
-            </v-btn>
+            </ProgressButton>
           </div>
         </v-form>
       </v-card-text>
@@ -311,6 +297,7 @@ import { imageUrl } from "@/common/imageUrl"
 import { useDisplay } from "vuetify"
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
+import ProgressButton from "@/components/shared/ProgressButton.vue"
 
 
 const userStore = useUserStore()

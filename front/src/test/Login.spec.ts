@@ -5,6 +5,7 @@ import { describe, test, expect, beforeEach } from 'vitest'
 import { createVuetify } from "vuetify"
 import * as components from "vuetify/components"
 import * as directives from "vuetify/directives"
+import router from '@/router'
 
 
 describe("ログインページ", () => {
@@ -13,7 +14,7 @@ describe("ログインページ", () => {
   beforeEach(() => {
     wrapper = mount(Login, {
       global: {
-        plugins: [createTestingPinia(), vuetify],
+        plugins: [createTestingPinia(), vuetify, router],
       },
     })
   })

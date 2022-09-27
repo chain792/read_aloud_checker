@@ -161,28 +161,15 @@
             >
               キャンセル
             </v-btn>
-            <v-btn 
-              v-if="progress"
-              :disabled="true"
+            <ProgressButton
               color="warning"
-              class="ml-sm-3 mt-3 mt-sm-0"
-            >
-              <v-progress-circular
-                size="20"
-                color="grey-darken-5"
-                indeterminate
-                width="3"
-              ></v-progress-circular>
-            </v-btn>
-            <v-btn
-              v-else
+              :progress="progress"
               :disabled="!validProfile"
-              color="warning"
               class="ml-sm-3 mt-3 mt-sm-0"
               @click="updateProfile(editedUser)"
             >
               この内容で編集する
-            </v-btn>
+            </ProgressButton>
           </div>
         </v-form>
       </v-card-text>
@@ -200,6 +187,7 @@ import { useFlashStore } from "@/store/flashStore";
 import { role_i18n } from "@/common/enum"
 import { imageUrl } from "@/common/imageUrl"
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
+import ProgressButton from "@/components/shared/ProgressButton.vue"
 
 interface User {
   id: number

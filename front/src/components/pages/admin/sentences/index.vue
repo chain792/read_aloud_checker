@@ -174,30 +174,15 @@
             ></v-radio>
           </v-radio-group>
 
-          <v-btn 
-            v-if="progress"
+          <ProgressButton
             width="100%"
-            color="warning" 
-            :disabled="true"
-          >
-            <v-progress-circular
-              size="20"
-              color="grey-darken-5"
-              indeterminate
-              width="3"
-              class="progress2"
-            ></v-progress-circular>
-          </v-btn>
-          <v-btn
-            v-else
-            :disabled="!valid"
             color="warning"
-            class=""
-            width="100%"
+            :progress="progress"
+            :disabled="!valid"
             @click="updateSentences(editedSentence)"
           >
-             編集
-          </v-btn>
+            編集
+          </ProgressButton>
 
         </v-form>
       </v-card-text>
@@ -213,6 +198,7 @@ import qs from "qs"
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router"
 import { useFlashStore } from "@/store/flashStore";
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
+import ProgressButton from "@/components/shared/ProgressButton.vue"
 
 interface Sentence {
   id: string

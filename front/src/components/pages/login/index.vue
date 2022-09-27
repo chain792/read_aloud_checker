@@ -38,29 +38,15 @@
             :append-inner-icon="isVisiblePassword ? 'mdi-eye' : 'mdi-eye-off'"
             @click:append-inner="isVisiblePassword = !isVisiblePassword"
           ></v-text-field>
-
-          <v-btn 
-            v-if="progress"
-            :disabled="true"
-            color="warning"
+          <ProgressButton
             width="100%"
-          >
-            <v-progress-circular
-              size="20"
-              color="grey-darken-5"
-              indeterminate
-              width="3"
-            ></v-progress-circular>
-          </v-btn>
-          <v-btn
-            v-else
+            color="warning"
+            :progress="progress"
             :disabled="!valid"
-            color="warning"
-            width="100%"
             @click="login"
           >
             ログイン
-          </v-btn>
+          </ProgressButton>
           <div class="mt-2">
             <router-link :to="{ name: 'NewPasswordReset' }" class="link-text text-blue-accent-4">パスワードを忘れた場合はこちら</router-link>
           </div>
@@ -111,6 +97,7 @@ import { useTokenStore } from "@/store/tokenStore"
 import { useRouter } from 'vue-router'
 import { refresh } from "@/common/refresh"
 import { useDisplay } from "vuetify"
+import ProgressButton from "@/components/shared/ProgressButton.vue"
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
