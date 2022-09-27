@@ -9,7 +9,7 @@ interface User {
   email: string
   name: string
   avatar: string
-  listeningSex: "male" | "female" | undefined
+  listeningSex?: "male" | "female"
   createdAt: string
   updatedAt: string
 }
@@ -18,7 +18,7 @@ type AuthUser = User | null
 
 export function speechUrl(object: S3Object, user: AuthUser): string {
   let speechPath = ''
-  if(!user){
+  if(!user || !user.listeningSex){
     speechPath = `sentence/speech/${object.id}/${object.femaleSpeech}`
   }else{
     switch (user.listeningSex) {
