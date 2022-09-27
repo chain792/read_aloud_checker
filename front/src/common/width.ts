@@ -1,6 +1,25 @@
 import { useDisplay } from 'vuetify/lib/framework.mjs';
 import { computed } from "vue"
 
+// 600px以下
+export const spScreen = computed<boolean>(() => {
+  const display = useDisplay()
+  if (display.xs.value) {
+    return true
+  } else {
+    return false
+  }
+})
+
+// 960px以上
+export const pcScreen = computed<boolean>(() => {
+  const display = useDisplay()
+  if (display.xs.value || display.sm.value) {
+    return false
+  } else {
+    return true
+  }
+})
 
 export const responsiveWidth190 = computed<string | number>(() => {
   const display = useDisplay()

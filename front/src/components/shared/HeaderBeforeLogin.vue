@@ -56,11 +56,10 @@
 import { ref, computed, ComputedRef } from "vue"
 import { useHeaderStore } from "@/store/headerStore"
 import { useRouter } from 'vue-router'
-import { useDisplay } from "vuetify"
+import { spScreen } from "@/common/width";
 
 const headerStore = useHeaderStore()
 const router = useRouter()
-const display = useDisplay()
 
 const headerColor: ComputedRef<string> = computed(() => {
   if(headerStore.isOpacity){
@@ -75,14 +74,6 @@ const headerElevation: ComputedRef<string> = computed(() => {
     return '0'
   }else{
     return '1'
-  }
-})
-
-const spScreen: ComputedRef<boolean> = computed(() => {
-  if (display.xs.value) {
-    return true
-  } else {
-    return false
   }
 })
 

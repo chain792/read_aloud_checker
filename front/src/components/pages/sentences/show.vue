@@ -6,7 +6,7 @@
 
         <div v-if="writer">
           <v-btn 
-            v-if="display.xs.value" 
+            v-if="spScreen" 
             class="icon-btn mr-5" 
             elevation="0" 
             icon 
@@ -216,14 +216,12 @@ import LoginRequiredModal from "@/components/shared/LoginRequiredModal.vue"
 import { speechUrl } from "@/common/speechUrl"
 import { toWords } from "number-to-words"
 import { useRouter } from 'vue-router'
-import { useDisplay } from "vuetify"
 import { imageUrl } from "@/common/imageUrl"
-import { modalWidth500 } from "@/common/width"
+import { modalWidth500, spScreen } from "@/common/width"
 
 const flashStore = useFlashStore()
 const userStore = useUserStore()
 const router = useRouter()
-const display = useDisplay()
 
 interface Props {
   id: string
