@@ -1,6 +1,6 @@
 <template>
   <div class="page-new-passwordreset py-5 pt-sm-10">
-    <v-card :width="cardWidth" class="mx-auto px-3 px-sm-5 py-3">
+    <v-card :width="responsiveWidth600" class="mx-auto px-3 px-sm-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">パスワード再設定のご案内</v-card-title>
       </v-card-item>
@@ -43,23 +43,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, ComputedRef } from "vue"
+import { ref } from "vue"
 import axios from "@/plugins/axios"
 import { useFlashStore } from "@/store/flashStore"
 import { useRouter } from 'vue-router'
-import { useDisplay } from "vuetify"
+import { responsiveWidth600 } from "@/common/width"
 
 const flashStore = useFlashStore()
 const router = useRouter()
-const display = useDisplay()
-
-const cardWidth: ComputedRef<string | number> = computed(() => {
-  if (display.xs.value) {
-    return '100%'
-  } else {
-    return 600
-  }
-})
 
 const valid = ref(true)
 const email = ref("")

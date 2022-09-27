@@ -1,6 +1,6 @@
 <template>
   <div class="page-new-sentence py-5 pt-sm-10">
-    <v-card :width="cardWidth" class="mx-auto px-5 py-3">
+    <v-card :width="responsiveWidth800" class="mx-auto px-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">英文投稿</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
@@ -64,26 +64,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, ComputedRef } from "vue"
+import { ref, reactive } from "vue"
 import axios from "@/plugins/axios"
 import Axios from "axios"
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 import { useFlashStore } from "@/store/flashStore"
 import { useRouter } from 'vue-router'
-import { useDisplay } from "vuetify"
 import ProgressButton from "@/components/shared/ProgressButton.vue"
+import { responsiveWidth800 } from "@/common/width"
 
 const flashStore = useFlashStore()
 const router = useRouter()
-const display = useDisplay()
-
-const cardWidth: ComputedRef<string | number> = computed(() => {
-  if (display.xs.value || display.sm.value) {
-    return '100%'
-  } else {
-    return 800
-  }
-})
 
 const valid = ref(true)
 const sentence = reactive({

@@ -65,7 +65,7 @@
   <teleport to="body">
     <div v-show="settingsDialog" class="modal" @click="settingsDialog = false" ></div>
     <div v-show="settingsDialog" class="modal-content">
-      <v-card :width="modalWidth" class="mx-assto px-5 py-3">
+      <v-card :width="modalWidth500" class="mx-assto px-5 py-3">
         <v-card-item>
           <div class="d-flex">
             <v-card-title class="text-h6 ml-auto">お手本の音声の性別を変更する</v-card-title>
@@ -100,6 +100,7 @@ import { useHeaderStore } from "@/store/headerStore"
 import { useRouter } from 'vue-router'
 import { imageUrl } from "@/common/imageUrl"
 import { useDisplay } from "vuetify"
+import { modalWidth500 } from "@/common/width"
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
@@ -108,13 +109,6 @@ const headerStore = useHeaderStore()
 const router = useRouter()
 const display = useDisplay()
 
-const modalWidth: ComputedRef<string | number> = computed(() => {
-  if (display.xs.value) {
-    return display.width.value
-  } else {
-    return 500
-  }
-})
 
 const headerColor: ComputedRef<string> = computed(() => {
   if(headerStore.isOpacity){

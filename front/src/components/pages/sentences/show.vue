@@ -164,7 +164,7 @@
   </div>
   <!-- 削除確認モーダル -->
   <v-dialog v-model="deleteConfirmModal">
-    <v-card :width="modalWidth" class="mx-auto px-5 py-3">
+    <v-card :width="modalWidth500" class="mx-auto px-5 py-3">
     <v-card-item>
       <div class="d-flex">
         <v-card-title class="text-h6 mx-auto">英文を削除する</v-card-title>
@@ -218,6 +218,7 @@ import { toWords } from "number-to-words"
 import { useRouter } from 'vue-router'
 import { useDisplay } from "vuetify"
 import { imageUrl } from "@/common/imageUrl"
+import { modalWidth500 } from "@/common/width"
 
 const flashStore = useFlashStore()
 const userStore = useUserStore()
@@ -235,14 +236,6 @@ interface User {
   name: string
   avatar: string
 }
-
-const modalWidth: ComputedRef<string | number> = computed(() => {
-  if (display.xs.value) {
-    return display.width.value
-  } else {
-    return 500
-  }
-})
 
 const props = defineProps<Props>()
 const sentence = ref({

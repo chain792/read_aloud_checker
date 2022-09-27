@@ -1,6 +1,6 @@
 <template>
   <div class="page-profile py-5 pt-sm-10">
-    <v-card :width="cardWidth" class="mx-auto px-3 px-sm-5 py-3">
+    <v-card :width="responsiveWidth600" class="mx-auto px-3 px-sm-5 py-3">
       <v-card-item>
         <v-card-title class="text-h6 text-center text-grey-darken-3 font-weight-bold tracking-widest">プロフィール</v-card-title>
       </v-card-item>
@@ -37,7 +37,7 @@
 
   <!-- プロフィール編集モーダル -->
   <v-dialog v-model="profileDialog">
-    <v-card :width="modalWidth" class="mt-n10 px-5 py-3">
+    <v-card :width="modalWidth400" class="mt-n10 px-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">プロフィール編集</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
@@ -78,7 +78,7 @@
           <div class="d-sm-flex justify-space-around">
             <v-btn 
               color="accent" 
-              :width="buttonWidth" 
+              :width="responsiveButtonWidth" 
               @click="profileDialog = false"
             >
               キャンセル
@@ -87,7 +87,7 @@
               color="warning"
               :progress="progress"
               :disabled="!validProfile"
-              :width="buttonWidthV2(190)"
+              :width="responsiveWidth190"
               class="ml-sm-3 mt-3 mt-sm-0"
               @click="updateProfile"
             >
@@ -101,7 +101,7 @@
 
   <!-- トリミングダイアログ -->
   <v-dialog v-model="trimmingDialog">
-    <v-card :width="trimedmodalWidth" class="mt-n10 px-5 py-3">
+    <v-card :width="modalWidth600" class="mt-n10 px-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">画像の切り抜き</v-card-title>
       </v-card-item>
@@ -146,7 +146,7 @@
 
   <!-- メールアドレス変更モーダル -->
   <v-dialog v-model="emailDialog">
-    <v-card :width="modalWidth" class="mt-n10 px-5 py-3">
+    <v-card :width="modalWidth400" class="mt-n10 px-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">メールアドレスの変更</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
@@ -186,7 +186,7 @@
           <div class="d-sm-flex justify-space-around">
             <v-btn 
               color="accent"
-              :width="buttonWidth" 
+              :width="responsiveButtonWidth" 
               @click="emailDialog = false"
             >
               キャンセル
@@ -194,7 +194,7 @@
             <v-btn
               :disabled="!validEmail"
               color="warning"
-              :width="buttonWidth"
+              :width="responsiveButtonWidth"
               class="ml-sm-3 mt-3 mt-sm-0"
               @click="updateEmail"
             >
@@ -208,7 +208,7 @@
 
   <!-- パスワード変更モーダル -->
   <v-dialog v-model="passwordDialog">
-    <v-card :width="modalWidth" class="mt-n10 px-5 py-3">
+    <v-card :width="modalWidth400" class="mt-n10 px-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">パスワードの変更</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
@@ -264,7 +264,7 @@
           <div class="d-sm-flex justify-space-around">
             <v-btn 
               color="accent"
-              :width="buttonWidth"
+              :width="responsiveButtonWidth"
               @click="passwordDialog = false"
             >
               キャンセル
@@ -272,7 +272,7 @@
             <v-btn
               :disabled="!validPassword"
               color="warning"
-              :width="buttonWidth"
+              :width="responsiveButtonWidth"
               class="ml-sm-3 mt-3 mt-sm-0"
               @click="updatePassword"
             >
@@ -294,57 +294,16 @@ import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 import { useUserStore } from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
 import { imageUrl } from "@/common/imageUrl"
-import { useDisplay } from "vuetify"
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
 import ProgressButton from "@/components/shared/ProgressButton.vue"
+import { modalWidth400, modalWidth600, responsiveWidth190, responsiveWidth600, responsiveButtonWidth } from "@/common/width"
 
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
 const currentUser = reactive(userStore.authUser!)
 const errorMessages: string[] = reactive([])
-const display = useDisplay()
-
-const cardWidth: ComputedRef<string | number> = computed(() => {
-  if (display.xs.value) {
-    return '100%'
-  } else {
-    return 600
-  }
-})
-
-const modalWidth: ComputedRef<string | number> = computed(() => {
-  if (display.xs.value) {
-    return display.width.value
-  } else {
-    return 400
-  }
-})
-
-const trimedmodalWidth: ComputedRef<string | number> = computed(() => {
-  if (display.xs.value) {
-    return display.width.value
-  } else {
-    return 600
-  }
-})
-
-const buttonWidth: ComputedRef<string | number | undefined> = computed(() => {
-  if (display.xs.value) {
-    return '100%'
-  } else {
-    return undefined
-  }
-})
-
-const buttonWidthV2 = (width: number): string | number => {
-  if (display.xs.value) {
-    return '100%'
-  } else {
-    return width
-  }
-}
 
 const currentUserEmail: ComputedRef<string> = computed(() => {
   if(currentUser.emailStatus === "unset"){
