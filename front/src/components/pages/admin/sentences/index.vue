@@ -6,14 +6,11 @@
       lazy-validation
     >
       <div style="width: 500px" class="d-flex mt-3 ml-3">
-        <v-text-field
+        <BaseTextField
           v-model="searchWord"
           label="検索"
           placeholder="検索ワードを入力"
-          color="blue"
-          density="comfortable"
-          variant="outlined"
-        ></v-text-field>
+        ></BaseTextField>
         <div class="select-container">
           <v-select
             v-model="itemValue"
@@ -140,16 +137,13 @@
           v-model="valid"
           lazy-validation
         >
-          <v-text-field
+          <BaseTextField
             v-model="editedSentence.title"
             label="タイトル"
             placeholder="英文のタイトルを入力"
-            color="blue"
-            density="comfortable"
-            variant="outlined"
             required
             :rules="titleRules"
-          ></v-text-field>
+          ></BaseTextField>
 
           <v-textarea
             v-model="editedSentence.body"
@@ -199,6 +193,8 @@ import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router"
 import { useFlashStore } from "@/store/flashStore";
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 import ProgressButton from "@/components/shared/ProgressButton.vue"
+import BaseTextField from "@/components/shared/form/BaseTextField.vue"
+import { titleRules } from "@/common/rules"
 
 interface Sentence {
   id: string
@@ -309,10 +305,7 @@ const openEditSentenceDialog = (sentence: Sentence): void => {
 
 
 const valid = ref(true)
-const titleRules = [
-  (v: string) => !!v || 'タイトルを入力してください',
-  (v: string) => (v && v.length <= 100) || '100文字以内で入力してください' 
-]
+
 const bodyRules = [
   (v: string) => !!v || '本文を入力してください',
   (v: string) => (v && v.length <= 10000) || '10000文字以内で入力してください' 

@@ -64,16 +64,13 @@
             <input ref="fileInput" type="file" accept="image/*" style="display: none;" @change="previewAvatar">
           </div>
           <div class="mt-5">
-            <v-text-field
+            <BaseTextField
               v-model="user.name"
               label="名前"
               placeholder="名前を入力"
-              color="blue"
-              density="comfortable"
-              variant="outlined"
               required
               :rules="nameRules"
-            ></v-text-field>
+            ></BaseTextField>
           </div>
           <div class="d-sm-flex justify-space-around">
             <v-btn 
@@ -268,6 +265,8 @@ import ProgressButton from "@/components/shared/ProgressButton.vue"
 import { modalWidth400, modalWidth600, responsiveWidth190, responsiveWidth600, responsiveButtonWidth } from "@/common/width"
 import EmailTextField from "@/components/shared/form/EmailTextField.vue"
 import PasswordTextField from "@/components/shared/form/PasswordTextField.vue"
+import { nameRules } from "@/common/rules"
+import BaseTextField from "@/components/shared/form/BaseTextField.vue"
 
 
 const userStore = useUserStore()
@@ -304,10 +303,6 @@ let uploadFileType: string = ""
 const profileForm: Ref<any> = ref(null)
 const profileDialog = ref(false)
 const validProfile = ref(true)
-const nameRules = [
-  (v: string) => !!v || '名前を入力してください',
-  (v: string) => (v && v.length <= 50) || '50文字以内で入力してください' 
-]
 const fileInput = ref<HTMLInputElement>()
 const preview = ref<HTMLImageElement>()
 const cropper = ref<any>()

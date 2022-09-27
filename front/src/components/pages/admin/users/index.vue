@@ -6,14 +6,11 @@
       lazy-validation
     >
       <div style="width: 500px" class="d-flex mt-3 ml-3">
-        <v-text-field
+        <BaseTextField
           v-model="searchWord"
           label="検索"
           placeholder="検索ワードを入力"
-          color="blue"
-          density="comfortable"
-          variant="outlined"
-        ></v-text-field>
+        ></BaseTextField>
         <div class="select-container">
           <v-select
             v-model="itemValue"
@@ -143,16 +140,13 @@
           v-model="validProfile"
         >
           <div class="mt-5">
-            <v-text-field
+            <BaseTextField
               v-model="editedUser!.name"
               label="名前"
               placeholder="名前を入力"
-              color="blue"
-              density="comfortable"
-              variant="outlined"
               required
               :rules="nameRules"
-            ></v-text-field>
+            ></BaseTextField>
           </div>
           <div class="d-sm-flex justify-space-around">
             <v-btn 
@@ -188,6 +182,8 @@ import { role_i18n } from "@/common/enum"
 import { avatarUrl } from "@/common/imageUrl"
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 import ProgressButton from "@/components/shared/ProgressButton.vue"
+import BaseTextField from "@/components/shared/form/BaseTextField.vue"
+import { nameRules } from "@/common/rules"
 
 interface User {
   id: number
@@ -290,10 +286,7 @@ const openEditUserDialog = (user: User): void => {
 
 
 const validProfile = ref(true)
-const nameRules = [
-  (v: string) => !!v || '名前を入力してください',
-  (v: string) => (v && v.length <= 50) || '50文字以内で入力してください' 
-]
+
 const progress = ref(false)
 
 

@@ -13,16 +13,13 @@
           v-model="valid"
           lazy-validation
         >
-          <v-text-field
+          <BaseTextField
             v-model="user.name"
             label="名前"
             placeholder="名前を入力"
-            color="blue"
-            density="comfortable"
-            variant="outlined"
             required
             :rules="nameRules"
-          ></v-text-field>
+          ></BaseTextField>
 
           <EmailTextField
             v-model="user.email"
@@ -97,6 +94,8 @@ import ProgressButton from "@/components/shared/ProgressButton.vue"
 import { responsiveWidth400 } from "@/common/width"
 import EmailTextField from "@/components/shared/form/EmailTextField.vue"
 import PasswordTextField from "@/components/shared/form/PasswordTextField.vue"
+import { nameRules } from "@/common/rules"
+import BaseTextField from "@/components/shared/form/BaseTextField.vue"
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
@@ -112,10 +111,6 @@ const user = reactive({
   password: ""
 })
 
-const nameRules = [
-  (v: string) => !!v || '名前を入力してください',
-  (v: string) => (v && v.length <= 50) || '50文字以内で入力してください' 
-]
 
 const errorMessages: string[] = reactive([])
 

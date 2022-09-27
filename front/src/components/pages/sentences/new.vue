@@ -13,16 +13,13 @@
           v-model="valid"
           lazy-validation
         >
-          <v-text-field
+          <BaseTextField
             v-model="sentence.title"
             label="タイトル"
             placeholder="英文のタイトルを入力"
-            color="blue"
-            density="comfortable"
-            variant="outlined"
             required
             :rules="titleRules"
-          ></v-text-field>
+          ></BaseTextField>
 
           <v-textarea
             v-model="sentence.body"
@@ -72,6 +69,8 @@ import { useFlashStore } from "@/store/flashStore"
 import { useRouter } from 'vue-router'
 import ProgressButton from "@/components/shared/ProgressButton.vue"
 import { responsiveWidth800 } from "@/common/width"
+import { titleRules } from "@/common/rules"
+import BaseTextField from "@/components/shared/form/BaseTextField.vue"
 
 const flashStore = useFlashStore()
 const router = useRouter()
@@ -82,10 +81,6 @@ const sentence = reactive({
   body: "",
   status: 'public_state'
 })
-const titleRules = [
-  (v: string) => !!v || 'タイトルを入力してください',
-  (v: string) => (v && v.length <= 100) || '100文字以内で入力してください' 
-]
 const bodyRules = [
   (v: string) => !!v || '本文を入力してください',
   (v: string) => (v && v.length <= 10000) || '10000文字以内で入力してください' 
