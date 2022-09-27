@@ -194,7 +194,7 @@ import { useFlashStore } from "@/store/flashStore";
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 import ProgressButton from "@/components/shared/ProgressButton.vue"
 import BaseTextField from "@/components/shared/form/BaseTextField.vue"
-import { titleRules } from "@/common/rules"
+import { bodyRules, titleRules } from "@/common/rules"
 
 interface Sentence {
   id: string
@@ -305,11 +305,6 @@ const openEditSentenceDialog = (sentence: Sentence): void => {
 
 
 const valid = ref(true)
-
-const bodyRules = [
-  (v: string) => !!v || '本文を入力してください',
-  (v: string) => (v && v.length <= 10000) || '10000文字以内で入力してください' 
-]
 const progress = ref(false)
 
 

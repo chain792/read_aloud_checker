@@ -69,7 +69,7 @@ import { useFlashStore } from "@/store/flashStore"
 import { useRouter } from 'vue-router'
 import ProgressButton from "@/components/shared/ProgressButton.vue"
 import { responsiveWidth800 } from "@/common/width"
-import { titleRules } from "@/common/rules"
+import { bodyRules, titleRules } from "@/common/rules"
 import BaseTextField from "@/components/shared/form/BaseTextField.vue"
 
 const flashStore = useFlashStore()
@@ -86,10 +86,6 @@ const sentence = reactive({
   body: "",
   status: ""
 })
-const bodyRules = [
-  (v: string) => !!v || '本文を入力してください',
-  (v: string) => (v && v.length <= 10000) || '10000文字以内で入力してください' 
-]
 const errorMessages: string[] = reactive([])
 const progress = ref(false)
 
