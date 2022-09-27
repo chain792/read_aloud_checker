@@ -158,30 +158,18 @@
           v-model="validEmail"
         >
           <div class="mt-5">
-            <v-text-field
+            <EmailTextField
               v-model="emailFormValue"
-              type="email"
               label="新しいメールアドレス"
               placeholder="新しいメールアドレスを入力"
-              color="blue"
-              density="comfortable"
-              variant="outlined"
-              required
-              :rules="emailRules"
-            ></v-text-field>
+            ></EmailTextField>
           </div>
           <div>
-            <v-text-field
+            <PasswordTextField
               v-model="passwordForChangeEmail"
-              type="password"
               label="現在のパスワード"
               placeholder="現在のパスワードを入力"
-              color="blue"
-              density="comfortable"
-              variant="outlined"
-              required
-              :rules="passwordRules"
-            ></v-text-field>
+            ></PasswordTextField>
           </div>
           <div class="d-sm-flex justify-space-around">
             <v-btn 
@@ -220,46 +208,26 @@
           v-model="validPassword"
         >
           <div class="mt-5 mb-n4">
-            <v-text-field
+            <PasswordTextField
               v-model="currentPassword"
-              type="password"
               label="現在のパスワード"
               placeholder="現在のパスワードを入力"
-              color="blue"
-              density="comfortable"
-              variant="outlined"
-              required
-              :rules="passwordRules"
-            ></v-text-field>
+            ></PasswordTextField>
           </div>
           <v-divider class="mx-n10"></v-divider>
           <div class="mt-5">
-            <v-text-field
+            <PasswordTextField
               v-model="newPassword"
-              :type="isVisiblePassword ? 'text' : 'password'"
               label="新しいパスワード"
               placeholder="半角英数字6文字以上"
-              color="blue"
-              density="comfortable"
-              variant="outlined"
-              required
-              :rules="passwordRules"
-              :append-inner-icon="isVisiblePassword ? 'mdi-eye' : 'mdi-eye-off'"
-              @click:append-inner="isVisiblePassword = !isVisiblePassword"
-            ></v-text-field>
+            ></PasswordTextField>
           </div>
           <div>
-            <v-text-field
+            <PasswordTextField
               v-model="newPasswordConfirmation"
-              type="password"
               label="新しいパスワード（確認）"
               placeholder="半角英数字6文字以上"
-              color="blue"
-              density="comfortable"
-              variant="outlined"
-              required
-              :rules="passwordRules"
-            ></v-text-field>
+            ></PasswordTextField>
           </div>
           <div class="d-sm-flex justify-space-around">
             <v-btn 
@@ -298,6 +266,8 @@ import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
 import ProgressButton from "@/components/shared/ProgressButton.vue"
 import { modalWidth400, modalWidth600, responsiveWidth190, responsiveWidth600, responsiveButtonWidth } from "@/common/width"
+import EmailTextField from "@/components/shared/form/EmailTextField.vue"
+import PasswordTextField from "@/components/shared/form/PasswordTextField.vue"
 
 
 const userStore = useUserStore()
@@ -473,14 +443,6 @@ const emailDialog = ref(false)
 const validEmail = ref(true)
 const emailFormValue = ref('')
 const passwordForChangeEmail = ref('')
-const emailRules = [
-  (v: string) => !!v || 'メールアドレスを入力してください',
-  (v: string) => /.+@.+\..+/.test(v) || 'メールアドレスの形式が正しくありません',
-]
-const passwordRules = [
-  (v: string) => !!v || 'パスワードを入力してください',
-  (v: string) => (v && v.length >= 6) || '6文字以上で入力してください',
-]
 
 const updateEmail = async ($event: any): Promise<void> => {
   $event.target.parentElement.disabled = true
@@ -524,7 +486,6 @@ const validPassword = ref(true)
 const currentPassword = ref('')
 const newPassword = ref('')
 const newPasswordConfirmation = ref('')
-const isVisiblePassword = ref(false)
 
 const updatePassword = async ($event: any): Promise<void> => {
   $event.target.parentElement.disabled = true

@@ -14,30 +14,18 @@
           <v-divider class="mx-n10"></v-divider>
           <div class="mt-6">新しいパスワードを入力してください</div>
           <div class="mt-6">
-            <v-text-field
+            <PasswordTextField
               v-model="user.password"
-              type="password"
               label="新しいパスワード"
               placeholder="半角英数字6文字以上"
-              color="blue"
-              density="comfortable"
-              variant="outlined"
-              required
-              :rules="passwordRules"
-            ></v-text-field>
+            ></PasswordTextField>
           </div>
           <div>
-            <v-text-field
+            <PasswordTextField
               v-model="user.password_confirmation"
-              type="password"
               label="新しいパスワード（確認）"
               placeholder="半角英数字6文字以上"
-              color="blue"
-              density="comfortable"
-              variant="outlined"
-              required
-              :rules="passwordRules"
-            ></v-text-field>
+            ></PasswordTextField>
           </div>
           <div class="d-flex justify-space-around">
             <v-btn
@@ -63,6 +51,7 @@ import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 import { useFlashStore } from "@/store/flashStore"
 import { useRouter } from 'vue-router'
 import { responsiveWidth400 } from "@/common/width"
+import PasswordTextField from "@/components/shared/form/PasswordTextField.vue"
 
 
 interface Props {
@@ -79,10 +68,6 @@ const user = reactive({
   password: "",
   password_confirmation: ""
 })
-const passwordRules = [
-  (v: string) => !!v || 'パスワードを入力してください',
-  (v: string) => (v && v.length >= 6) || '6文字以上で入力してください',
-]
 
 const verifyToken = async (): Promise<void> => {
   flashStore.$reset()

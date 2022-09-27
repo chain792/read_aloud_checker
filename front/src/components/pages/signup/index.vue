@@ -24,31 +24,17 @@
             :rules="nameRules"
           ></v-text-field>
 
-          <v-text-field
+          <EmailTextField
             v-model="user.email"
-            type="email"
             label="メールアドレス"
             placeholder="メールアドレスを入力"
-            color="blue"
-            density="comfortable"
-            variant="outlined"
-            required
-            :rules="emailRules"
-          ></v-text-field>
+          ></EmailTextField>
 
-          <v-text-field
+          <PasswordTextField
             v-model="user.password"
-            :type="isVisiblePassword ? 'text' : 'password'"
             label="パスワード"
             placeholder="半角英数字6文字以上"
-            color="blue"
-            density="comfortable"
-            variant="outlined"
-            :rules="passwordRules"
-            required
-            :append-inner-icon="isVisiblePassword ? 'mdi-eye' : 'mdi-eye-off'"
-            @click:append-inner="isVisiblePassword = !isVisiblePassword"
-          ></v-text-field>
+          ></PasswordTextField>
 
           <ProgressButton
             width="100%"
@@ -109,6 +95,8 @@ import { useRouter } from 'vue-router'
 import { refresh } from "@/common/refresh"
 import ProgressButton from "@/components/shared/ProgressButton.vue"
 import { responsiveWidth400 } from "@/common/width"
+import EmailTextField from "@/components/shared/form/EmailTextField.vue"
+import PasswordTextField from "@/components/shared/form/PasswordTextField.vue"
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
@@ -128,18 +116,6 @@ const nameRules = [
   (v: string) => !!v || '名前を入力してください',
   (v: string) => (v && v.length <= 50) || '50文字以内で入力してください' 
 ]
-
-const emailRules = [
-  (v: string) => !!v || 'メールアドレスを入力してください',
-  (v: string) => /.+@.+\..+/.test(v) || 'メールアドレスの形式が正しくありません',
-]
-
-const passwordRules = [
-  (v: string) => !!v || 'パスワードを入力してください',
-  (v: string) => (v && v.length >= 6) || '6文字以上で入力してください',
-]
-const isVisiblePassword = ref(false)
-
 
 const errorMessages: string[] = reactive([])
 

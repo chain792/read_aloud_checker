@@ -14,18 +14,12 @@
             ご登録いただいたメールアドレスを入力してください。<br>
             ご登録メールアドレス宛てに、再設定ページの案内をお送りします。
           </div>
-          <v-text-field
+          <EmailTextField
             v-model="email"
-            type="email"
             label="メールアドレス"
             placeholder="メールアドレスを入力"
-            color="blue"
-            density="comfortable"
-            variant="outlined"
-            required
-            :rules="emailRules"
             class="mt-5"
-          ></v-text-field>
+          ></EmailTextField>
 
           <v-btn
             :disabled="!valid"
@@ -48,16 +42,13 @@ import axios from "@/plugins/axios"
 import { useFlashStore } from "@/store/flashStore"
 import { useRouter } from 'vue-router'
 import { responsiveWidth600 } from "@/common/width"
+import EmailTextField from "@/components/shared/form/EmailTextField.vue"
 
 const flashStore = useFlashStore()
 const router = useRouter()
 
 const valid = ref(true)
 const email = ref("")
-const emailRules = [
-  (v: string) => !!v || 'メールアドレスを入力してください',
-  (v: string) => /.+@.+\..+/.test(v) || 'メールアドレスの形式が正しくありません',
-]
 
 const sendEmail = async (): Promise<void> => {
   flashStore.$reset()
