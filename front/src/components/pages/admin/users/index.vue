@@ -111,7 +111,7 @@
         </v-card-item>
         <v-card-text class="mt-3">
           <div class="text-center">
-            <img :src="imageUrl('avatar', itemUser!)" alt="アバター" class="avatar">
+            <img :src="avatarUrl(itemUser!)" alt="アバター" class="avatar">
           </div>
           <div class="text-center mt-3">
             <p class="text-subtitle-1 fs-small text-grey-darken-3">名前</p>
@@ -185,7 +185,7 @@ import qs from "qs"
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router"
 import { useFlashStore } from "@/store/flashStore";
 import { role_i18n } from "@/common/enum"
-import { imageUrl } from "@/common/imageUrl"
+import { avatarUrl } from "@/common/imageUrl"
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 import ProgressButton from "@/components/shared/ProgressButton.vue"
 

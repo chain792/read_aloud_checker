@@ -6,7 +6,7 @@
       </v-card-item>
       <v-card-text class="mt-3">
         <div class="text-center">
-          <img :src="imageUrl('avatar', currentUser)" alt="アバター" class="avatar">
+          <img :src="avatarUrl(currentUser)" alt="アバター" class="avatar">
         </div>
         <div class="text-center mt-3">
           <p class="text-subtitle-1 fs-small text-grey-darken-3">名前</p>
@@ -55,7 +55,7 @@
                 <v-tooltip activator="parent" location="top">
                   <p class="tooltip">画像を追加</p>
                 </v-tooltip>
-                <img ref="preview" :src="imageUrl('avatar', user)" alt="アバター" class="avatar pointer" @click="clickFileInput">
+                <img ref="preview" :src="avatarUrl(user)" alt="アバター" class="avatar pointer" @click="clickFileInput">
                 <v-icon class="icon" color="grey-lighten-4">
                   mdi-camera-enhance-outline
                 </v-icon>
@@ -293,7 +293,7 @@ import Axios from "axios"
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 import { useUserStore } from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
-import { imageUrl } from "@/common/imageUrl"
+import { avatarUrl } from "@/common/imageUrl"
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
 import ProgressButton from "@/components/shared/ProgressButton.vue"

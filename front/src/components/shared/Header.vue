@@ -24,7 +24,7 @@
           color="rgba(255,255,255,1)"
           v-bind="props"
         >
-          <img :src="imageUrl('avatar', userStore.authUser!)" alt="" class="avatar">
+          <img :src="avatarUrl(userStore.authUser!)" alt="" class="avatar">
         </v-btn>
       </template>
       <v-list>
@@ -98,7 +98,7 @@ import { useFlashStore } from "@/store/flashStore"
 import { useTokenStore } from "@/store/tokenStore"
 import { useHeaderStore } from "@/store/headerStore"
 import { useRouter } from 'vue-router'
-import { imageUrl } from "@/common/imageUrl"
+import { avatarUrl } from "@/common/imageUrl"
 import { modalWidth500, spScreen } from "@/common/width"
 
 const userStore = useUserStore()

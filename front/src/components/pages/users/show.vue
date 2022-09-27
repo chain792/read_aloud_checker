@@ -6,7 +6,7 @@
       </v-card-item>
       <v-card-text v-if="user" class="mt-3">
         <div class="text-center">
-          <img :src="imageUrl('avatar', user)" alt="アバター" class="avatar">
+          <img :src="avatarUrl(user)" alt="アバター" class="avatar">
         </div>
         <div class="text-center mt-3">
           <p class="text-subtitle-1 fs-small text-grey-darken-3">名前</p>
@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue"
 import axios from "@/plugins/axios"
-import { imageUrl } from "@/common/imageUrl"
+import { avatarUrl } from "@/common/imageUrl"
 import { responsiveWidth600 } from "@/common/width";
 
 interface Props {

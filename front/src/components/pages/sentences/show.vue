@@ -15,7 +15,7 @@
             <v-tooltip activator="parent" location="top">
               <p class="tooltip">プロフィールを見る</p>
             </v-tooltip>
-            <img :src="imageUrl('avatar', writer)" class="avatar">
+            <img :src="avatarUrl(writer)" class="avatar">
           </v-btn>
           <p v-else class="writer-name mr-5">
             作成者：
@@ -216,7 +216,7 @@ import LoginRequiredModal from "@/components/shared/LoginRequiredModal.vue"
 import { speechUrl } from "@/common/speechUrl"
 import { toWords } from "number-to-words"
 import { useRouter } from 'vue-router'
-import { imageUrl } from "@/common/imageUrl"
+import { avatarUrl } from "@/common/imageUrl"
 import { modalWidth500, spScreen } from "@/common/width"
 
 const flashStore = useFlashStore()
