@@ -1,6 +1,6 @@
 <template>
   <div class="page-signup py-5 pt-sm-10">
-    <v-card :width="cardWidth" class="mx-auto px-3 px-sm-5 py-3">
+    <v-card :width="responsiveWidth400" class="mx-auto px-3 px-sm-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">ユーザー登録</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
@@ -13,65 +13,35 @@
           v-model="valid"
           lazy-validation
         >
-          <v-text-field
+          <BaseTextField
             v-model="user.name"
             label="名前"
             placeholder="名前を入力"
-            color="blue"
-            density="comfortable"
-            variant="outlined"
             required
             :rules="nameRules"
-          ></v-text-field>
+          ></BaseTextField>
 
-          <v-text-field
+          <EmailTextField
             v-model="user.email"
-            type="email"
             label="メールアドレス"
             placeholder="メールアドレスを入力"
-            color="blue"
-            density="comfortable"
-            variant="outlined"
-            required
-            :rules="emailRules"
-          ></v-text-field>
+          ></EmailTextField>
 
-          <v-text-field
+          <PasswordTextField
             v-model="user.password"
-            :type="isVisiblePassword ? 'text' : 'password'"
             label="パスワード"
             placeholder="半角英数字6文字以上"
-            color="blue"
-            density="comfortable"
-            variant="outlined"
-            :rules="passwordRules"
-            required
-            :append-inner-icon="isVisiblePassword ? 'mdi-eye' : 'mdi-eye-off'"
-            @click:append-inner="isVisiblePassword = !isVisiblePassword"
-          ></v-text-field>
+          ></PasswordTextField>
 
-          <v-btn 
-            v-if="progress"
-            :disabled="true"
-            color="warning"
+          <ProgressButton
             width="100%"
-          >
-            <v-progress-circular
-              size="20"
-              color="grey-darken-5"
-              indeterminate
-              width="3"
-            ></v-progress-circular>
-          </v-btn>
-          <v-btn
-            v-else
+            color="warning"
+            :progress="progress"
             :disabled="!valid"
-            color="warning"
-            width="100%"
             @click="register"
           >
             登録
-          </v-btn>
+          </ProgressButton>
 
           <div class="mt-2">
             <router-link :to="{ name: 'Login' }" class="link-text text-blue-accent-4">アカウントをお持ちの方はこちら</router-link>
@@ -111,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, ComputedRef } from "vue"
+import { ref, reactive } from "vue"
 import axios from "@/plugins/axios"
 import Axios from "axios"
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
@@ -120,21 +90,17 @@ import { useFlashStore } from "@/store/flashStore"
 import { useTokenStore } from "@/store/tokenStore"
 import { useRouter } from 'vue-router'
 import { refresh } from "@/common/refresh"
-import { useDisplay } from "vuetify"
+import ProgressButton from "@/components/shared/ProgressButton.vue"
+import { responsiveWidth400 } from "@/common/width"
+import EmailTextField from "@/components/shared/form/EmailTextField.vue"
+import PasswordTextField from "@/components/shared/form/PasswordTextField.vue"
+import { nameRules } from "@/common/rules"
+import BaseTextField from "@/components/shared/form/BaseTextField.vue"
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
 const tokenStore = useTokenStore()
 const router = useRouter()
-const display = useDisplay()
-
-const cardWidth: ComputedRef<string | number> = computed(() => {
-  if (display.xs.value) {
-    return '100%'
-  } else {
-    return 400
-  }
-})
 
 const progress = ref(false)
 const valid = ref(true)
@@ -144,22 +110,6 @@ const user = reactive({
   email: "",
   password: ""
 })
-
-const nameRules = [
-  (v: string) => !!v || '名前を入力してください',
-  (v: string) => (v && v.length <= 50) || '50文字以内で入力してください' 
-]
-
-const emailRules = [
-  (v: string) => !!v || 'メールアドレスを入力してください',
-  (v: string) => /.+@.+\..+/.test(v) || 'メールアドレスの形式が正しくありません',
-]
-
-const passwordRules = [
-  (v: string) => !!v || 'パスワードを入力してください',
-  (v: string) => (v && v.length >= 6) || '6文字以上で入力してください',
-]
-const isVisiblePassword = ref(false)
 
 
 const errorMessages: string[] = reactive([])

@@ -1,6 +1,6 @@
 <template>
   <div class="page-edit-passwordreset py-5 pt-sm-10">
-    <v-card :width="cardWidth" class="mx-auto px-3 px-sm-5 py-3">
+    <v-card :width="responsiveWidth400" class="mx-auto px-3 px-sm-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">パスワード再設定</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
@@ -14,30 +14,18 @@
           <v-divider class="mx-n10"></v-divider>
           <div class="mt-6">新しいパスワードを入力してください</div>
           <div class="mt-6">
-            <v-text-field
+            <PasswordTextField
               v-model="user.password"
-              type="password"
               label="新しいパスワード"
               placeholder="半角英数字6文字以上"
-              color="blue"
-              density="comfortable"
-              variant="outlined"
-              required
-              :rules="passwordRules"
-            ></v-text-field>
+            ></PasswordTextField>
           </div>
           <div>
-            <v-text-field
+            <PasswordTextField
               v-model="user.password_confirmation"
-              type="password"
               label="新しいパスワード（確認）"
               placeholder="半角英数字6文字以上"
-              color="blue"
-              density="comfortable"
-              variant="outlined"
-              required
-              :rules="passwordRules"
-            ></v-text-field>
+            ></PasswordTextField>
           </div>
           <div class="d-flex justify-space-around">
             <v-btn
@@ -56,13 +44,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, ComputedRef } from "vue"
+import { ref, reactive } from "vue"
 import axios from "@/plugins/axios"
 import Axios from "axios"
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 import { useFlashStore } from "@/store/flashStore"
 import { useRouter } from 'vue-router'
-import { useDisplay } from "vuetify"
+import { responsiveWidth400 } from "@/common/width"
+import PasswordTextField from "@/components/shared/form/PasswordTextField.vue"
 
 
 interface Props {
@@ -71,27 +60,14 @@ interface Props {
 
 const props = defineProps<Props>()
 const router = useRouter()
-const display = useDisplay()
 const flashStore = useFlashStore()
 const errorMessages: string[] = reactive([])
-
-const cardWidth: ComputedRef<string | number> = computed(() => {
-  if (display.xs.value) {
-    return '100%'
-  } else {
-    return 400
-  }
-})
 
 const valid = ref(true)
 const user = reactive({
   password: "",
   password_confirmation: ""
 })
-const passwordRules = [
-  (v: string) => !!v || 'パスワードを入力してください',
-  (v: string) => (v && v.length >= 6) || '6文字以上で入力してください',
-]
 
 const verifyToken = async (): Promise<void> => {
   flashStore.$reset()

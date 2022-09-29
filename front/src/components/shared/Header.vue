@@ -24,7 +24,7 @@
           color="rgba(255,255,255,1)"
           v-bind="props"
         >
-          <img :src="imageUrl('avatar', userStore.authUser!)" alt="" class="avatar">
+          <img :src="avatarUrl(userStore.authUser!)" alt="" class="avatar">
         </v-btn>
       </template>
       <v-list>
@@ -65,7 +65,7 @@
   <teleport to="body">
     <div v-show="settingsDialog" class="modal" @click="settingsDialog = false" ></div>
     <div v-show="settingsDialog" class="modal-content">
-      <v-card :width="modalWidth" class="mx-assto px-5 py-3">
+      <v-card :width="modalWidth500" class="mx-assto px-5 py-3">
         <v-card-item>
           <div class="d-flex">
             <v-card-title class="text-h6 ml-auto">お手本の音声の性別を変更する</v-card-title>
@@ -98,23 +98,14 @@ import { useFlashStore } from "@/store/flashStore"
 import { useTokenStore } from "@/store/tokenStore"
 import { useHeaderStore } from "@/store/headerStore"
 import { useRouter } from 'vue-router'
-import { imageUrl } from "@/common/imageUrl"
-import { useDisplay } from "vuetify"
+import { avatarUrl } from "@/common/imageUrl"
+import { modalWidth500, spScreen } from "@/common/width"
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
 const tokenStore = useTokenStore()
 const headerStore = useHeaderStore()
 const router = useRouter()
-const display = useDisplay()
-
-const modalWidth: ComputedRef<string | number> = computed(() => {
-  if (display.xs.value) {
-    return display.width.value
-  } else {
-    return 500
-  }
-})
 
 const headerColor: ComputedRef<string> = computed(() => {
   if(headerStore.isOpacity){
@@ -129,14 +120,6 @@ const headerElevation: ComputedRef<string> = computed(() => {
     return '0'
   }else{
     return '1'
-  }
-})
-
-const spScreen: ComputedRef<boolean> = computed(() => {
-  if (display.xs.value) {
-    return true
-  } else {
-    return false
   }
 })
 

@@ -1,6 +1,6 @@
 <template>
   <div class="page-passwordreset-sent py-5 pt-sm-10">
-    <v-card :width="cardWidth" class="mx-auto px-3 px-sm-5 py-3">
+    <v-card :width="responsiveWidth600" class="mx-auto px-3 px-sm-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">メール送信完了</v-card-title>
       </v-card-item>
@@ -21,18 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ComputedRef } from "vue"
-import { useDisplay } from "vuetify"
-
-const display = useDisplay()
-
-const cardWidth: ComputedRef<string | number> = computed(() => {
-  if (display.xs.value) {
-    return '100%'
-  } else {
-    return 600
-  }
-})
+import { responsiveWidth600 } from "@/common/width"
 
 </script>
 

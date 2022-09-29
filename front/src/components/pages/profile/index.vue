@@ -1,12 +1,12 @@
 <template>
   <div class="page-profile py-5 pt-sm-10">
-    <v-card :width="cardWidth" class="mx-auto px-3 px-sm-5 py-3">
+    <v-card :width="responsiveWidth600" class="mx-auto px-3 px-sm-5 py-3">
       <v-card-item>
         <v-card-title class="text-h6 text-center text-grey-darken-3 font-weight-bold tracking-widest">プロフィール</v-card-title>
       </v-card-item>
       <v-card-text class="mt-3">
         <div class="text-center">
-          <img :src="imageUrl('avatar', currentUser)" alt="アバター" class="avatar">
+          <img :src="avatarUrl(currentUser)" alt="アバター" class="avatar">
         </div>
         <div class="text-center mt-3">
           <p class="text-subtitle-1 fs-small text-grey-darken-3">名前</p>
@@ -37,7 +37,7 @@
 
   <!-- プロフィール編集モーダル -->
   <v-dialog v-model="profileDialog">
-    <v-card :width="modalWidth" class="mt-n10 px-5 py-3">
+    <v-card :width="modalWidth400" class="mt-n10 px-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">プロフィール編集</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
@@ -55,7 +55,7 @@
                 <v-tooltip activator="parent" location="top">
                   <p class="tooltip">画像を追加</p>
                 </v-tooltip>
-                <img ref="preview" :src="imageUrl('avatar', user)" alt="アバター" class="avatar pointer" @click="clickFileInput">
+                <img ref="preview" :src="avatarUrl(user)" alt="アバター" class="avatar pointer" @click="clickFileInput">
                 <v-icon class="icon" color="grey-lighten-4">
                   mdi-camera-enhance-outline
                 </v-icon>
@@ -64,49 +64,32 @@
             <input ref="fileInput" type="file" accept="image/*" style="display: none;" @change="previewAvatar">
           </div>
           <div class="mt-5">
-            <v-text-field
+            <BaseTextField
               v-model="user.name"
               label="名前"
               placeholder="名前を入力"
-              color="blue"
-              density="comfortable"
-              variant="outlined"
               required
               :rules="nameRules"
-            ></v-text-field>
+            ></BaseTextField>
           </div>
           <div class="d-sm-flex justify-space-around">
             <v-btn 
               color="accent" 
-              :width="buttonWidth" 
+              :width="responsiveButtonWidth" 
               @click="profileDialog = false"
             >
               キャンセル
             </v-btn>
-            <v-btn 
-              v-if="progress"
-              :disabled="true"
+            <ProgressButton
               color="warning"
-              :width="buttonWidthV2(190)"
-              class="ml-sm-3 mt-3 mt-sm-0"
-            >
-              <v-progress-circular
-                size="20"
-                color="grey-darken-5"
-                indeterminate
-                width="3"
-              ></v-progress-circular>
-            </v-btn>
-            <v-btn
-              v-else
+              :progress="progress"
               :disabled="!validProfile"
-              color="warning"
-              :width="buttonWidthV2(190)"
+              :width="responsiveWidth190"
               class="ml-sm-3 mt-3 mt-sm-0"
               @click="updateProfile"
             >
               この内容で編集する
-            </v-btn>
+            </ProgressButton>
           </div>
         </v-form>
       </v-card-text>
@@ -115,7 +98,7 @@
 
   <!-- トリミングダイアログ -->
   <v-dialog v-model="trimmingDialog">
-    <v-card :width="trimedmodalWidth" class="mt-n10 px-5 py-3">
+    <v-card :width="modalWidth600" class="mt-n10 px-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">画像の切り抜き</v-card-title>
       </v-card-item>
@@ -160,7 +143,7 @@
 
   <!-- メールアドレス変更モーダル -->
   <v-dialog v-model="emailDialog">
-    <v-card :width="modalWidth" class="mt-n10 px-5 py-3">
+    <v-card :width="modalWidth400" class="mt-n10 px-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">メールアドレスの変更</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
@@ -172,35 +155,23 @@
           v-model="validEmail"
         >
           <div class="mt-5">
-            <v-text-field
+            <EmailTextField
               v-model="emailFormValue"
-              type="email"
               label="新しいメールアドレス"
               placeholder="新しいメールアドレスを入力"
-              color="blue"
-              density="comfortable"
-              variant="outlined"
-              required
-              :rules="emailRules"
-            ></v-text-field>
+            ></EmailTextField>
           </div>
           <div>
-            <v-text-field
+            <PasswordTextField
               v-model="passwordForChangeEmail"
-              type="password"
               label="現在のパスワード"
               placeholder="現在のパスワードを入力"
-              color="blue"
-              density="comfortable"
-              variant="outlined"
-              required
-              :rules="passwordRules"
-            ></v-text-field>
+            ></PasswordTextField>
           </div>
           <div class="d-sm-flex justify-space-around">
             <v-btn 
               color="accent"
-              :width="buttonWidth" 
+              :width="responsiveButtonWidth" 
               @click="emailDialog = false"
             >
               キャンセル
@@ -208,7 +179,7 @@
             <v-btn
               :disabled="!validEmail"
               color="warning"
-              :width="buttonWidth"
+              :width="responsiveButtonWidth"
               class="ml-sm-3 mt-3 mt-sm-0"
               @click="updateEmail"
             >
@@ -222,7 +193,7 @@
 
   <!-- パスワード変更モーダル -->
   <v-dialog v-model="passwordDialog">
-    <v-card :width="modalWidth" class="mt-n10 px-5 py-3">
+    <v-card :width="modalWidth400" class="mt-n10 px-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">パスワードの変更</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
@@ -234,51 +205,31 @@
           v-model="validPassword"
         >
           <div class="mt-5 mb-n4">
-            <v-text-field
+            <PasswordTextField
               v-model="currentPassword"
-              type="password"
               label="現在のパスワード"
               placeholder="現在のパスワードを入力"
-              color="blue"
-              density="comfortable"
-              variant="outlined"
-              required
-              :rules="passwordRules"
-            ></v-text-field>
+            ></PasswordTextField>
           </div>
           <v-divider class="mx-n10"></v-divider>
           <div class="mt-5">
-            <v-text-field
+            <PasswordTextField
               v-model="newPassword"
-              :type="isVisiblePassword ? 'text' : 'password'"
               label="新しいパスワード"
               placeholder="半角英数字6文字以上"
-              color="blue"
-              density="comfortable"
-              variant="outlined"
-              required
-              :rules="passwordRules"
-              :append-inner-icon="isVisiblePassword ? 'mdi-eye' : 'mdi-eye-off'"
-              @click:append-inner="isVisiblePassword = !isVisiblePassword"
-            ></v-text-field>
+            ></PasswordTextField>
           </div>
           <div>
-            <v-text-field
+            <PasswordTextField
               v-model="newPasswordConfirmation"
-              type="password"
               label="新しいパスワード（確認）"
               placeholder="半角英数字6文字以上"
-              color="blue"
-              density="comfortable"
-              variant="outlined"
-              required
-              :rules="passwordRules"
-            ></v-text-field>
+            ></PasswordTextField>
           </div>
           <div class="d-sm-flex justify-space-around">
             <v-btn 
               color="accent"
-              :width="buttonWidth"
+              :width="responsiveButtonWidth"
               @click="passwordDialog = false"
             >
               キャンセル
@@ -286,7 +237,7 @@
             <v-btn
               :disabled="!validPassword"
               color="warning"
-              :width="buttonWidth"
+              :width="responsiveButtonWidth"
               class="ml-sm-3 mt-3 mt-sm-0"
               @click="updatePassword"
             >
@@ -307,57 +258,21 @@ import Axios from "axios"
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 import { useUserStore } from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
-import { imageUrl } from "@/common/imageUrl"
-import { useDisplay } from "vuetify"
+import { avatarUrl } from "@/common/imageUrl"
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
+import ProgressButton from "@/components/shared/ProgressButton.vue"
+import { modalWidth400, modalWidth600, responsiveWidth190, responsiveWidth600, responsiveButtonWidth } from "@/common/width"
+import EmailTextField from "@/components/shared/form/EmailTextField.vue"
+import PasswordTextField from "@/components/shared/form/PasswordTextField.vue"
+import { nameRules } from "@/common/rules"
+import BaseTextField from "@/components/shared/form/BaseTextField.vue"
 
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
 const currentUser = reactive(userStore.authUser!)
 const errorMessages: string[] = reactive([])
-const display = useDisplay()
-
-const cardWidth: ComputedRef<string | number> = computed(() => {
-  if (display.xs.value) {
-    return '100%'
-  } else {
-    return 600
-  }
-})
-
-const modalWidth: ComputedRef<string | number> = computed(() => {
-  if (display.xs.value) {
-    return display.width.value
-  } else {
-    return 400
-  }
-})
-
-const trimedmodalWidth: ComputedRef<string | number> = computed(() => {
-  if (display.xs.value) {
-    return display.width.value
-  } else {
-    return 600
-  }
-})
-
-const buttonWidth: ComputedRef<string | number | undefined> = computed(() => {
-  if (display.xs.value) {
-    return '100%'
-  } else {
-    return undefined
-  }
-})
-
-const buttonWidthV2 = (width: number): string | number => {
-  if (display.xs.value) {
-    return '100%'
-  } else {
-    return width
-  }
-}
 
 const currentUserEmail: ComputedRef<string> = computed(() => {
   if(currentUser.emailStatus === "unset"){
@@ -388,10 +303,6 @@ let uploadFileType: string = ""
 const profileForm: Ref<any> = ref(null)
 const profileDialog = ref(false)
 const validProfile = ref(true)
-const nameRules = [
-  (v: string) => !!v || '名前を入力してください',
-  (v: string) => (v && v.length <= 50) || '50文字以内で入力してください' 
-]
 const fileInput = ref<HTMLInputElement>()
 const preview = ref<HTMLImageElement>()
 const cropper = ref<any>()
@@ -527,14 +438,6 @@ const emailDialog = ref(false)
 const validEmail = ref(true)
 const emailFormValue = ref('')
 const passwordForChangeEmail = ref('')
-const emailRules = [
-  (v: string) => !!v || 'メールアドレスを入力してください',
-  (v: string) => /.+@.+\..+/.test(v) || 'メールアドレスの形式が正しくありません',
-]
-const passwordRules = [
-  (v: string) => !!v || 'パスワードを入力してください',
-  (v: string) => (v && v.length >= 6) || '6文字以上で入力してください',
-]
 
 const updateEmail = async ($event: any): Promise<void> => {
   $event.target.parentElement.disabled = true
@@ -578,7 +481,6 @@ const validPassword = ref(true)
 const currentPassword = ref('')
 const newPassword = ref('')
 const newPasswordConfirmation = ref('')
-const isVisiblePassword = ref(false)
 
 const updatePassword = async ($event: any): Promise<void> => {
   $event.target.parentElement.disabled = true

@@ -1,6 +1,6 @@
 <template>
   <div class="page-edit-sentence py-5 pt-sm-10">
-    <v-card :width="cardWidth" class="mx-auto px-5 py-3">
+    <v-card :width="responsiveWidth800" class="mx-auto px-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">英文編集</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
@@ -13,16 +13,13 @@
           v-model="valid"
           lazy-validation
         >
-          <v-text-field
+          <BaseTextField
             v-model="sentence.title"
             label="タイトル"
             placeholder="英文のタイトルを入力"
-            color="blue"
-            density="comfortable"
-            variant="outlined"
             required
             :rules="titleRules"
-          ></v-text-field>
+          ></BaseTextField>
 
           <v-textarea
             v-model="sentence.body"
@@ -47,30 +44,15 @@
             ></v-radio>
           </v-radio-group>
 
-          <v-btn 
-            v-if="progress"
+          <ProgressButton
             width="100%"
-            color="warning" 
-            :disabled="true"
-          >
-            <v-progress-circular
-              size="20"
-              color="grey-darken-5"
-              indeterminate
-              width="3"
-              class="progress2"
-            ></v-progress-circular>
-          </v-btn>
-          <v-btn
-            v-else
-            :disabled="!valid"
             color="warning"
-            class=""
-            width="100%"
+            :progress="progress"
+            :disabled="!valid"
             @click="updateSentences"
           >
-             編集
-          </v-btn>
+            編集
+          </ProgressButton>
 
         </v-form>
       </v-card-text>
@@ -79,29 +61,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, ComputedRef } from "vue"
+import { ref, reactive } from "vue"
 import axios from "@/plugins/axios"
 import Axios from "axios"
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 import { useFlashStore } from "@/store/flashStore"
 import { useRouter } from 'vue-router'
-import { useDisplay } from "vuetify"
+import ProgressButton from "@/components/shared/ProgressButton.vue"
+import { responsiveWidth800 } from "@/common/width"
+import { bodyRules, titleRules } from "@/common/rules"
+import BaseTextField from "@/components/shared/form/BaseTextField.vue"
 
 const flashStore = useFlashStore()
 const router = useRouter()
-const display = useDisplay()
 
 interface Props {
   id: string
 }
-
-const cardWidth: ComputedRef<string | number> = computed(() => {
-  if (display.xs.value || display.sm.value) {
-    return '100%'
-  } else {
-    return 800
-  }
-})
 
 const props = defineProps<Props>()
 const valid = ref(true)
@@ -110,14 +86,6 @@ const sentence = reactive({
   body: "",
   status: ""
 })
-const titleRules = [
-  (v: string) => !!v || 'タイトルを入力してください',
-  (v: string) => (v && v.length <= 100) || '100文字以内で入力してください' 
-]
-const bodyRules = [
-  (v: string) => !!v || '本文を入力してください',
-  (v: string) => (v && v.length <= 10000) || '10000文字以内で入力してください' 
-]
 const errorMessages: string[] = reactive([])
 const progress = ref(false)
 

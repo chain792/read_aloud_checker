@@ -1,5 +1,5 @@
 <template>
-  <v-card :width="cardWidth" class="mx-auto px-5 py-3">
+  <v-card :width="responsiveWidth600" class="mx-auto px-5 py-3">
     <v-card-item>
       <div class="d-flex">
         <v-card-title class="text-h6 ml-auto">ユーザー登録してみませんか？</v-card-title>
@@ -40,9 +40,8 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, ComputedRef } from "vue"
+import { responsiveWidth600 } from '@/common/width';
 import { useRouter } from 'vue-router'
-import { useDisplay } from "vuetify"
 
 interface Emits { 
   (e: "close-modal"): void  // eslint-disable-line no-unused-vars
@@ -50,15 +49,6 @@ interface Emits {
 const emit = defineEmits<Emits>()
 
 const router = useRouter()
-const display = useDisplay()
-
-const cardWidth: ComputedRef<string | number> = computed(() => {
-  if (display.xs.value) {
-    return '100%'
-  } else {
-    return 600
-  }
-})
 
 const linkToSignup = (): void => {
   router.push({ name: "Signup" })

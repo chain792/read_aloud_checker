@@ -115,23 +115,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ComputedRef, ref, onMounted } from "vue"
+import { ref, onMounted } from "vue"
 import { useDisplay } from "vuetify"
 import { useHeaderStore } from "@/store/headerStore"
+import { pcScreen } from "@/common/width";
 
 const headerStore = useHeaderStore()
 const display = useDisplay()
 
 headerStore.opacity()
 
-//960px以上
-const pcScreen: ComputedRef<boolean> = computed(() => {
-  if (display.xs.value || display.sm.value) {
-    return false
-  } else {
-    return true
-  }
-})
 
 /***************************************************
   Intersection Observer API

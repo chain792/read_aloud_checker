@@ -6,14 +6,11 @@
       lazy-validation
     >
       <div style="width: 500px" class="d-flex mt-3 ml-3">
-        <v-text-field
+        <BaseTextField
           v-model="searchWord"
           label="検索"
           placeholder="検索ワードを入力"
-          color="blue"
-          density="comfortable"
-          variant="outlined"
-        ></v-text-field>
+        ></BaseTextField>
         <div class="select-container">
           <v-select
             v-model="itemValue"
@@ -111,7 +108,7 @@
         </v-card-item>
         <v-card-text class="mt-3">
           <div class="text-center">
-            <img :src="imageUrl('avatar', itemUser!)" alt="アバター" class="avatar">
+            <img :src="avatarUrl(itemUser!)" alt="アバター" class="avatar">
           </div>
           <div class="text-center mt-3">
             <p class="text-subtitle-1 fs-small text-grey-darken-3">名前</p>
@@ -143,16 +140,13 @@
           v-model="validProfile"
         >
           <div class="mt-5">
-            <v-text-field
+            <BaseTextField
               v-model="editedUser!.name"
               label="名前"
               placeholder="名前を入力"
-              color="blue"
-              density="comfortable"
-              variant="outlined"
               required
               :rules="nameRules"
-            ></v-text-field>
+            ></BaseTextField>
           </div>
           <div class="d-sm-flex justify-space-around">
             <v-btn 
@@ -161,28 +155,15 @@
             >
               キャンセル
             </v-btn>
-            <v-btn 
-              v-if="progress"
-              :disabled="true"
+            <ProgressButton
               color="warning"
-              class="ml-sm-3 mt-3 mt-sm-0"
-            >
-              <v-progress-circular
-                size="20"
-                color="grey-darken-5"
-                indeterminate
-                width="3"
-              ></v-progress-circular>
-            </v-btn>
-            <v-btn
-              v-else
+              :progress="progress"
               :disabled="!validProfile"
-              color="warning"
               class="ml-sm-3 mt-3 mt-sm-0"
               @click="updateProfile(editedUser)"
             >
               この内容で編集する
-            </v-btn>
+            </ProgressButton>
           </div>
         </v-form>
       </v-card-text>
@@ -198,8 +179,11 @@ import qs from "qs"
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router"
 import { useFlashStore } from "@/store/flashStore";
 import { role_i18n } from "@/common/enum"
-import { imageUrl } from "@/common/imageUrl"
+import { avatarUrl } from "@/common/imageUrl"
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
+import ProgressButton from "@/components/shared/ProgressButton.vue"
+import BaseTextField from "@/components/shared/form/BaseTextField.vue"
+import { nameRules } from "@/common/rules"
 
 interface User {
   id: number
@@ -302,10 +286,7 @@ const openEditUserDialog = (user: User): void => {
 
 
 const validProfile = ref(true)
-const nameRules = [
-  (v: string) => !!v || '名前を入力してください',
-  (v: string) => (v && v.length <= 50) || '50文字以内で入力してください' 
-]
+
 const progress = ref(false)
 
 

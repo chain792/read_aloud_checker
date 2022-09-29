@@ -1,7 +1,7 @@
 <template>
   <div class="page-admin-login">
     <FlashMessage />
-    <v-card :width="cardWidth" class="mx-auto card-position px-3 px-sm-5 py-3">
+    <v-card :width="responsiveWidth400" class="mx-auto card-position px-3 px-sm-5 py-3">
       <v-card-item>
         <v-card-title class="text-center text-h5">ログイン</v-card-title>
         <v-card-subtitle v-if="errorMessages.length" class="mt-3">
@@ -14,54 +14,27 @@
           v-model="valid"
           lazy-validation
         >
-          <v-text-field
+          <EmailTextField
             v-model="loginInfo.email"
-            type="email"
             label="メールアドレス"
             placeholder="メールアドレスを入力"
-            color="blue"
-            density="comfortable"
-            variant="outlined"
-            required
-            :rules="emailRules"
-          ></v-text-field>
+          ></EmailTextField>
 
-          <v-text-field
+          <PasswordTextField
             v-model="loginInfo.password"
-            :type="isVisiblePassword ? 'text' : 'password'"
             label="パスワード"
             placeholder="半角英数字6文字以上"
-            color="blue"
-            density="comfortable"
-            variant="outlined"
-            :rules="passwordRules"
-            required
-            :append-inner-icon="isVisiblePassword ? 'mdi-eye' : 'mdi-eye-off'"
-            @click:append-inner="isVisiblePassword = !isVisiblePassword"
-          ></v-text-field>
+          ></PasswordTextField>
 
-          <v-btn 
-            v-if="progress"
-            :disabled="true"
-            color="warning"
+          <ProgressButton
             width="100%"
-          >
-            <v-progress-circular
-              size="20"
-              color="grey-darken-5"
-              indeterminate
-              width="3"
-            ></v-progress-circular>
-          </v-btn>
-          <v-btn
-            v-else
+            color="warning"
+            :progress="progress"
             :disabled="!valid"
-            color="warning"
-            width="100%"
             @click="login"
           >
             ログイン
-          </v-btn>
+          </ProgressButton>
         </v-form>
       </v-card-text>
     </v-card>
@@ -69,47 +42,31 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, ComputedRef } from "vue"
+import { ref, reactive } from "vue"
 import axios from "@/plugins/axios"
 import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 import { useUserStore }  from "@/store/userStore"
 import { useFlashStore } from "@/store/flashStore"
 import { useTokenStore } from "@/store/tokenStore"
 import { useRouter } from 'vue-router'
-import { useDisplay } from "vuetify"
 import FlashMessage from '@/components/shared/FlashMessage.vue'
+import ProgressButton from "@/components/shared/ProgressButton.vue"
+import { responsiveWidth400 } from "@/common/width"
+import EmailTextField from "@/components/shared/form/EmailTextField.vue"
+import PasswordTextField from "@/components/shared/form/PasswordTextField.vue"
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
 const tokenStore = useTokenStore()
 const router = useRouter()
-const display = useDisplay()
-
-const cardWidth: ComputedRef<string | number> = computed(() => {
-  if (display.xs.value) {
-    return '100%'
-  } else {
-    return 400
-  }
-})
 
 const progress = ref(false)
 const errorMessages: string[] = reactive([])
 const valid = ref(true)
-const isVisiblePassword = ref(false)
 const loginInfo = reactive({
   email: "",
   password: ""
 })
-
-const emailRules = [
-  (v: string) => !!v || 'メールアドレスを入力してください',
-  (v: string) => /.+@.+\..+/.test(v) || 'メールアドレスの形式が正しくありません',
-]
-const passwordRules = [
-  (v: string) => !!v || 'パスワードを入力してください',
-  (v: string) => (v && v.length >= 6) || '6文字以上で入力してください',
-]
 
 const login = async (): Promise<void> => {
   progress.value = true
