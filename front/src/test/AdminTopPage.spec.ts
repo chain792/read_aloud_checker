@@ -1,34 +1,25 @@
 import { createTestingPinia } from '@pinia/testing'
 import { mount, VueWrapper } from '@vue/test-utils'
-import Profile from '@/components/pages/profile/index.vue'
+import AdminTopPage from '@/components/pages/admin/static/TopPage.vue'
 import { describe, test, expect, beforeEach } from 'vitest'
 import { createVuetify } from "vuetify"
 import * as components from "vuetify/components"
 import * as directives from "vuetify/directives"
 import router from '@/router'
+import { adminUser } from './factories/user'
 
 
-describe("プロフィールページ", () => {
+describe("管理画面トップページ", () => {
   const vuetify = createVuetify({ components, directives })
   let wrapper: VueWrapper<any>
   beforeEach(() => {
-    wrapper = mount(Profile, {
+    wrapper = mount(AdminTopPage, {
       global: {
         plugins: [
           createTestingPinia({
             initialState: {
               user: {
-                authUser: {
-                  id: 1,
-                  email: 'test@example.com',
-                  emailStatus: "unverified",
-                  name: 'test',
-                  avatar: '',
-                  role: "general",
-                  listeningSex: "male",
-                  createdAt: "2022",
-                  updatedAt: "2022"
-                }
+                authUser: adminUser
               }
             }
           }), 
@@ -40,6 +31,6 @@ describe("プロフィールページ", () => {
   })
 
   test('初期表示されること', () => {
-    expect(wrapper.text()).toContain('プロフィール')
+    expect(wrapper.text()).toContain('ダッシュボード')
   })
 })
