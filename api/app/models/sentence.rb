@@ -17,6 +17,9 @@ class Sentence < ApplicationRecord
   after_create :create_speech
   after_update :create_speech, if: :saved_change_to_body?
 
+  scope :user_published, -> { public_state.where(creater_type: 'User') }
+  scope :news_published, -> { public_state.where(creater_type: 'News') }
+
   def create_speech
     self.female_speech = AwsPollyService.call(body, 'Joanna', "sentence/speech/#{id}")
     self.male_speech = AwsPollyService.call(body, 'Matthew', "sentence/speech/#{id}")

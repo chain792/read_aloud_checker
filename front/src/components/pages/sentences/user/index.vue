@@ -40,8 +40,12 @@ const sentences: Array<Sentence> = reactive([])
 
 const fetchSentences = async (page?: string | number): Promise<void> => {
   try{
-    const query =  page? `?page=${page}` : ''
-    const res = await axios.get("user_sentences" + query)
+    const res = await axios.get("sentences", {
+      params: {
+        page,
+        type: 'user'
+      }
+    })
     paginationLength.value= res.data.pagination.pages
     res.data.sentences.map((sentence: Sentence) => {
       sentences.push({
