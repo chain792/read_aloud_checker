@@ -46,4 +46,35 @@ RSpec.describe 'Sentences', type: :request do
       expect(response).to have_http_status :ok
     end
   end
+
+  describe 'GET /api/v1/sentences/bookmark' do
+    let(:sentence_num) { 10 }
+    let(:bookmark_num) { 5 }
+    let!(:me) { create(:user) }
+    let!(:headers) { { Authorization: "Bearer #{me.create_access_token[:token]}" } }
+    before do
+      sentences = create_list(:user_sentence, sentence_num)
+      bookmark_num.times do |i|
+        create(:bookmark, user: me, sentence: sentences[i])
+      end
+    end
+
+    context 'ログイン後' do
+      it 'ブックマーク一覧を返す' do
+        get bookmark_api_v1_sentences_path, xhr: true, headers: headers
+
+        expect(JSON.parse(body)['sentences'].count).to eq(bookmark_num)
+        expect(response).to be_successful
+        expect(response).to have_http_status :ok
+      end
+    end
+    context 'ログイン前' do
+      it 'アクセス制限される' do
+        get bookmark_api_v1_sentences_path, xhr: true
+
+        expect(response).not_to be_successful
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+  end
 end
