@@ -8,12 +8,6 @@ RSpec.describe Training, type: :model do
       expect(training.errors).to be_empty
     end
 
-    it '有効であること' do
-      training = build(:training)
-      expect(training).to be_valid
-      expect(training.errors).to be_empty
-    end
-
     it 'タイトルがない場合、無効' do
       training = build(:training, title: nil)
       expect(training).to be_invalid
