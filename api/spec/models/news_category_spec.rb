@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe NewsCategory, type: :model do
-  let(:created_news_category) { create(:news_category) }
-
   describe 'バリデーション確認' do
     it '有効であること' do
       news_category = build(:news_category)

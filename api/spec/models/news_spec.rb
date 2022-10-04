@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe News, type: :model do
-  let(:created_news) { create(:news) }
-
   describe 'バリデーション確認' do
     it '有効であること' do
       news = build(:news)
