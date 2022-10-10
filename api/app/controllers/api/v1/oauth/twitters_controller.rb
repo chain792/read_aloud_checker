@@ -42,30 +42,22 @@ class Api::V1::Oauth::TwittersController < ApplicationController
       { scheme: :query_string },
     )
 
-    case response
-    when Net::HTTPSuccess
-      user_info = JSON.parse(response.body)
+    user_info = get_user_info(response)
 
-      if user_info["id"]
-        user = Authentication.find_or_create_user_from_oauth(
-          'twitter',
-          user_info["id"],
-          user_info["name"],
-          user_info["email"],
-          user_info["profile_image_url_https"].sub('normal', 'bigger'),
-        )
+    if user_info[:id]
+      user = Authentication.find_or_create_user_from_oauth(
+        'twitter',
+        user_info,
+      )
 
-        if user&.valid?
-          refresh_token = user.refresh_me!
-          set_refresh_token_to_cookie(refresh_token)
-        else
-          logger.error "Failed to create user. user: #{user.inspect}"
-        end
+      if user&.valid?
+        refresh_token = user.refresh_me!
+        set_refresh_token_to_cookie(refresh_token)
       else
-        logger.error "Failed to get user info via OAuth. user_info: #{user_info}"
+        logger.error "Failed to create user. user: #{user.inspect}"
       end
     else
-      logger.error "Failed OAuth. Code: #{response.code}"
+      logger.error "Failed to get user info via OAuth. user_info: #{user_info}"
     end
 
     render html: "<script>if(window.location.href.indexOf('oauth/twitter/callback')>0)window.close()</script>".html_safe
@@ -75,5 +67,21 @@ class Api::V1::Oauth::TwittersController < ApplicationController
 
   def callback_url
     "#{ENV.fetch('API_DOMAIN', nil)}/api/v1/oauth/twitter/callback"
+  end
+
+  def get_user_info(response)
+    case response
+    when Net::HTTPSuccess
+      raw_info = JSON.parse(response.body)
+
+      user_info[:id] = raw_info["id"]
+      user_info[:name] = raw_info["name"]
+      user_info[:email] = raw_info["email"]
+      user_info[:image] = raw_info["profile_image_url_https"].sub('normal', 'bigger')
+      user_info
+    else
+      logger.error "Failed OAuth. Code: #{response.code}"
+      {}
+    end
   end
 end
