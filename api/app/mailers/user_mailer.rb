@@ -5,7 +5,7 @@ class UserMailer < ApplicationMailer
     @token  = @user.reset_password_token
     mail(
       to: user.email,
-      subject: 'パスワード再設定のご案内',
+      subject: t('.subject'),
     )
   end
 end
