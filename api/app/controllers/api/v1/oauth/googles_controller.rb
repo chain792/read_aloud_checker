@@ -29,7 +29,7 @@ class Api::V1::Oauth::GooglesController < ApplicationController
           user_info["picture"],
         )
 
-        if user && user.valid?
+        if user&.valid?
           refresh_token = user.refresh_me!
           set_refresh_token_to_cookie(refresh_token)
         else

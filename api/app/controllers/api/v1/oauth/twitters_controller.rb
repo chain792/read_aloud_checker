@@ -55,7 +55,7 @@ class Api::V1::Oauth::TwittersController < ApplicationController
           user_info["profile_image_url_https"].sub('normal', 'bigger'),
         )
 
-        if user && user.valid?
+        if user&.valid?
           refresh_token = user.refresh_me!
           set_refresh_token_to_cookie(refresh_token)
         else
