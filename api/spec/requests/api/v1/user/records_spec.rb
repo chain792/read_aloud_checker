@@ -10,6 +10,7 @@ RSpec.describe 'Sentences', type: :request do
   describe 'GET /index' do
     context 'ログイン後' do
       it 'データが返る' do
+        expect(Time.zone).to be nil
         get api_v1_user_records_path, params: params, xhr: true, headers: headers
         expect(JSON.parse(body).count).to eq(Time.zone.today.end_of_month.day)
         expect(response).to be_successful
