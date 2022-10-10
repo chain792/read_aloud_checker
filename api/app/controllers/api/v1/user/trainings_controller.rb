@@ -22,6 +22,9 @@ class Api::V1::User::TrainingsController < ApplicationController
   private
 
   def training_params
-    params.require(:training).permit(:sentence_id, :title, :body, :male_speech, :female_speech, result_words_attributes: [:position, :result])
+    params.require(:training).permit(
+      :sentence_id, :title, :body, :male_speech, :female_speech,
+      result_words_attributes: %i[position result]
+    )
   end
 end

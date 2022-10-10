@@ -10,7 +10,7 @@ class AvatarUploader < CarrierWave::Uploader::Base
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
-    "public/#{ENV['RAILS_ENV']}/uploads/user/avatar/#{model.user.id}"
+    "public/#{ENV.fetch('RAILS_ENV', nil)}/uploads/user/avatar/#{model.user.id}"
   end
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
@@ -36,7 +36,7 @@ class AvatarUploader < CarrierWave::Uploader::Base
   # Add an allowlist of extensions which are allowed to be uploaded.
   # For images you might use something like this:
   def extension_allowlist
-    %w(jpg jpeg gif png)
+    %w[jpg jpeg gif png]
   end
 
   # Override the filename of the uploaded files:

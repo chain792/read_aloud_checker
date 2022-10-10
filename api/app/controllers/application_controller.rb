@@ -9,6 +9,7 @@ class ApplicationController < ActionController::API
 
   def xhr_request?
     return if request.xhr?
+
     head :forbidden
   end
 end

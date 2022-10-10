@@ -52,7 +52,7 @@ const precision: Ref<string | number> = ref(100)
 const date = new Date()
 const currentYear = date.getFullYear()
 const currentMonth = date.getMonth() + 1
-const [registerdYear, registerdMonth] = useUserStore().authUser!.createdAt.split('-')
+const [registerdYear, registerdMonth] = useUserStore().authUser!.createdAt.split('/')
 const diffYear = currentYear - Number(registerdYear)
 const diffMonth = currentMonth - Number(registerdMonth)
 const itemNumber = diffYear * 12 + diffMonth + 1
@@ -120,7 +120,7 @@ const chartOptions = {
   height: 100%;
 }
 .select-container{
-  width: 160px;
+  width: 170px;
   height: 40px;
 }
 
