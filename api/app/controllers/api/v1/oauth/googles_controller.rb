@@ -48,6 +48,7 @@ class Api::V1::Oauth::GooglesController < ApplicationController
     when 200
       raw_info = JSON.parse(response.body)
 
+      user_info = {}
       user_info[:id] = raw_info["sub"]
       user_info[:name] = raw_info["name"]
       user_info[:email] = raw_info["email"]

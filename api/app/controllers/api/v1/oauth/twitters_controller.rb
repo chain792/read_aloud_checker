@@ -74,6 +74,7 @@ class Api::V1::Oauth::TwittersController < ApplicationController
     when Net::HTTPSuccess
       raw_info = JSON.parse(response.body)
 
+      user_info = {}
       user_info[:id] = raw_info["id"]
       user_info[:name] = raw_info["name"]
       user_info[:email] = raw_info["email"]
