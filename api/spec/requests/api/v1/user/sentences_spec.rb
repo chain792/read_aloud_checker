@@ -124,7 +124,7 @@ RSpec.describe 'Sentences', type: :request do
           expect {
             delete sentence_path(sentence), xhr: true, headers: headers
           } .to raise_error(NoMethodError)
-            .and change { Sentence.count }.by(0)
+            .and not_change { Sentence.count }
         end
       end
     end

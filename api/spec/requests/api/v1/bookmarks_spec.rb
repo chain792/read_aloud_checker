@@ -30,6 +30,7 @@ RSpec.describe "Bookmarks", type: :request do
         before do
           create(:bookmark, user: me, sentence: bookmarked_sentence)
         end
+
         it 'destroyが成功する' do
           expect { delete api_v1_sentence_bookmark_path(bookmarked_sentence), xhr: true, headers: headers }
             .to change { Bookmark.count }.by(-1)
@@ -43,7 +44,7 @@ RSpec.describe "Bookmarks", type: :request do
           expect {
             delete api_v1_sentence_bookmark_path(sentence), xhr: true, headers: headers
           } .to raise_error(NoMethodError)
-            .and change { Bookmark.count }.by(0)
+            .and not_change { Bookmark.count }
         end
       end
     end

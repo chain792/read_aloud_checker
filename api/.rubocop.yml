@@ -115,3 +115,7 @@ Lint/AmbiguousBlockAssociation:
 Naming/VariableNumber:
   Exclude:
     - "spec/**/*"
+
+Rails/FilePath:
+  Exclude:
+    - "spec/**/*"
