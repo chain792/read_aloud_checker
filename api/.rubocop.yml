@@ -43,8 +43,24 @@ Style/HashSyntax:
 Style/NestedParenthesizedCalls:
   Enabled: false
 
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/BlockDelimiters:
+  AutoCorrect: false
+  Exclude:
+    - "spec/**/*"
+
 Layout/LineLength:
   Max: 140
+  Exclude:
+    - "spec/**/*"
 
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
