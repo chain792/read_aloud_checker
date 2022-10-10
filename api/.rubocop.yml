@@ -58,9 +58,12 @@ Style/BlockDelimiters:
     - "spec/**/*"
 
 Layout/LineLength:
-  Max: 140
+  Max: 150
   Exclude:
     - "spec/**/*"
+
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
 
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
@@ -93,4 +96,7 @@ RSpec/MultipleMemoizedHelpers:
   Enabled: false
 
 RSpec/RepeatedDescription:
+  Enabled: false
+
+RSpec/ExpectChange:
   Enabled: false
