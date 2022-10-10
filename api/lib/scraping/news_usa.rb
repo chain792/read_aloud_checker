@@ -2,7 +2,7 @@ module Scraping
   class NewsUSA
     def self.scrape
       url = 'https://www.copyrightfreecontent.com/'
-      html = URI.open(url).read
+      html = URI.parse(url).open.read
       doc = Nokogiri::HTML.parse(html)
       news = []
       doc.css('#content > div').each do |div|
