@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Sessions', type: :request do
+RSpec.describe 'AdminSessions', type: :request do
   describe 'POST /api/v1/login' do
     let(:params) {
       { email: user.email, password: 'password' }
