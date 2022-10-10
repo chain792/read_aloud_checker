@@ -15,6 +15,9 @@ AllCops:
     - 'config/**/*'
   NewCops: enable
 
+Naming/AccessorMethodName:
+  Enabled: false
+
 Metrics/AbcSize:
   Max: 30
 
@@ -102,5 +105,13 @@ RSpec/ExpectChange:
   Enabled: false
 
 Layout/SpaceAroundMethodCallOperator:
+  Exclude:
+    - "spec/**/*"
+
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - "spec/**/*"
+
+Naming/VariableNumber:
   Exclude:
     - "spec/**/*"

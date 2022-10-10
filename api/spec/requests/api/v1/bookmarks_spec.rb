@@ -4,7 +4,6 @@ RSpec.describe "Bookmarks", type: :request do
   let!(:me) { create(:user) }
   let!(:sentence) { create(:user_sentence) }
   let!(:bookmarked_sentence) { create(:user_sentence) }
-  let!(:created_bookmark) { create(:bookmark, user: me, sentence: bookmarked_sentence) }
   let!(:headers) { { Authorization: "Bearer #{me.create_access_token[:token]}" } }
 
   describe 'POST /api/v1/sentences/:sentence_id/bookmark' do
@@ -28,6 +27,9 @@ RSpec.describe "Bookmarks", type: :request do
   describe 'DELETE /api/v1/sentences/:sentence_id/bookmark' do
     context 'ログイン後' do
       context '自分の資産の場合' do
+        before do
+          create(:bookmark, user: me, sentence: bookmarked_sentence)
+        end
         it 'destroyが成功する' do
           expect { delete api_v1_sentence_bookmark_path(bookmarked_sentence), xhr: true, headers: headers }
             .to change { Bookmark.count }.by(-1)

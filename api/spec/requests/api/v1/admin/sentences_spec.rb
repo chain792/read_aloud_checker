@@ -62,7 +62,7 @@ RSpec.describe 'AdminSentences', type: :request do
     context 'ゲストユーザー' do
       let!(:headers) { { Authorization: "Bearer #{guest.create_access_token[:token]}" } }
       it 'アクセス制限される' do
-        expect { patch api_v1_admin_sentence_path(sentence), params: params, xhr: true }.not_to change { Sentence.find(sentence.id).body }
+        expect { patch api_v1_admin_sentence_path(sentence), params: params, xhr: true, headers: headers }.not_to change { Sentence.find(sentence.id).body }
         expect(response).not_to be_successful
         expect(response).to have_http_status :unauthorized
       end
@@ -90,7 +90,7 @@ RSpec.describe 'AdminSentences', type: :request do
     context 'ゲストユーザー' do
       let!(:headers) { { Authorization: "Bearer #{guest.create_access_token[:token]}" } }
       it 'アクセス制限される' do
-        expect { delete api_v1_admin_sentence_path(sentence), xhr: true }.not_to change { Sentence.count }
+        expect { delete api_v1_admin_sentence_path(sentence), xhr: true, headers: headers }.not_to change { Sentence.count }
         expect(response).not_to be_successful
         expect(response).to have_http_status :unauthorized
       end

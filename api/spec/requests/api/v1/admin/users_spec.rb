@@ -62,7 +62,7 @@ RSpec.describe 'AdminUsers', type: :request do
     context 'ゲストユーザー' do
       let!(:headers) { { Authorization: "Bearer #{guest.create_access_token[:token]}" } }
       it 'アクセス制限される' do
-        expect { patch api_v1_admin_user_path(user), params: params, xhr: true }.not_to change { User.find(user.id).name }
+        expect { patch api_v1_admin_user_path(user), params: params, xhr: true, headers: headers }.not_to change { User.find(user.id).name }
         expect(response).not_to be_successful
         expect(response).to have_http_status :unauthorized
       end
@@ -90,7 +90,7 @@ RSpec.describe 'AdminUsers', type: :request do
     context 'ゲストユーザー' do
       let!(:headers) { { Authorization: "Bearer #{guest.create_access_token[:token]}" } }
       it 'アクセス制限される' do
-        expect { delete api_v1_admin_user_path(user), xhr: true }.not_to change { User.count }
+        expect { delete api_v1_admin_user_path(user), xhr: true, headers: headers }.not_to change { User.count }
         expect(response).not_to be_successful
         expect(response).to have_http_status :unauthorized
       end
