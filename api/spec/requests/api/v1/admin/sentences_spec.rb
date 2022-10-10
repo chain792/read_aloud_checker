@@ -6,14 +6,14 @@ RSpec.describe 'AdminSentences', type: :request do
   let!(:headers) { { Authorization: "Bearer #{admin.create_access_token[:token]}" } }
 
   describe 'GET /index' do
-    let(:user_sentence_num) { 10 }
+    let(:sentence_num) { 10 }
     before do
-      create_list(:user_sentence, user_sentence_num, creater: guest)
+      create_list(:user_sentence, sentence_num, creater: guest)
     end
     context 'ログイン後' do
       it '英文一覧が返る' do
         get api_v1_admin_sentences_path, xhr: true, headers: headers
-        expect(JSON.parse(body)['sentences'].count).to eq(user_sentence_num)
+        expect(JSON.parse(body)['sentences'].count).to eq(sentence_num)
         expect(response).to be_successful
         expect(response).to have_http_status :ok
       end
