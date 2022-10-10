@@ -12,5 +12,5 @@ class DetailSentenceResource
     transform_keys :lower_camel
   end
 
-  one :creater, key: 'user', resource:  RestrictedUserResource, if: proc { |sentence| sentence.creater_type == 'User' }
+  one :creater, key: 'user', resource: RestrictedUserResource, if: proc { |sentence| sentence.creater_type == 'User' }
 end

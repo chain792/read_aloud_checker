@@ -20,7 +20,7 @@ class Api::V1::User::RecordsController < ApplicationController
       if !failed_results.empty? && failed_results[0].date.day == i
         failed_number = failed_results.shift.count
       end
-      monthly_results << { succeededNumber: succeeded_number , failedNumber: failed_number }
+      monthly_results << { succeededNumber: succeeded_number, failedNumber: failed_number }
     end
 
     render json: monthly_results

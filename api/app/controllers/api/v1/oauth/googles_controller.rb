@@ -9,13 +9,13 @@ class Api::V1::Oauth::GooglesController < ApplicationController
   def callback
     access_token = GoogleClient.auth_code.get_token(
       params[:code],
-      redirect_uri: callback_url
+      redirect_uri: callback_url,
     )
     response = access_token.get(
       'https://www.googleapis.com/oauth2/v3/userinfo',
-      params: { access_token: access_token.token }
+      params: { access_token: access_token.token },
     )
-    
+
     case response.status
     when 200
       user_info = JSON.parse(response.body)
@@ -26,7 +26,7 @@ class Api::V1::Oauth::GooglesController < ApplicationController
           user_info["sub"],
           user_info["name"],
           user_info["email"],
-          user_info["picture"]
+          user_info["picture"],
         )
 
         if user && user.valid?
@@ -48,6 +48,6 @@ class Api::V1::Oauth::GooglesController < ApplicationController
   private
 
   def callback_url
-    "#{ENV['API_DOMAIN']}/api/v1/oauth/google/callback"
+    "#{ENV.fetch('API_DOMAIN', nil)}/api/v1/oauth/google/callback"
   end
 end

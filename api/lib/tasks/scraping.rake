@@ -2,7 +2,7 @@ require_relative '../scraping/news_usa'
 
 namespace :scraping do
   desc 'NewsUSAから英文を取得する'
-	task scrape_news_usa: :environment do
+  task scrape_news_usa: :environment do
     news_articles = Scraping::NewsUSA.scrape
     news_articles.each do |news_article|
       news_category = NewsCategory.find_or_create_by!(name: news_article[:category])
@@ -12,5 +12,5 @@ namespace :scraping do
         sentence.save!
       end
     end
-	end
+  end
 end

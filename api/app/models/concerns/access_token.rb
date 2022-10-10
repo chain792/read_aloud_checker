@@ -8,7 +8,7 @@ module AccessToken
   end
 
   def create_access_token
-    payload = { user_id: id , exp: set_expeired_time(:jwt) }
+    payload = { user_id: id, exp: set_expeired_time(:jwt) }
     { token: issue_token(payload),
       expired_time: set_expeired_time(:front) }
   end
@@ -21,7 +21,7 @@ module AccessToken
 
   def set_expeired_time(target)
     # フロントに渡す有効期限の値は1分の余裕をもたせる
-    buffer = target == :jwt ? 0 : 1.minutes
-    (Time.current + 15.minutes - buffer).to_i
+    buffer = target == :jwt ? 0 : 1.minute
+    (15.minutes.from_now - buffer).to_i
   end
 end

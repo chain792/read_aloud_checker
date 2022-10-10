@@ -1,5 +1,5 @@
 class Api::V1::Profile::PasswordsController < ApplicationController
-  def update  
+  def update
     user = User.find(current_user.id)
 
     if user.valid_password?(params[:current_password])

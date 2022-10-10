@@ -16,6 +16,7 @@ RSpec.describe 'Sentences', type: :request do
         expect(response).to have_http_status :ok
       end
     end
+
     context 'ログイン前' do
       it 'アクセス制限される' do
         get api_v1_user_records_path, params: params, xhr: true

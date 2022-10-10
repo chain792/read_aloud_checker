@@ -10,7 +10,7 @@ module RefreshToken
 
   def refresh_me!
     self.refresh_token = SecureRandom.uuid
-    self.save!
+    save!
     refresh_token
   end
 end

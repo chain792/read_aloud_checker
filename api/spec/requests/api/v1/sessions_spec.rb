@@ -29,6 +29,7 @@ RSpec.describe 'Sessions', type: :request do
       before do
         cookies[:refresh_token] = user.refresh_me!
       end
+
       it 'refreshが成功する' do
         post api_v1_refresh_path, xhr: true
         expect(response).to be_successful
@@ -48,10 +49,11 @@ RSpec.describe 'Sessions', type: :request do
       before do
         cookies[:refresh_token] = user.refresh_me!
       end
+
       it 'logoutが成功する' do
         delete api_v1_logout_path, xhr: true
 
-        expect(response.cookies.fetch('refresh_token')).to be nil
+        expect(response.cookies.fetch('refresh_token')).to be_nil
         expect(response).to be_successful
         expect(response).to have_http_status :no_content
       end

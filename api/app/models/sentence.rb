@@ -13,7 +13,7 @@ class Sentence < ApplicationRecord
   validates :status, presence: true
 
   # 全角を半角にする
-  before_save -> { self.body = NKF.nkf('-w -Z1 -Z4 -x', self.body) }
+  before_save -> { self.body = NKF.nkf('-w -Z1 -Z4 -x', body) }
   after_create :create_speech
   after_update :create_speech, if: :saved_change_to_body?
 

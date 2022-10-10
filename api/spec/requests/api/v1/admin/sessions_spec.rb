@@ -11,13 +11,13 @@ RSpec.describe 'AdminSessions', type: :request do
 
     context '管理者' do
       let(:user) { create(:user, role: :admin) }
-      
+
       it 'ログインが成功する' do
         post api_v1_admin_login_path, params: params, xhr: true
         expect(response).to be_successful
         expect(response).to have_http_status :ok
       end
-      
+
       it 'ログインが失敗する' do
         post api_v1_admin_login_path, params: params_2, xhr: true
         expect(response).not_to be_successful
@@ -27,7 +27,7 @@ RSpec.describe 'AdminSessions', type: :request do
 
     context 'ゲストユーザー' do
       let(:user) { create(:user) }
-  
+
       it 'ログインが失敗する' do
         post api_v1_admin_login_path, params: params, xhr: true
         expect(response).not_to be_successful

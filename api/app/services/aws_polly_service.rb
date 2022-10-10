@@ -9,13 +9,13 @@ class AwsPollyService
         language_code: "en-US",
         output_format: "mp3",
         text: text,
-        voice_id: voice_id
+        voice_id: voice_id,
       })
       speech_name = SecureRandom.urlsafe_base64
       PUBLIC_BUCKET.put_object(
         acl: 'private',
         body: resp.audio_stream.read,
-        key: "public/#{ENV['RAILS_ENV']}/uploads/#{path}/#{speech_name}.mp3"
+        key: "public/#{ENV.fetch('RAILS_ENV', nil)}/uploads/#{path}/#{speech_name}.mp3",
       )
       speech_name
     end

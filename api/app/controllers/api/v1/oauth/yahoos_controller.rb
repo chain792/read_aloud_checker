@@ -9,10 +9,10 @@ class Api::V1::Oauth::YahoosController < ApplicationController
   def callback
     access_token = YahooClient.auth_code.get_token(
       params[:code],
-      redirect_uri: callback_url
+      redirect_uri: callback_url,
     )
     response = access_token.get(
-      'https://userinfo.yahooapis.jp/yconnect/v2/attribute'
+      'https://userinfo.yahooapis.jp/yconnect/v2/attribute',
     )
 
     case response.status
@@ -25,7 +25,7 @@ class Api::V1::Oauth::YahoosController < ApplicationController
           user_info["sub"],
           user_info["nickname"],
           user_info["email"],
-          user_info["picture"]
+          user_info["picture"],
         )
 
         if user && user.valid?
@@ -47,6 +47,6 @@ class Api::V1::Oauth::YahoosController < ApplicationController
   private
 
   def callback_url
-    "#{ENV['API_DOMAIN']}/api/v1/oauth/yahoo/callback"
+    "#{ENV.fetch('API_DOMAIN', nil)}/api/v1/oauth/yahoo/callback"
   end
 end

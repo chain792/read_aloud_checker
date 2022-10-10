@@ -17,6 +17,7 @@ RSpec.describe 'Trainings', type: :request do
         expect(response).to have_http_status :ok
       end
     end
+
     context 'ログイン前' do
       it 'アクセス制限される' do
         get api_v1_user_trainings_path, xhr: true
@@ -33,14 +34,15 @@ RSpec.describe 'Trainings', type: :request do
     }
     context 'ログイン後' do
       it 'createが成功する' do
-        expect{ post api_v1_user_trainings_path, params: params, xhr: true, headers: headers }.to change{ Training.count }.by(1)
+        expect { post api_v1_user_trainings_path, params: params, xhr: true, headers: headers }.to change { Training.count }.by(1)
         expect(response).to be_successful
         expect(response).to have_http_status :ok
       end
     end
+
     context 'ログイン前' do
       it 'アクセス制限される' do
-        expect{ post api_v1_user_trainings_path, params: params, xhr: true }.to change{ Training.count }.by(0)
+        expect { post api_v1_user_trainings_path, params: params, xhr: true }.not_to change { Training.count }
         expect(response).not_to be_successful
         expect(response).to have_http_status :unauthorized
       end
@@ -60,14 +62,16 @@ RSpec.describe 'Trainings', type: :request do
           expect(response).to have_http_status :ok
         end
       end
+
       context '他人の資産の場合' do
         it '他ユーザーにはアクセスできない' do
-          expect { 
-            get api_v1_user_training_path(training), xhr: true, headers: headers 
+          expect {
+            get api_v1_user_training_path(training), xhr: true, headers: headers
           } .to raise_error(ActiveRecord::RecordNotFound)
         end
       end
     end
+
     context 'ログイン前' do
       it 'アクセス制限される' do
         get api_v1_user_training_path(training_by_me), xhr: true

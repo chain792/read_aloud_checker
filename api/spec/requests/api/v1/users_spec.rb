@@ -9,7 +9,7 @@ RSpec.describe 'Users', type: :request do
     }
 
     it 'ユーザーが追加される' do
-      expect{ post api_v1_users_path, params: params, xhr: true }.to change{ User.count }.by(1)
+      expect { post api_v1_users_path, params: params, xhr: true }.to change { User.count }.by(1)
       expect(response).to be_successful
       expect(response).to have_http_status :ok
     end

@@ -7,9 +7,10 @@ module Scraping
       news = []
       doc.css('#content > div').each do |div|
         break if div.attribute('class').value == 'navigation'
+
         title = div.at_css('h1 > a').text
-        body = div.at_css('.entry > p').text.gsub(/\(NewsUSA\)\W*/,'')
-        category = div.at_css('h1 > a').attribute('href').value.gsub(url, '').gsub(/\/.*/, '')
+        body = div.at_css('.entry > p').text.gsub(/\(NewsUSA\)\W*/, '')
+        category = div.at_css('h1 > a').attribute('href').value.gsub(url, '').gsub(%r{/.*}, '')
         news << { title: title, body: body, category: category }
       end
       news

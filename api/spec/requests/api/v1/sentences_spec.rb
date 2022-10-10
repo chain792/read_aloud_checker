@@ -68,6 +68,7 @@ RSpec.describe 'Sentences', type: :request do
         expect(response).to have_http_status :ok
       end
     end
+
     context 'ログイン前' do
       it 'アクセス制限される' do
         get bookmark_api_v1_sentences_path, xhr: true

@@ -9,13 +9,13 @@ class Api::V1::Oauth::TwittersController < ApplicationController
       value: request_token.token,
       http_only: true,
       secure: true,
-      expires: 1.hour.from_now
+      expires: 1.hour.from_now,
     }
     cookies[:token_secret] = {
       value: request_token.secret,
       http_only: true,
       secure: true,
-      expires: 1.hour.from_now
+      expires: 1.hour.from_now,
     }
 
     render json: request_token.authorize_url(oauth_callback: callback_url)
@@ -33,13 +33,13 @@ class Api::V1::Oauth::TwittersController < ApplicationController
     access_token = request_token.get_access_token(
       {},
       oauth_token: params[:oauth_token],
-      oauth_verifier: params[:oauth_verifier]
+      oauth_verifier: params[:oauth_verifier],
     )
     response = TwitterConsumer.request(
       :get,
       '/1.1/account/verify_credentials.json?include_entities=false&skip_status=true&include_email=true',
       access_token,
-      { scheme: :query_string }
+      { scheme: :query_string },
     )
 
     case response
@@ -52,7 +52,7 @@ class Api::V1::Oauth::TwittersController < ApplicationController
           user_info["id"],
           user_info["name"],
           user_info["email"],
-          user_info["profile_image_url_https"].sub('normal', 'bigger')
+          user_info["profile_image_url_https"].sub('normal', 'bigger'),
         )
 
         if user && user.valid?
@@ -74,6 +74,6 @@ class Api::V1::Oauth::TwittersController < ApplicationController
   private
 
   def callback_url
-    "#{ENV['API_DOMAIN']}/api/v1/oauth/twitter/callback"
+    "#{ENV.fetch('API_DOMAIN', nil)}/api/v1/oauth/twitter/callback"
   end
 end
