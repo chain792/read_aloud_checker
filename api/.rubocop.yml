@@ -43,6 +43,12 @@ Style/HashSyntax:
 Style/NestedParenthesizedCalls:
   Enabled: false
 
+Layout/LineLength:
+  Max: 140
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
 RSpec/MultipleExpectations:
   Enabled: false
 
