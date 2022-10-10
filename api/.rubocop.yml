@@ -100,3 +100,7 @@ RSpec/RepeatedDescription:
 
 RSpec/ExpectChange:
   Enabled: false
+
+Layout/SpaceAroundMethodCallOperator:
+  Exclude:
+    - "spec/**/*"
