@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_02_072414) do
+ActiveRecord::Schema.define(version: 2022_10_22_111650) do
 
   create_table "authentications", charset: "utf8mb4", force: :cascade do |t|
     t.string "uid"
@@ -66,6 +66,8 @@ ActiveRecord::Schema.define(version: 2022_09_02_072414) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "male_speech"
     t.string "female_speech"
+    t.string "thumbnail"
+    t.integer "word_count"
     t.index ["creater_type", "creater_id"], name: "index_sentences_on_creater"
   end
 
