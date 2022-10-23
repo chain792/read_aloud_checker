@@ -10,16 +10,13 @@ module Scraping
         
         body = div.at_css('.entry > p').text.gsub(/\(NewsUSA\)\W*/, '')
         # 長すぎる英文は取得しない 
-        next if body.split.length > 300
+        next if !body.split.length.between?(1,300)
 
         title = div.at_css('h1 > a').text
         thumbnail = div.at_css('.entry > p > .category-img').attribute('src').value
         category = div.at_css('h1 > a').attribute('href').value.gsub(base_url, '').gsub(%r{/.*}, '')
         news << { title: title, body: body, category: category, thumbnail: thumbnail }
       end
-      
-      binding.pry
-      
       news
     end
   end

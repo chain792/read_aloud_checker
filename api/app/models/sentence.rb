@@ -1,4 +1,6 @@
 class Sentence < ApplicationRecord
+  mount_uploader :thumbnail, ThumbnailUploader
+
   require 'nkf'
   include UuidPk
 
