@@ -1,3 +1,5 @@
+import { Sentence } from '@/@types/model.d';
+
 interface User {
   id: number
   avatar?: string
@@ -10,6 +12,15 @@ export function avatarUrl(user: User): string {
     return '/default.png'
   }
   imagePath = `user/avatar/${user.id}/${user.avatar}`
+
+  return `${import.meta.env.VITE_CLOUD_FRONT}/public/${import.meta.env.MODE}/uploads/${imagePath}`
+}
+
+export function thumbnailUrl(sentence: Sentence): string {
+  if(!sentence.thumbnail){
+    return '/favicon.png'
+  }
+  const imagePath = `sentence/thumbnail/${sentence.id}/${sentence.thumbnail}`
 
   return `${import.meta.env.VITE_CLOUD_FRONT}/public/${import.meta.env.MODE}/uploads/${imagePath}`
 }

@@ -4,6 +4,7 @@ export interface Sentence {
   body: string
   status: "public_state" | "private_state"
   wordCount: number
+  thumbnail: string
   createrType: string
   createdAt: string
 }
