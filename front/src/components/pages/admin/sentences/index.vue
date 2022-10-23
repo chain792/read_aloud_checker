@@ -195,15 +195,8 @@ import ErrorMessages from "@/components/shared/ErrorMessages.vue"
 import ProgressButton from "@/components/shared/ProgressButton.vue"
 import BaseTextField from "@/components/shared/form/BaseTextField.vue"
 import { bodyRules, titleRules } from "@/common/rules"
+import { Sentence } from "@/@types/model"
 
-interface Sentence {
-  id: string
-  title: string
-  body: string
-  status: string
-  createrType: string
-  createdAt: string
-}
 interface EditedSentence {
   id: string
   title: string
