@@ -7,5 +7,6 @@ class SentenceResource
   attribute :thumbnail do |resource|
     resource.thumbnail.identifier
   end
+  one :creater, key: 'news', resource: NewsResource, if: proc { |sentence| sentence.creater_type == 'News' }
   transform_keys :lower_camel
 end
