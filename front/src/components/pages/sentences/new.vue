@@ -49,15 +49,31 @@
               class="accordion-title py-2 pr-3"
               @click="isAccordion = !isAccordion"
             >  
-              <span class="text-grey-darken-2" :class="{'open': isAccordion === true}">▼</span> 
-              
+              <span class="text-grey-darken-2 d-inline-block" :class="{'open': isAccordion === true}">▼</span> 
               その他の設定
             </span>
-            <div v-show="isAccordion" class="accordion-menu mt-2">
+            <div v-show="isAccordion" class="accordion-menu mt-5">
               <div>
-                英文の画像イメージを追加する
+                <span 
+                  class="pointer text-blue-accent-4"
+                  @click="clickFileInput"
+                >
+                  <v-icon color="grey-darken-2 mr-1">mdi-camera</v-icon>
+                  英文の画像イメージを追加
+                </span>
+                <v-img v-show="imageSrc" :src="imageSrc" class="preview-image mt-3" width="120px">
+                  <v-icon 
+                    class="close-icon pointer" size="x-large" color="grey-darken-3"
+                    @click="closeImage"
+                  >
+                    mdi-close-circle
+                  </v-icon>
+                </v-img>
+              
+                <input ref="fileInput" type="file" accept="image/*" style="display: none;" @change="previewImage">
               </div>
-              <div>
+
+              <div class="mt-5">
                 カテゴリー
               </div>
             </div>
@@ -103,6 +119,8 @@ const sentence = reactive({
 const errorMessages: string[] = reactive([])
 const progress = ref(false)
 const isAccordion = ref(false)
+const fileInput = ref<HTMLInputElement>()
+const imageSrc = ref<string | undefined>()
 
 const createSentences = async (): Promise<void> => {
   try{
@@ -124,6 +142,26 @@ const createSentences = async (): Promise<void> => {
   }
 }
 
+const clickFileInput = (): void => {
+  fileInput.value!.click()
+}
+
+const previewImage = (): void => {
+  const file = fileInput.value!.files![0]
+  const reader = new FileReader()
+  reader.onloadend = (): void => {
+    imageSrc.value= reader.result as string
+  }
+  if(file){
+    reader.readAsDataURL(file)
+  }
+}
+
+const closeImage = (): void => {
+  fileInput.value!.value = ""
+  imageSrc.value = undefined 
+}
+
 </script>
 
 <style scoped>
@@ -142,12 +180,26 @@ const createSentences = async (): Promise<void> => {
   user-select: none;
 }
 
+.pointer{
+  cursor: pointer;
+}
+
 .accordion-title > span{
   transition: transform .3s;
-  display:inline-block;
 }
 .accordion-title > span.open{
   transform: rotate(60deg);
+}
+
+.preview-image{
+  position: relative;
+}
+
+.close-icon{
+  position: absolute;
+  top: 3px;
+  right: 3px;
+
 }
 
 
