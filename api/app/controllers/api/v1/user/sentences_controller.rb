@@ -37,6 +37,6 @@ class Api::V1::User::SentencesController < ApplicationController
   private
 
   def sentence_params
-    params.require(:sentence).permit(:title, :body, :status)
+    params.require(:sentence).permit(:title, :body, :status, :thumbnail)
   end
 end

@@ -126,7 +126,12 @@ const createSentences = async (): Promise<void> => {
   try{
     errorMessages.splice(0)
     progress.value = true
-    await axios.post("user/sentences", { sentence: sentence })
+    const formData = new FormData()
+    formData.append('sentence[title]', sentence.title)
+    formData.append('sentence[body]', sentence.body)
+    formData.append('sentence[status]', sentence.status)
+    formData.append('sentence[thumbnail]', fileInput.value!.files![0])
+    await axios.post("user/sentences", formData)
     flashStore.succeedCreateSentences()
     router.push({ name: "MySentences" })
   } catch(e) {
