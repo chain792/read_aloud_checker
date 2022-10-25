@@ -2,11 +2,31 @@
   <div class="page-user-sentences">
     <v-container class="pt-0">
       <tab-menu :tab="1"></tab-menu>
-      <v-card v-for="sentence in sentences" :key="sentence.id" class="my-3 mx-10">
-        <router-link :to="{ name: 'Sentence', params: { id: sentence.id } }" class="text-decoration-none">
-          <v-card-text>{{ sentence.title }}</v-card-text>
-        </router-link>
-      </v-card>
+      <div class="card-container mt-12">
+        <v-card v-for="sentence in sentences" :key="sentence.id" :rounded="0" class="py-1 mx-sm-10 sentences-card">
+          <router-link :to="{ name: 'Sentence', params: { id: sentence.id } }" class="text-decoration-none">
+            <div class="d-flex">
+              <div class="thumbnail-container flex-shrink-0">
+                <v-img :src="thumbnailUrl(sentence)" :cover="true" :aspect-ratio="1" ></v-img>
+              </div>
+              <v-card-text>
+                <div>{{ sentence.title }}</div>
+                <div class="text-black mt-2 d-flex">
+                  {{ sentence.wordCount }} 単語
+                  <!-- <v-btn
+                    class="ml-3 bg-grey-lighten-2"
+                    :rounded="true"
+                    density="compact"
+                    @click.prevent="test"
+                  >
+                    <span class="text-body-2">{{ sentence.news.category }}</span>
+                  </v-btn> -->
+                </div>
+              </v-card-text>
+            </div>
+          </router-link>
+        </v-card>
+      </div>
       <v-pagination
         v-if="paginationLength > 1"
         v-model="page"
@@ -24,6 +44,7 @@ import axios from "@/plugins/axios"
 import TabMenu from "../components/TabMenu.vue"
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router"
 import { Sentence } from "@/@types/model"
+import { thumbnailUrl } from "@/common/imageUrl"
 
 const router = useRouter()
 const route = useRoute()
@@ -66,6 +87,25 @@ onBeforeRouteUpdate(async (to) => {
 .page-user-sentences{
   background-color: rgba(225, 200, 30, 0.1);
   height: 100%;
+}
+
+.thumbnail-container{
+  width: 100px;
+  background-color: rgba(200, 200, 200, 0.1)
+}
+.sentences-card{
+  height: 120px;
+}
+.card-container .sentences-card:nth-child(n + 2){
+  border-top: 1.5px solid rgba(200,200,200,0.2);
+}
+.sentence-title:hover{
+  text-decoration: underline;
+}
+@media (min-width: 600px) {
+  .sentences-card{
+    height: 100px;
+  }
 }
 
 @media (min-width: 1920px) {
