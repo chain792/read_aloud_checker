@@ -44,6 +44,25 @@
             ></v-radio>
           </v-radio-group>
 
+          <div class="accordion mb-5">
+            <span 
+              class="accordion-title py-2 pr-3"
+              @click="isAccordion = !isAccordion"
+            >  
+              <span class="text-grey-darken-2" :class="{'open': isAccordion === true}">▼</span> 
+              
+              その他の設定
+            </span>
+            <div v-show="isAccordion" class="accordion-menu mt-2">
+              <div>
+                英文の画像イメージを追加する
+              </div>
+              <div>
+                カテゴリー
+              </div>
+            </div>
+          </div>
+
           <ProgressButton
             width="100%"
             color="warning"
@@ -83,6 +102,7 @@ const sentence = reactive({
 })
 const errorMessages: string[] = reactive([])
 const progress = ref(false)
+const isAccordion = ref(false)
 
 const createSentences = async (): Promise<void> => {
   try{
@@ -116,4 +136,19 @@ const createSentences = async (): Promise<void> => {
   letter-spacing: 0.01em;
   color: #555;
 }
+
+.accordion-title{
+  cursor: pointer;
+  user-select: none;
+}
+
+.accordion-title > span{
+  transition: transform .3s;
+  display:inline-block;
+}
+.accordion-title > span.open{
+  transform: rotate(60deg);
+}
+
+
 </style>
