@@ -75,12 +75,14 @@
 
               <div class="mt-5">
                 <span class="text-caption text-grey-darken-3">タグを設定することができます</span>
-                <BaseTextField
+                <AutoComplimentTextField
                   v-model="sentence.category"
-                  class="mt-1"
                   label="タグ"
-                ></BaseTextField>
-
+                  :items="categories"
+                  @input="fetchCategories"
+                  @auto-compliment="autoCompliment"
+                >
+                </AutoComplimentTextField>
               </div>
             </div>
           </div>
@@ -112,10 +114,10 @@ import ProgressButton from "@/components/shared/ProgressButton.vue"
 import { responsiveWidth800 } from "@/common/width"
 import { bodyRules, titleRules } from "@/common/rules"
 import BaseTextField from "@/components/shared/form/BaseTextField.vue"
+import AutoComplimentTextField from "@/components/shared/form/AutoComplimentTextField.vue"
 
 const flashStore = useFlashStore()
 const router = useRouter()
-
 const valid = ref(true)
 const sentence = reactive({
   title: "",
@@ -128,6 +130,29 @@ const progress = ref(false)
 const isAccordion = ref(false)
 const fileInput = ref<HTMLInputElement>()
 const imageSrc = ref<string | undefined>()
+const categories = ref<Array<string>>([])
+
+const fetchCategories = async (): Promise<void> => {
+  if(!sentence.category){
+    categories.value = []
+    return
+  }
+
+  try{
+    const res = await axios.get("categories", {
+      params: {
+        word: sentence.category
+      }
+    })
+    categories.value = res.data
+  } catch(e) {
+    console.log(e)
+  }
+}
+
+const autoCompliment = (item: string) =>{
+  sentence.category = item
+}
 
 const createSentences = async (): Promise<void> => {
   try{
@@ -212,8 +237,6 @@ const closeImage = (): void => {
   position: absolute;
   top: 3px;
   right: 3px;
-
 }
-
 
 </style>
