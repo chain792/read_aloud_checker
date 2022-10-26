@@ -97,7 +97,7 @@ onBeforeRouteUpdate(async (to) => {
   background-color: rgba(200, 200, 200, 0.1)
 }
 .sentences-card{
-  height: 120px;
+  height: 130px;
 }
 .card-container .sentences-card:nth-child(n + 2){
   border-top: 1.5px solid rgba(200,200,200,0.2);

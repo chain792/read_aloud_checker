@@ -30,4 +30,14 @@ class Sentence < ApplicationRecord
     self.male_speech = AwsPollyService.call(body, 'Matthew', "sentence/speech/#{id}")
     save
   end
+
+  def save_with_categories(name)
+    ActiveRecord::Base.transaction do
+      self.save!
+      self.categories = [Category.find_or_initialize_by(name: name.strip)] unless name.blank?
+    end
+    true
+    rescue StandardError
+      false
+  end
 end

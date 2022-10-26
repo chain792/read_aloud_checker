@@ -4,7 +4,7 @@ class Api::V1::SentencesController < ApplicationController
   def index
     case params[:type]
     when 'user'
-      sentences = Sentence.user_published.order(created_at: :desc).page(params[:page])
+      sentences = Sentence.user_published.includes(:categories).order(created_at: :desc).page(params[:page])
     when 'news'
       sentences = Sentence.news_published.includes(:categories).order(created_at: :desc).page(params[:page])
     end
