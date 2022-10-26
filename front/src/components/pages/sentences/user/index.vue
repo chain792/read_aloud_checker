@@ -13,14 +13,14 @@
                 <div>{{ sentence.title }}</div>
                 <div class="text-black mt-2 d-flex">
                   {{ sentence.wordCount }} 単語
-                  <!-- <v-btn
-                    class="ml-3 bg-grey-lighten-2"
+                  <v-btn
+                    v-if="sentence.categories[0]"
+                    class="ml-3 bg-grey-lighten-2 category-button"
                     :rounded="true"
                     density="compact"
-                    @click.prevent="test"
                   >
-                    <span class="text-body-2">{{ sentence.news.category }}</span>
-                  </v-btn> -->
+                    <span class="text-body-2">{{ sentence.categories[0].name }}</span>
+                  </v-btn>
                 </div>
               </v-card-text>
             </div>

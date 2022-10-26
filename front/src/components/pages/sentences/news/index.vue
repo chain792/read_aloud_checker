@@ -14,12 +14,13 @@
                 <div class="text-black mt-2 d-flex">
                   {{ sentence.wordCount }} 単語
                   <v-btn
+                    v-if="sentence.categories[0]"
                     class="ml-3 bg-grey-lighten-2 category-button"
                     :rounded="true"
                     density="compact"
                     @click.prevent="test"
                   >
-                    <span class="text-body-2">{{ sentence.news.category }}</span>
+                    <span class="text-body-2">{{ sentence.categories[0].name }}</span>
                   </v-btn>
                 </div>
               </v-card-text>
@@ -46,11 +47,6 @@ import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router"
 import { Sentence } from "@/@types/model"
 import { thumbnailUrl } from "@/common/imageUrl"
 
-interface NewsSentence extends Sentence {
-  news: {
-    category: string
-  }
-}
 const test = () => {
   console.log('aaa')
 }
@@ -61,7 +57,7 @@ const queryValueOfPage = route.query.page? Number(route.query.page) : undefined
 const page = ref(queryValueOfPage)
 const paginationLength = ref(1)
 
-const sentences = ref<Array<NewsSentence>>([])
+const sentences = ref<Array<Sentence>>([])
 
 const fetchSentences = async (page?: string | number): Promise<void> => {
   try{

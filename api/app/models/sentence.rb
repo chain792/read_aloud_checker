@@ -7,6 +7,8 @@ class Sentence < ApplicationRecord
   belongs_to :creater, polymorphic: true
   has_many :trainings, dependent: :destroy
   has_many :bookmarks, dependent: :destroy
+  has_many :sentence_categories, dependent: :destroy
+  has_many :categories, through: :sentence_categories, source: :category
 
   enum status: { public_state: 0, private_state: 1 }
 

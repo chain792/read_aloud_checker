@@ -7,4 +7,5 @@ export interface Sentence {
   thumbnail: string
   createrType: string
   createdAt: string
+  categories: Array<{name: string}>
 }
