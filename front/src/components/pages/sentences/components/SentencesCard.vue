@@ -15,6 +15,7 @@
                 class="ml-3 bg-grey-lighten-2 category-button"
                 :rounded="true"
                 density="compact"
+                :to="{ name: 'CategorySentences', query: { keyword: sentence.categories[0].name } }"
               >
                 <span class="text-body-2">{{ sentence.categories[0].name }}</span>
               </v-btn>

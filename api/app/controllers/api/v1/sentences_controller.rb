@@ -18,7 +18,13 @@ class Api::V1::SentencesController < ApplicationController
   end
 
   def bookmark
-    sentences = current_user.bookmark_sentences.order('bookmarks.updated_at desc').page(params[:page])
+    sentences = current_user.bookmark_sentences.includes(:categories).order('bookmarks.updated_at desc').page(params[:page])
+    pagenation = resources_with_pagination(sentences)
+    render json: pagenation.merge(JSON.parse SentenceResource.new(sentences).serialize)
+  end
+
+  def category
+    sentences = Category.find_by(name: params[:keyword]).sentences.includes(:categories).order('sentences.created_at desc').page(params[:page])
     pagenation = resources_with_pagination(sentences)
     render json: pagenation.merge(JSON.parse SentenceResource.new(sentences).serialize)
   end
