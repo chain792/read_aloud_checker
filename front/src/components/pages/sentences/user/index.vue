@@ -2,31 +2,7 @@
   <div class="page-user-sentences">
     <v-container class="pt-0">
       <tab-menu :tab="1"></tab-menu>
-      <div class="card-container mt-12">
-        <v-card v-for="sentence in sentences" :key="sentence.id" :rounded="0" class="py-1 mx-sm-10 sentences-card">
-          <router-link :to="{ name: 'Sentence', params: { id: sentence.id } }" class="text-decoration-none">
-            <div class="d-flex">
-              <div class="thumbnail-container flex-shrink-0">
-                <v-img :src="thumbnailUrl(sentence)" :cover="true" :aspect-ratio="1" ></v-img>
-              </div>
-              <v-card-text>
-                <div>{{ sentence.title }}</div>
-                <div class="text-black mt-2 d-flex">
-                  {{ sentence.wordCount }} 単語
-                  <v-btn
-                    v-if="sentence.categories[0]"
-                    class="ml-3 bg-grey-lighten-2 category-button"
-                    :rounded="true"
-                    density="compact"
-                  >
-                    <span class="text-body-2">{{ sentence.categories[0].name }}</span>
-                  </v-btn>
-                </div>
-              </v-card-text>
-            </div>
-          </router-link>
-        </v-card>
-      </div>
+      <sentences-card :sentences="sentences" class="mt-12"></sentences-card>
       <v-pagination
         v-if="paginationLength > 1"
         v-model="page"
@@ -44,7 +20,7 @@ import axios from "@/plugins/axios"
 import TabMenu from "../components/TabMenu.vue"
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router"
 import { Sentence } from "@/@types/model"
-import { thumbnailUrl } from "@/common/imageUrl"
+import SentencesCard from "../components/SentencesCard.vue"
 
 const router = useRouter()
 const route = useRoute()

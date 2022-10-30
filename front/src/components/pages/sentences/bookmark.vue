@@ -4,12 +4,8 @@
       <div class="bookmark-container">
         <p class="text-h6 text-center mt-1 text-grey-darken-3 font-weight-bold tracking-widest">ブックマークした英文</p>
         <v-divider  length="250" thickness="2" class="mx-auto mt-2"></v-divider>
-        <div v-if="sentences.length" class="mt-6">
-          <v-card v-for="sentence in sentences" :key="sentence.id" class="my-3 mx-10">
-            <router-link :to="{ name: 'Sentence', params: { id: sentence.id } }" class="text-decoration-none">
-              <v-card-text>{{ sentence.title }}</v-card-text>
-            </router-link>
-          </v-card>
+        <div v-if="sentences.length" class="mt-8">
+          <sentences-card :sentences="sentences"></sentences-card>
         </div>
         <div v-else-if="isAxiosFinished" class="mt-10">
           <p class="text-center text-grey-darken-3 text-body-2 tracking-wide">ブックマークしている英文はありません</p>
@@ -31,6 +27,7 @@ import { ref } from "vue"
 import axios from "@/plugins/axios"
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router"
 import { Sentence } from "@/@types/model"
+import SentencesCard from "./components/SentencesCard.vue"
 
 const router = useRouter()
 const route = useRoute()

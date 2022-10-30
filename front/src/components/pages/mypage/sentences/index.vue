@@ -13,11 +13,7 @@
         英文を作成する
       </v-btn>
       <div v-if="sentences.length" class="sentences-container">
-        <v-card v-for="sentence in sentences" :key="sentence.id" class="my-3 mx-10">
-          <router-link :to="{ name: 'Sentence', params: { id: sentence.id } }" class="text-decoration-none">
-            <v-card-text>{{ sentence.title }}</v-card-text>
-          </router-link>
-        </v-card>
+        <sentences-card :sentences="sentences" class="mt-10"></sentences-card>
         <v-pagination
           v-if="paginationLength > 1"
           v-model="page"
@@ -38,6 +34,7 @@ import { ref } from "vue"
 import axios from "@/plugins/axios"
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router"
 import { Sentence } from "@/@types/model"
+import SentencesCard from "@/components/pages/sentences/components/SentencesCard.vue"
 
 const router = useRouter()
 const route = useRoute()
