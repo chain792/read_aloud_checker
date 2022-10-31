@@ -44,48 +44,39 @@
             ></v-radio>
           </v-radio-group>
 
-          <div class="accordion mb-5">
-            <span 
-              class="accordion-title py-2 pr-3"
-              @click="isAccordion = !isAccordion"
-            >  
-              <span class="text-grey-darken-2 d-inline-block" :class="{'open': isAccordion === true}">▼</span> 
-              その他の設定
-            </span>
-            <div v-show="isAccordion" class="accordion-menu mt-5">
-              <div>
-                <span 
-                  class="pointer text-blue-accent-4"
-                  @click="clickFileInput"
+          <AccordionMenu>
+            <div>
+              <span 
+                class="pointer text-blue-accent-4"
+                @click="clickFileInput"
+              >
+                <v-icon color="grey-darken-2 mr-1">mdi-camera</v-icon>
+                英文の画像イメージを追加
+              </span>
+              <v-img v-show="imageSrc" :src="imageSrc" class="preview-image mt-3" width="120px">
+                <v-icon 
+                  class="close-icon pointer" size="x-large" color="grey-darken-3"
+                  @click="closeImage"
                 >
-                  <v-icon color="grey-darken-2 mr-1">mdi-camera</v-icon>
-                  英文の画像イメージを追加
-                </span>
-                <v-img v-show="imageSrc" :src="imageSrc" class="preview-image mt-3" width="120px">
-                  <v-icon 
-                    class="close-icon pointer" size="x-large" color="grey-darken-3"
-                    @click="closeImage"
-                  >
-                    mdi-close-circle
-                  </v-icon>
-                </v-img>
-              
-                <input ref="fileInput" type="file" accept="image/*" style="display: none;" @change="previewImage">
-              </div>
-
-              <div class="mt-5">
-                <span class="text-caption text-grey-darken-3">タグを設定することができます</span>
-                <AutoComplimentTextField
-                  v-model="sentence.category"
-                  label="タグ"
-                  :items="categories"
-                  @input="fetchCategories"
-                  @auto-compliment="autoCompliment"
-                >
-                </AutoComplimentTextField>
-              </div>
+                  mdi-close-circle
+                </v-icon>
+              </v-img>
+            
+              <input ref="fileInput" type="file" accept="image/*" style="display: none;" @change="previewImage">
             </div>
-          </div>
+
+            <div class="mt-5">
+              <span class="text-caption text-grey-darken-3">タグを設定することができます</span>
+              <AutoComplimentTextField
+                v-model="sentence.category"
+                label="タグ"
+                :items="categories"
+                @input="fetchCategories"
+                @auto-compliment="autoCompliment"
+              >
+              </AutoComplimentTextField>
+            </div>
+          </AccordionMenu>
 
           <ProgressButton
             width="100%"
@@ -115,6 +106,7 @@ import { responsiveWidth800 } from "@/common/width"
 import { bodyRules, titleRules } from "@/common/rules"
 import BaseTextField from "@/components/shared/form/BaseTextField.vue"
 import AutoComplimentTextField from "@/components/shared/form/AutoComplimentTextField.vue"
+import AccordionMenu from "./components/AccordionMenu.vue"
 
 const flashStore = useFlashStore()
 const router = useRouter()
@@ -127,7 +119,6 @@ const sentence = reactive({
 })
 const errorMessages: string[] = reactive([])
 const progress = ref(false)
-const isAccordion = ref(false)
 const fileInput = ref<HTMLInputElement>()
 const imageSrc = ref<string | undefined>()
 const categories = ref<Array<string>>([])
@@ -213,20 +204,9 @@ const closeImage = (): void => {
   color: #555;
 }
 
-.accordion-title{
-  cursor: pointer;
-  user-select: none;
-}
 
 .pointer{
   cursor: pointer;
-}
-
-.accordion-title > span{
-  transition: transform .3s;
-}
-.accordion-title > span.open{
-  transform: rotate(60deg);
 }
 
 .preview-image{
