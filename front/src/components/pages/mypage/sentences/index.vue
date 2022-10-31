@@ -34,7 +34,7 @@ import { ref } from "vue"
 import axios from "@/plugins/axios"
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router"
 import { Sentence } from "@/@types/model"
-import SentencesCard from "@/components/pages/sentences/components/SentencesCard.vue"
+import SentencesCard from "../components/SentencesCard.vue"
 
 const router = useRouter()
 const route = useRoute()
