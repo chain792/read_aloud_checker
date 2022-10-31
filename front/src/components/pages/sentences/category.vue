@@ -1,14 +1,15 @@
 <template>
   <div class="page-bookmark">
-    <v-container>
+    <v-container class="pt-0">
       <div class="bookmark-container">
-        <p class="text-h6 text-center mt-1 text-grey-darken-3 font-weight-bold tracking-widest">ブックマークした英文</p>
-        <v-divider  length="250" thickness="2" class="mx-auto mt-2"></v-divider>
-        <div v-if="sentences.length" class="mt-8">
+        <div class="text-center">
+          <div class="text-h6 px-5 py-2 title tracking-widest">[{{ route.query.keyword }}]の英文</div>
+        </div>
+        <div v-if="sentences.length" class="mt-10">
           <sentences-card :sentences="sentences"></sentences-card>
         </div>
         <div v-else-if="isAxiosFinished" class="mt-10">
-          <p class="text-center text-grey-darken-3 text-body-2 tracking-wide">ブックマークしている英文はありません</p>
+          <p class="text-center text-grey-darken-3 text-body-2 tracking-wide">{{ route.query.keyword }}の英文はありません</p>
         </div>
         <v-pagination
           v-if="paginationLength > 1"
@@ -32,6 +33,7 @@ import SentencesCard from "./components/SentencesCard.vue"
 const router = useRouter()
 const route = useRoute()
 
+const queryValueOfKeyword = route.query.keyword? route.query.keyword as string: undefined
 const queryValueOfPage = route.query.page? Number(route.query.page) : undefined
 const page = ref(queryValueOfPage)
 const paginationLength = ref(1)
@@ -39,10 +41,14 @@ const paginationLength = ref(1)
 const sentences = ref<Array<Sentence>>([])
 const isAxiosFinished = ref(false)
 
-const fetchSentences = async (page?: string | number): Promise<void> => {
+const fetchSentences = async (page?: string | number, keyword?: string): Promise<void> => {
   try{
-    const query =  page? `?page=${page}` : ''
-    const res = await axios.get("sentences/bookmark" + query)
+    const res = await axios.get("sentences/category", {
+      params: {
+        page,
+        keyword
+      },
+    })
     paginationLength.value= res.data.pagination.pages
     sentences.value = res.data.sentences
   } catch(e) {
@@ -50,15 +56,21 @@ const fetchSentences = async (page?: string | number): Promise<void> => {
   }
   isAxiosFinished.value = true
 }
-fetchSentences(queryValueOfPage)
+fetchSentences(queryValueOfPage, queryValueOfKeyword)
 
 const paginate = (page: number) => {
-  router.push({ name: "BookmarkSentences", query: { page } })
+  router.push({ 
+    name: "CategorySentences", 
+    query: { 
+      page,
+      keyword: route.query.keyword,
+    } 
+  })
 }
 
 onBeforeRouteUpdate(async (to) => {
   sentences.value = []
-  await fetchSentences(to.query.page as string)
+  await fetchSentences(to.query.page as string, to.query.keyword as string)
 })
 
 
@@ -76,6 +88,13 @@ onBeforeRouteUpdate(async (to) => {
 
 .tracking-widest{
   letter-spacing: 0.2em !important;
+}
+
+.title {
+  background-color: #fb901d;
+  color: #fff;
+  font-weight: 500;
+  display: inline-block
 }
 
 @media (min-width: 1920px) {

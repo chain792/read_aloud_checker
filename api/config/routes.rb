@@ -5,7 +5,9 @@ Rails.application.routes.draw do
       resources :sentences, only: %i[index show] do
         resource :bookmark, only: %i[create destroy]
         collection { get :bookmark }
+        collection { get :category }
       end
+      resources :categories, only: %i[index]
       namespace :user do
         resources :sentences, only: %i[index create edit update destroy]
         resources :trainings, only: %i[index create show]

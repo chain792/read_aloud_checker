@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_02_072414) do
+ActiveRecord::Schema.define(version: 2022_10_26_074510) do
 
   create_table "authentications", charset: "utf8mb4", force: :cascade do |t|
     t.string "uid"
@@ -33,16 +33,14 @@ ActiveRecord::Schema.define(version: 2022_09_02_072414) do
     t.index ["user_id"], name: "index_bookmarks_on_user_id"
   end
 
-  create_table "news", charset: "utf8mb4", force: :cascade do |t|
-    t.string "title", null: false
-    t.bigint "news_category_id", null: false
+  create_table "categories", charset: "utf8mb4", force: :cascade do |t|
+    t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["news_category_id"], name: "index_news_on_news_category_id"
   end
 
-  create_table "news_categories", charset: "utf8mb4", force: :cascade do |t|
-    t.string "name", null: false
+  create_table "news", charset: "utf8mb4", force: :cascade do |t|
+    t.string "title", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -56,6 +54,15 @@ ActiveRecord::Schema.define(version: 2022_09_02_072414) do
     t.index ["training_id"], name: "index_result_words_on_training_id"
   end
 
+  create_table "sentence_categories", charset: "utf8mb4", force: :cascade do |t|
+    t.string "sentence_id", null: false
+    t.bigint "category_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["category_id"], name: "index_sentence_categories_on_category_id"
+    t.index ["sentence_id"], name: "index_sentence_categories_on_sentence_id"
+  end
+
   create_table "sentences", id: { type: :string, limit: 36 }, charset: "utf8mb4", force: :cascade do |t|
     t.string "creater_type", null: false
     t.bigint "creater_id", null: false
@@ -66,6 +73,8 @@ ActiveRecord::Schema.define(version: 2022_09_02_072414) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "male_speech"
     t.string "female_speech"
+    t.string "thumbnail"
+    t.integer "word_count"
     t.index ["creater_type", "creater_id"], name: "index_sentences_on_creater"
   end
 
@@ -108,8 +117,9 @@ ActiveRecord::Schema.define(version: 2022_09_02_072414) do
   add_foreign_key "authentications", "users"
   add_foreign_key "bookmarks", "sentences"
   add_foreign_key "bookmarks", "users"
-  add_foreign_key "news", "news_categories"
   add_foreign_key "result_words", "trainings"
+  add_foreign_key "sentence_categories", "categories"
+  add_foreign_key "sentence_categories", "sentences"
   add_foreign_key "trainings", "sentences"
   add_foreign_key "trainings", "users"
 end

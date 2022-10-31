@@ -44,6 +44,23 @@
             ></v-radio>
           </v-radio-group>
 
+          <AccordionMenu>
+            <ThumbnailForm @file-change="setThumbnailFile">
+            </ThumbnailForm>
+
+            <div class="mt-5">
+              <span class="text-caption text-grey-darken-3">タグを設定することができます</span>
+              <AutoComplimentTextField
+                v-model="sentence.category"
+                label="タグ"
+                :items="categories"
+                @input="fetchCategories"
+                @auto-compliment="autoCompliment"
+              >
+              </AutoComplimentTextField>
+            </div>
+          </AccordionMenu>
+
           <ProgressButton
             width="100%"
             color="warning"
@@ -71,24 +88,63 @@ import ProgressButton from "@/components/shared/ProgressButton.vue"
 import { responsiveWidth800 } from "@/common/width"
 import { bodyRules, titleRules } from "@/common/rules"
 import BaseTextField from "@/components/shared/form/BaseTextField.vue"
+import AutoComplimentTextField from "@/components/shared/form/AutoComplimentTextField.vue"
+import AccordionMenu from "./components/AccordionMenu.vue"
+import ThumbnailForm from "./components/ThumbnailForm.vue"
 
 const flashStore = useFlashStore()
 const router = useRouter()
-
 const valid = ref(true)
 const sentence = reactive({
   title: "",
   body: "",
-  status: 'public_state'
+  status: 'public_state',
+  category: ""
 })
+let thumbnailFile: File | null | "" = null
 const errorMessages: string[] = reactive([])
 const progress = ref(false)
+const categories = ref<Array<string>>([])
+
+const fetchCategories = async (): Promise<void> => {
+  if(!sentence.category){
+    categories.value = []
+    return
+  }
+
+  try{
+    const res = await axios.get("categories", {
+      params: {
+        word: sentence.category
+      }
+    })
+    categories.value = res.data
+  } catch(e) {
+    console.log(e)
+  }
+}
+
+const autoCompliment = (item: string) =>{
+  sentence.category = item
+}
+
+const setThumbnailFile = (file: File | "") => {
+  thumbnailFile = file
+}
 
 const createSentences = async (): Promise<void> => {
   try{
     errorMessages.splice(0)
     progress.value = true
-    await axios.post("user/sentences", { sentence: sentence })
+    const formData = new FormData()
+    formData.append('sentence[title]', sentence.title)
+    formData.append('sentence[body]', sentence.body)
+    formData.append('sentence[status]', sentence.status)
+    formData.append('sentence[category]', sentence.category)
+    if(thumbnailFile){
+      formData.append('sentence[thumbnail]', thumbnailFile)
+    }
+    await axios.post("user/sentences", formData)
     flashStore.succeedCreateSentences()
     router.push({ name: "MySentences" })
   } catch(e) {
@@ -116,4 +172,5 @@ const createSentences = async (): Promise<void> => {
   letter-spacing: 0.01em;
   color: #555;
 }
+
 </style>

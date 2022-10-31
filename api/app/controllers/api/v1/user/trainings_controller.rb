@@ -1,6 +1,6 @@
 class Api::V1::User::TrainingsController < ApplicationController
   def index
-    trainings = current_user.trainings.includes(:sentence, :result_words).order(created_at: :desc).page(params[:page])
+    trainings = current_user.trainings.includes(:result_words).order(created_at: :desc).page(params[:page])
     pagenation = resources_with_pagination(trainings)
     render json: pagenation.merge(JSON.parse TrainingResource.new(trainings).serialize)
   end

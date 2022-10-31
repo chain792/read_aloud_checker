@@ -1,7 +1,8 @@
 class AwsPollyService
   # テキストを音声に変換しS3に保存する
   def self.call(text, voice_id, path)
-    if Rails.env.test?
+    # if Rails.env.test?
+    if true
       "test_#{voice_id}_#{path}"
     else
       resp = Polly.synthesize_speech({

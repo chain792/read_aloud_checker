@@ -14,7 +14,7 @@
           lazy-validation
         >
           <BaseTextField
-            v-model="sentence.title"
+            v-model="editedSentence.title"
             label="タイトル"
             placeholder="英文のタイトルを入力"
             required
@@ -22,7 +22,7 @@
           ></BaseTextField>
 
           <v-textarea
-            v-model="sentence.body"
+            v-model="editedSentence.body"
             label="本文"
             placeholder="本文を入力"
             color="blue"
@@ -32,7 +32,7 @@
             :rules="bodyRules"
           ></v-textarea>
 
-          <v-radio-group v-model="sentence.status">
+          <v-radio-group v-model="editedSentence.status">
             <div class="radio-label">公開・非公開設定</div>
             <v-radio
               label="公開する"
@@ -43,6 +43,26 @@
               value="private_state"
             ></v-radio>
           </v-radio-group>
+
+          <AccordionMenu>
+            <ThumbnailForm 
+              :image-src="previewThumbnailUrl(sentence)"
+              @file-change="setThumbnailFile"
+            >
+            </ThumbnailForm>
+
+            <div class="mt-5">
+              <span class="text-caption text-grey-darken-3">タグを設定することができます</span>
+              <AutoComplimentTextField
+                v-model="editedSentence.category"
+                label="タグ"
+                :items="categories"
+                @input="fetchCategories"
+                @auto-compliment="autoCompliment"
+              >
+              </AutoComplimentTextField>
+            </div>
+          </AccordionMenu>
 
           <ProgressButton
             width="100%"
@@ -71,6 +91,11 @@ import ProgressButton from "@/components/shared/ProgressButton.vue"
 import { responsiveWidth800 } from "@/common/width"
 import { bodyRules, titleRules } from "@/common/rules"
 import BaseTextField from "@/components/shared/form/BaseTextField.vue"
+import AutoComplimentTextField from "@/components/shared/form/AutoComplimentTextField.vue"
+import AccordionMenu from "./components/AccordionMenu.vue"
+import ThumbnailForm from "./components/ThumbnailForm.vue"
+import { previewThumbnailUrl } from "@/common/imageUrl"
+import { Sentence } from "@/@types/model"
 
 const flashStore = useFlashStore()
 const router = useRouter()
@@ -81,21 +106,28 @@ interface Props {
 
 const props = defineProps<Props>()
 const valid = ref(true)
-const sentence = reactive({
+const sentence = ref<Sentence>()
+const editedSentence = reactive({
   title: "",
   body: "",
-  status: ""
+  status: "",
+  category: "",
 })
+let thumbnailFile: File | null | "" = null
+const categories = ref<Array<string>>([])
 const errorMessages: string[] = reactive([])
 const progress = ref(false)
 
 const fetchSentence = async (): Promise<void> => {
   try{
     const res = await axios.get(`user/sentences/${props.id}/edit`)
-    console.log(res)
-    sentence.title = res.data.sentence.title
-    sentence.body = res.data.sentence.body
-    sentence.status = res.data.sentence.status
+    sentence.value = res.data.sentence
+    editedSentence.title = res.data.sentence.title
+    editedSentence.body = res.data.sentence.body
+    editedSentence.status = res.data.sentence.status
+    if(res.data.sentence.categories[0]){
+      editedSentence.category = res.data.sentence.categories[0].name
+    }
   } catch(e) {
     flashStore.invalidUrl()
     router.push({ name: "TopPage" })
@@ -103,11 +135,45 @@ const fetchSentence = async (): Promise<void> => {
 }
 fetchSentence()
 
+const fetchCategories = async (): Promise<void> => {
+  if(!editedSentence.category){
+    categories.value = []
+    return
+  }
+
+  try{
+    const res = await axios.get("categories", {
+      params: {
+        word: editedSentence.category
+      }
+    })
+    categories.value = res.data
+  } catch(e) {
+    console.log(e)
+  }
+}
+
+const autoCompliment = (item: string) =>{
+  editedSentence.category = item
+}
+
+const setThumbnailFile = (file: File | "") => {
+  thumbnailFile = file
+}
+
 const updateSentences = async (): Promise<void> => {
   try{
     errorMessages.splice(0)
     progress.value = true
-    await axios.patch(`user/sentences/${props.id}`, { sentence: sentence })
+    const formData = new FormData()
+    formData.append('sentence[title]', editedSentence.title)
+    formData.append('sentence[body]', editedSentence.body)
+    formData.append('sentence[status]', editedSentence.status)
+    formData.append('sentence[category]', editedSentence.category)
+    if(thumbnailFile !== null){
+      formData.append('sentence[thumbnail]', thumbnailFile)
+    }
+    await axios.patch(`user/sentences/${props.id}`, formData)
     flashStore.succeedUpdateSentences()
     router.push({ name: "MySentences" })
   } catch(e) {

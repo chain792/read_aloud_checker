@@ -13,11 +13,7 @@
         英文を作成する
       </v-btn>
       <div v-if="sentences.length" class="sentences-container">
-        <v-card v-for="sentence in sentences" :key="sentence.id" class="my-3 mx-10">
-          <router-link :to="{ name: 'Sentence', params: { id: sentence.id } }" class="text-decoration-none">
-            <v-card-text>{{ sentence.title }}</v-card-text>
-          </router-link>
-        </v-card>
+        <sentences-card :sentences="sentences" class="mt-10"></sentences-card>
         <v-pagination
           v-if="paginationLength > 1"
           v-model="page"
@@ -34,15 +30,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue"
+import { ref } from "vue"
 import axios from "@/plugins/axios"
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router"
-
-
-interface Sentence {
-  id: string
-  title: string
-}
+import { Sentence } from "@/@types/model"
+import SentencesCard from "../components/SentencesCard.vue"
 
 const router = useRouter()
 const route = useRoute()
@@ -51,7 +43,7 @@ const queryValueOfPage = route.query.page? Number(route.query.page) : undefined
 const page = ref(queryValueOfPage)
 const paginationLength = ref(1)
 
-const sentences: Array<Sentence> = reactive([])
+const sentences = ref<Array<Sentence>>([])
 const isAxiosFinished = ref(false)
 
 const fetchSentences = async (page?: string | number): Promise<void> => {
@@ -59,12 +51,7 @@ const fetchSentences = async (page?: string | number): Promise<void> => {
     const query =  page? `?page=${page}` : ''
     const res = await axios.get("user/sentences" + query)
     paginationLength.value= res.data.pagination.pages
-    res.data.sentences.map((sentence: Sentence) => {
-      sentences.push({
-        id: sentence.id,
-        title: sentence.title
-      })
-    })
+    sentences.value = res.data.sentences
   } catch(e) {
     console.log(e)
   }
@@ -77,7 +64,7 @@ const paginate = (page: number) => {
 }
 
 onBeforeRouteUpdate(async (to) => {
-  sentences.splice(0)
+  sentences.value = []
   await fetchSentences(to.query.page as string)
 })
 
