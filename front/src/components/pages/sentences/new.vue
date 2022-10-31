@@ -45,25 +45,8 @@
           </v-radio-group>
 
           <AccordionMenu>
-            <div>
-              <span 
-                class="pointer text-blue-accent-4"
-                @click="clickFileInput"
-              >
-                <v-icon color="grey-darken-2 mr-1">mdi-camera</v-icon>
-                英文の画像イメージを追加
-              </span>
-              <v-img v-show="imageSrc" :src="imageSrc" class="preview-image mt-3" width="120px">
-                <v-icon 
-                  class="close-icon pointer" size="x-large" color="grey-darken-3"
-                  @click="closeImage"
-                >
-                  mdi-close-circle
-                </v-icon>
-              </v-img>
-            
-              <input ref="fileInput" type="file" accept="image/*" style="display: none;" @change="previewImage">
-            </div>
+            <ThumbnailForm @file-change="setThumbnailFile">
+            </ThumbnailForm>
 
             <div class="mt-5">
               <span class="text-caption text-grey-darken-3">タグを設定することができます</span>
@@ -107,6 +90,7 @@ import { bodyRules, titleRules } from "@/common/rules"
 import BaseTextField from "@/components/shared/form/BaseTextField.vue"
 import AutoComplimentTextField from "@/components/shared/form/AutoComplimentTextField.vue"
 import AccordionMenu from "./components/AccordionMenu.vue"
+import ThumbnailForm from "./components/ThumbnailForm.vue"
 
 const flashStore = useFlashStore()
 const router = useRouter()
@@ -117,10 +101,9 @@ const sentence = reactive({
   status: 'public_state',
   category: ""
 })
+let thumbnailFile: File | null | "" = null
 const errorMessages: string[] = reactive([])
 const progress = ref(false)
-const fileInput = ref<HTMLInputElement>()
-const imageSrc = ref<string | undefined>()
 const categories = ref<Array<string>>([])
 
 const fetchCategories = async (): Promise<void> => {
@@ -145,6 +128,10 @@ const autoCompliment = (item: string) =>{
   sentence.category = item
 }
 
+const setThumbnailFile = (file: File | "") => {
+  thumbnailFile = file
+}
+
 const createSentences = async (): Promise<void> => {
   try{
     errorMessages.splice(0)
@@ -154,7 +141,9 @@ const createSentences = async (): Promise<void> => {
     formData.append('sentence[body]', sentence.body)
     formData.append('sentence[status]', sentence.status)
     formData.append('sentence[category]', sentence.category)
-    formData.append('sentence[thumbnail]', fileInput.value!.files![0])
+    if(thumbnailFile){
+      formData.append('sentence[thumbnail]', thumbnailFile)
+    }
     await axios.post("user/sentences", formData)
     flashStore.succeedCreateSentences()
     router.push({ name: "MySentences" })
@@ -171,26 +160,6 @@ const createSentences = async (): Promise<void> => {
   }
 }
 
-const clickFileInput = (): void => {
-  fileInput.value!.click()
-}
-
-const previewImage = (): void => {
-  const file = fileInput.value!.files![0]
-  const reader = new FileReader()
-  reader.onloadend = (): void => {
-    imageSrc.value= reader.result as string
-  }
-  if(file){
-    reader.readAsDataURL(file)
-  }
-}
-
-const closeImage = (): void => {
-  fileInput.value!.value = ""
-  imageSrc.value = undefined 
-}
-
 </script>
 
 <style scoped>
@@ -202,21 +171,6 @@ const closeImage = (): void => {
 .radio-label{
   letter-spacing: 0.01em;
   color: #555;
-}
-
-
-.pointer{
-  cursor: pointer;
-}
-
-.preview-image{
-  position: relative;
-}
-
-.close-icon{
-  position: absolute;
-  top: 3px;
-  right: 3px;
 }
 
 </style>

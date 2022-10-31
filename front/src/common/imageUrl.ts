@@ -24,3 +24,16 @@ export function thumbnailUrl(sentence: Sentence): string {
 
   return `${import.meta.env.VITE_CLOUD_FRONT}/public/${import.meta.env.MODE}/uploads/${imagePath}`
 }
+
+export function previewThumbnailUrl(sentence: Sentence | undefined): string | undefined {
+  if(!sentence){
+    return
+  }
+
+  if(!sentence.thumbnail){
+    return
+  }
+  const imagePath = `sentence/thumbnail/${sentence.id}/${sentence.thumbnail}`
+
+  return `${import.meta.env.VITE_CLOUD_FRONT}/public/${import.meta.env.MODE}/uploads/${imagePath}`
+}

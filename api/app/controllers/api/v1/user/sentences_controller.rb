@@ -21,7 +21,9 @@ class Api::V1::User::SentencesController < ApplicationController
 
   def update
     sentence = current_user.sentences.find(params[:id])
-    if sentence.update(sentence_params)
+    sentence.assign_attributes(sentence_params)
+    
+    if sentence.save_with_categories(category_params[:category])
       head :no_content
     else
       render json: sentence.errors.full_messages, status: :bad_request

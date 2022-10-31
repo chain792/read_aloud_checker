@@ -34,7 +34,7 @@ class Sentence < ApplicationRecord
   def save_with_categories(name)
     ActiveRecord::Base.transaction do
       self.save!
-      self.categories = [Category.find_or_initialize_by(name: name.strip)] unless name.blank?
+      self.categories = name.blank? ? [] : [Category.find_or_initialize_by(name: name.strip)]
     end
     true
     rescue StandardError
