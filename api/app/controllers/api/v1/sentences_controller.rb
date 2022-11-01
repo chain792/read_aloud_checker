@@ -4,9 +4,9 @@ class Api::V1::SentencesController < ApplicationController
   def index
     case params[:type]
     when 'user'
-      sentences = Sentence.user_published.includes(:categories).order(created_at: :desc).page(params[:page])
+      sentences = Sentence.user_published.includes(:categories).popular(params[:sort]).order(created_at: :desc).page(params[:page])
     when 'news'
-      sentences = Sentence.news_published.includes(:categories).order(created_at: :desc).page(params[:page])
+      sentences = Sentence.news_published.includes(:categories).popular(params[:sort]).order(created_at: :desc).page(params[:page])
     end
     pagenation = resources_with_pagination(sentences)
     render json: pagenation.merge(JSON.parse SentenceResource.new(sentences).serialize)
