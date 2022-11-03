@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :users, only: %i[create show]
+      namespace :sentences do
+        resources :searches, only: %i[index]
+      end
       resources :sentences, only: %i[index show] do
         resource :bookmark, only: %i[create destroy]
         collection { get :bookmark }
