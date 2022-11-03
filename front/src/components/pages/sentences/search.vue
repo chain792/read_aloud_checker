@@ -2,7 +2,7 @@
   <div class="page-bookmark">
     <v-container>
       <div class="bookmark-container">
-        <div class="text-h6 text-center mt-1 text-grey-darken-3 font-weight-bold tracking-widest">タグ： {{ route.query.keyword }}</div>
+        <div class="text-h6 text-center mt-1 text-grey-darken-3 font-weight-bold tracking-widest">検索： {{ route.query.keyword }}</div>
         <v-divider  length="300" thickness="2" class="mx-auto mt-2"></v-divider>
         <order-button
           class="mt-3"
@@ -30,6 +30,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import axios from "@/plugins/axios"
+import qs from "qs"
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router"
 import { Sentence } from "@/@types/model"
 import SentencesCard from "./components/SentencesCard.vue"
@@ -49,12 +50,17 @@ const isAxiosFinished = ref(false)
 
 const fetchSentences = async (page?: string | number, keyword?: string, sort?: string): Promise<void> => {
   try{
-    const res = await axios.get("sentences/category", {
+    const res = await axios.get("sentences/searches", {
       params: {
         page,
-        keyword,
+        q: {
+          title_cont: keyword
+        },
         sort
       },
+      paramsSerializer: params => {
+        return qs.stringify(params)
+      }
     })
     paginationLength.value= res.data.pagination.pages
     sentences.value = res.data.sentences
@@ -67,7 +73,7 @@ fetchSentences(queryValueOfPage, queryValueOfKeyword, queryValueOfSort)
 
 const paginate = (page: number) => {
   router.push({ 
-    name: "CategorySentences", 
+    name: "SearchSentences", 
     query: { 
       page,
       keyword: route.query.keyword,
@@ -79,7 +85,7 @@ const paginate = (page: number) => {
 const orderByCreated = (): void => {
   page.value = 1
   router.push({ 
-    name: "CategorySentences",
+    name: "SearchSentences",
     query: { 
       keyword: route.query.keyword,
       sort: 'created'
@@ -90,7 +96,7 @@ const orderByCreated = (): void => {
 const orderByPopular = (): void => {
   page.value = 1
   router.push({ 
-    name: "CategorySentences",
+    name: "SearchSentences",
     query: { 
       keyword: route.query.keyword,
       sort: 'popular'
@@ -120,7 +126,12 @@ onBeforeRouteUpdate(async (to) => {
   letter-spacing: 0.2em !important;
 }
 
-
+.title {
+  background-color: #fb901d;
+  color: #fff;
+  font-weight: 500;
+  display: inline-block
+}
 
 @media (min-width: 1920px) {
   .bookmark-container{

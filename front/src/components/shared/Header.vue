@@ -9,6 +9,23 @@
 
     <v-spacer></v-spacer>
 
+
+    <div 
+      v-show="pcScreen"
+      @keydown.enter="searchSentence"
+    >
+      <BaseTextField
+        v-model="searchWord"
+        placeholder="英文を検索"
+        class="search-field mr-5"
+        required
+        :hide-details="true"
+        append-inner-icon="mdi-magnify"
+        density="compact"
+        @click:append-inner="searchSentence"
+      ></BaseTextField>
+    </div>
+
     <router-link v-show="!spScreen" :to="{ name: 'NewsSentences' }" class="mr-5 header-text text-grey-darken-4">
       英文一覧
     </router-link>
@@ -99,7 +116,8 @@ import { useTokenStore } from "@/store/tokenStore"
 import { useHeaderStore } from "@/store/headerStore"
 import { useRouter } from 'vue-router'
 import { avatarUrl } from "@/common/imageUrl"
-import { modalWidth500, spScreen } from "@/common/width"
+import { modalWidth500, spScreen, pcScreen } from "@/common/width"
+import BaseTextField from "@/components/shared/form/BaseTextField.vue"
 
 const userStore = useUserStore()
 const flashStore = useFlashStore()
@@ -147,6 +165,11 @@ const sideItems = [
 
 const settingsDialog = ref(false)
 const drawer = ref(false)
+const searchWord = ref("")
+
+const searchSentence = (): void => {
+  router.push({ name: "SearchSentences", query: { keyword: searchWord.value } })
+}
 
 async function logout(): Promise<void>{
   flashStore.$reset()
@@ -279,5 +302,9 @@ async function changeListeningSexToFemale(): Promise<void>{
 
 .header-text-bookmark{
   width: 110px;
+}
+
+.search-field{
+  width: 300px;
 }
 </style>
