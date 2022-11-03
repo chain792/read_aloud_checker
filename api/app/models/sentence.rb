@@ -24,6 +24,7 @@ class Sentence < ApplicationRecord
 
   scope :user_published, -> { public_state.where(creater_type: 'User') }
   scope :news_published, -> { public_state.where(creater_type: 'News') }
+  scope :popular, ->(sort) { left_joins(:trainings).group(:id).order('count(sentences.id) desc') if sort == 'popular' }
 
   def create_speech
     self.female_speech = AwsPollyService.call(body, 'Joanna', "sentence/speech/#{id}")

@@ -5,6 +5,10 @@
         <div class="text-center">
           <div class="text-h6 px-5 py-2 title tracking-widest">[{{ route.query.keyword }}]の英文</div>
         </div>
+        <order-button
+          @order-by-created="orderByCreated"
+          @order-by-popular="orderByPopular"
+        ></order-button>
         <div v-if="sentences.length" class="mt-10">
           <sentences-card :sentences="sentences"></sentences-card>
         </div>
@@ -29,24 +33,27 @@ import axios from "@/plugins/axios"
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router"
 import { Sentence } from "@/@types/model"
 import SentencesCard from "./components/SentencesCard.vue"
+import OrderButton from "./components/OrderButton.vue"
 
 const router = useRouter()
 const route = useRoute()
 
 const queryValueOfKeyword = route.query.keyword? route.query.keyword as string: undefined
 const queryValueOfPage = route.query.page? Number(route.query.page) : undefined
+const queryValueOfSort = route.query.sort? route.query.sort as string : undefined
 const page = ref(queryValueOfPage)
 const paginationLength = ref(1)
 
 const sentences = ref<Array<Sentence>>([])
 const isAxiosFinished = ref(false)
 
-const fetchSentences = async (page?: string | number, keyword?: string): Promise<void> => {
+const fetchSentences = async (page?: string | number, keyword?: string, sort?: string): Promise<void> => {
   try{
     const res = await axios.get("sentences/category", {
       params: {
         page,
-        keyword
+        keyword,
+        sort
       },
     })
     paginationLength.value= res.data.pagination.pages
@@ -56,7 +63,7 @@ const fetchSentences = async (page?: string | number, keyword?: string): Promise
   }
   isAxiosFinished.value = true
 }
-fetchSentences(queryValueOfPage, queryValueOfKeyword)
+fetchSentences(queryValueOfPage, queryValueOfKeyword, queryValueOfSort)
 
 const paginate = (page: number) => {
   router.push({ 
@@ -64,13 +71,36 @@ const paginate = (page: number) => {
     query: { 
       page,
       keyword: route.query.keyword,
+      sort: route.query.sort
+    } 
+  })
+}
+
+const orderByCreated = (): void => {
+  page.value = 1
+  router.push({ 
+    name: "CategorySentences",
+    query: { 
+      keyword: route.query.keyword,
+      sort: 'created'
+    } 
+  })
+}
+
+const orderByPopular = (): void => {
+  page.value = 1
+  router.push({ 
+    name: "CategorySentences",
+    query: { 
+      keyword: route.query.keyword,
+      sort: 'popular'
     } 
   })
 }
 
 onBeforeRouteUpdate(async (to) => {
   sentences.value = []
-  await fetchSentences(to.query.page as string, to.query.keyword as string)
+  await fetchSentences(to.query.page as string, to.query.keyword as string, to.query.sort as string)
 })
 
 
