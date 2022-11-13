@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(version: 2022_10_26_074510) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["category_id"], name: "index_sentence_categories_on_category_id"
+    t.index ["sentence_id", "category_id"], name: "index_sentence_categories_on_sentence_id_and_category_id", unique: true
     t.index ["sentence_id"], name: "index_sentence_categories_on_sentence_id"
   end
 

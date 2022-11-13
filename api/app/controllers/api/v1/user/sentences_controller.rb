@@ -22,7 +22,7 @@ class Api::V1::User::SentencesController < ApplicationController
   def update
     sentence = current_user.sentences.find(params[:id])
     sentence.assign_attributes(sentence_params)
-    
+
     if sentence.save_with_categories(category_params[:category])
       head :no_content
     else

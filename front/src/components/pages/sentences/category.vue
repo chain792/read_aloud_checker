@@ -49,7 +49,7 @@ const isAxiosFinished = ref(false)
 
 const fetchSentences = async (page?: string | number, keyword?: string, sort?: string): Promise<void> => {
   try{
-    const res = await axios.get("sentences/category", {
+    const res = await axios.get("sentences/categories", {
       params: {
         page,
         keyword,

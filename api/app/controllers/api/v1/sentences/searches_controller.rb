@@ -1,4 +1,6 @@
 class Api::V1::Sentences::SearchesController < ApplicationController
+  skip_before_action :authenticate!
+
   def index
     q = Sentence.ransack(params[:q])
     sentences = q.result(distinct: true).includes(:categories).popular(params[:sort]).order(created_at: :desc).page(params[:page])

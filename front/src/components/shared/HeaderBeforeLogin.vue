@@ -9,6 +9,22 @@
 
     <v-spacer></v-spacer>
 
+    <div 
+      v-show="pcScreen"
+      @keydown.enter="searchSentence"
+    >
+      <BaseTextField
+        v-model="searchWord"
+        placeholder="英文を検索"
+        class="search-field mr-5"
+        required
+        :hide-details="true"
+        append-inner-icon="mdi-magnify"
+        density="compact"
+        @click:append-inner="searchSentence"
+      ></BaseTextField>
+    </div>
+
     <router-link v-show="!spScreen" :to="{ name: 'NewsSentences' }" class="mr-5 header-text text-grey-darken-4">
       英文一覧
     </router-link>
@@ -56,7 +72,8 @@
 import { ref, computed, ComputedRef } from "vue"
 import { useHeaderStore } from "@/store/headerStore"
 import { useRouter } from 'vue-router'
-import { spScreen } from "@/common/width";
+import { spScreen, pcScreen } from "@/common/width"
+import BaseTextField from "@/components/shared/form/BaseTextField.vue"
 
 const headerStore = useHeaderStore()
 const router = useRouter()
@@ -85,6 +102,11 @@ const sideItems = [
 ]
 
 const drawer = ref(false)
+const searchWord = ref("")
+
+const searchSentence = (): void => {
+  router.push({ name: "SearchSentences", query: { keyword: searchWord.value } })
+}
 
 function linkToTopPage(): void{
   drawer.value = false
@@ -128,5 +150,9 @@ function linkToSignup(): void{
 .header-text:hover{
   color: #ef8060 !important;
   font-weight: 600;
+}
+
+.search-field{
+  width: 300px;
 }
 </style>

@@ -6,5 +6,7 @@ class CreateSentenceCategoris < ActiveRecord::Migration[6.1]
 
       t.timestamps
     end
+
+    add_index :sentence_categories, [:sentence_id, :category_id], unique: true
   end
 end
