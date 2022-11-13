@@ -1,8 +1,8 @@
 module Scraping
   class NewsUSA
-    def self.scrape(n)
+    def self.scrape(page_number)
       base_url = 'https://www.copyrightfreecontent.com/'
-      html = URI.parse(base_url + "page/#{n}/").open.read
+      html = URI.parse(base_url + "page/#{page_number}/").open.read
       doc = Nokogiri::HTML.parse(html)
       news = []
       doc.css('#content > div').each do |div|
