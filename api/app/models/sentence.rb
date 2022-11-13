@@ -34,11 +34,11 @@ class Sentence < ApplicationRecord
 
   def save_with_categories(name)
     ActiveRecord::Base.transaction do
-      self.save!
+      save!
       self.categories = name.blank? ? [] : [Category.find_or_initialize_by(name: name.strip)]
     end
     true
-    rescue StandardError
-      false
+  rescue StandardError
+    false
   end
 end
