@@ -1,4 +1,4 @@
-# read_aloud_checker
+# 音読スター
 https://ondoku-star.com/
 
 ## サービス概要
