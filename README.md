@@ -30,18 +30,17 @@ https://ondoku-star.com/
   - ページネーション 
   - 英文の新規投稿順・人気順でのソート
   - 英文のブックマーク機能
-  - 英文の音声変換機能(Amazon Pollyを利用) 
+  - 英文の音声変換機能 (Amazon Pollyを利用) 
   - 英文の音声の性別変更機能
   - 音読した音声の録音機能
-  - 音読記録機能 
-    音読した単語数と精度を月毎にグラフ表示
+  - 音読記録機能 (音読した単語数と精度を月毎にグラフ表示) 
   - 音読履歴機能
   - 音読する英文のCRUD機能 
   - カテゴリー機能　
   - 画像のトリミング機能
-  - ソーシャルログイン機能(Twitter, Google, Yahoo) 
+  - ソーシャルログイン機能 (Twitter, Google, Yahoo) 
   - パスワードリセット機能
-  - メール送信機能(Amazon SESを利用)
+  - メール送信機能 (Amazon SESを利用)
 
 - ### 管理画面
   - 検索機能
@@ -64,6 +63,9 @@ https://ondoku-star.com/
   - jwt  
   - alba  
   - rspec-rails  
+  - rubocop  
+  - capistrano  
+
 
 # インフラ構成図
 ![infra drawio](https://user-images.githubusercontent.com/97337735/191248071-f07cfff5-5234-4c50-a5c8-bfeccb002f2a.png)
